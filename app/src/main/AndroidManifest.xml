@@ -13,6 +13,18 @@
         android:theme="@style/Theme.Cinebox"
         tools:targetApi="31">
         <activity
+            android:name=".Inscription"
+            android:exported="false" />
+        <activity
+            android:name=".Film"
+            android:exported="false" />
+        <activity
+            android:name=".Grignotines"
+            android:exported="false" />
+        <activity
+            android:name=".Films"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
