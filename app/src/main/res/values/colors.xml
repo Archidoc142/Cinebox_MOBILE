@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="fond">#2B2C33</color>
+    <color name="barre">#003366</color>
+    <color name="bouton">#00478F</color>
+    <color name="nav">#0066CC</color>
+    <color name="bleu">#66B2FF</color>
+    <color name="prix_orange">#A0522D</color>
+    <color name="prix_orange_border">#6D1F00</color>
+    <color name="prix_gris">#647687</color>
+    <color name="prix_gris_border">#314354</color>
 </resources>
