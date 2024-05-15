@@ -11,4 +11,11 @@
     <color name="prix_orange_border">#6D1F00</color>
     <color name="prix_gris">#647687</color>
     <color name="prix_gris_border">#314354</color>
+    <color name="titleBG">#303030</color>
+    <color name="searchBarBG">#6b6b6b</color>
+    <color name="navElement">#1165ba</color>
+    <color name="borderNav">#10559b</color>
+    <color name="titleMovieBlue">#66b2ff</color>
+    <color name="blueTextBox">#00478f</color>
+    <color name="borderBlueTB">#013365</color>
 </resources>
