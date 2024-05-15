@@ -4,6 +4,190 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/fond"
     tools:context=".Grignotines">
 
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/barre"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/list"
+                    android:layout_width="38dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:src="@drawable/list" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="235dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingLeft="49dp"
+                    android:text="Cinébox"
+                    android:textColor="#FFFFFF"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageInstanceFilm"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    android:src="@drawable/profil_image" />
+
+                <ImageView
+                    android:id="@+id/cart"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:src="@drawable/cart" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/nav_elements"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/connexion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/navElement"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="Se connecter"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/films"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="Films"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/grignotines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/navElement"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="Grignotines"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/tarifs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:paddingLeft="18dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="Tarifs"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/titleBG"
+            android:gravity="center"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="Grignotines"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/searchBarBG"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/searchBtn"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:src="@drawable/loupe" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="199dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Rechercher"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/stateBtn"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="6dp"
+                android:src="@drawable/arrow_right"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="25dp"
+            app:spanCount="2" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
