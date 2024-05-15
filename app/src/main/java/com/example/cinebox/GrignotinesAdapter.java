@@ -44,7 +44,7 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
 
         Glide.with(context)
                 .load(images[position])
-                .error(R.drawable.imageNotFound)
+                .error(R.drawable.image_not_found)
                 .into(holder.imageView);
 
         holder.nom.setOnClickListener(new View.OnClickListener() {

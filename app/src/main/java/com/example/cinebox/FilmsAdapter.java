@@ -43,7 +43,7 @@ public class FilmsAdapter extends RecyclerView.Adapter<FilmsAdapter.MyViewHolder
 
         Glide.with(context)
                 .load(images[position])
-                .error(R.drawable.imageNotFound)
+                .error(R.drawable.image_not_found)
                 .into(holder.imageView);
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {

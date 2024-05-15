@@ -19,7 +19,7 @@
             android:id="@+id/imageInstanceFilm"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:src="@drawable/imageNotFound" />
+            android:src="@drawable/image_not_found" />
 
         <TextView
             android:id="@+id/nom"
