@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Panier"
+    android:background="@color/fond">
+
+    <include
+        android:id="@+id/nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/nav" />
+
+    <TextView
+        android:id="@+id/panierTitre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="32sp"
+        android:layout_margin="20dp"
+        android:text="Panier"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_below="@+id/nav"/>
+
+
+    <TextView
+        android:id="@+id/panierVide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:text="@string/panier_vide"
+        android:textColor="@color/prix_gris"
+        android:textSize="25sp"
+        android:textStyle="italic"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_panier"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/panierTitre"
+        android:layout_margin="20dp" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="2dp"
+        android:layout_margin="20dp"
+        android:background="@color/bleu"
+        android:layout_below="@+id/recycler_panier" />
+
+    <TextView
+        android:id="@+id/panierTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:paddingTop="3dp"
+        android:text="Total : "
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:layout_below="@id/recycler_panier"/>
+
+</RelativeLayout>
