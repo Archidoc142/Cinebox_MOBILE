@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Cinebox</string>
+    <string name="panier_vide">Le panier est vide.</string>
 </resources>
