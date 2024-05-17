@@ -16,22 +16,25 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Panier"
+            android:name=".AccueilActivity"
             android:exported="false" />
         <activity
-            android:name=".Tarifs"
+            android:name=".PanierActivity"
             android:exported="false" />
         <activity
-            android:name=".Inscription"
+            android:name=".TarifsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InscriptionActivity"
             android:exported="false" />
         <activity
             android:name=".FilmActivity"
             android:exported="false" />
         <activity
-            android:name=".Grignotines"
+            android:name=".GrignotinesActivity"
             android:exported="false" />
         <activity
-            android:name=".Films"
+            android:name=".FilmsActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

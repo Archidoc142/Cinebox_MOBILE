@@ -1,7 +1,7 @@
 /****************************************
  * Fichier : Films
  * Auteur : Antoine Auger
- * Fonctionnalité : MGr2, MGr3
+ * Fonctionnalité : MFi2, MFi3
  * Date : 14 mai 2024
  * Vérification :
  * Date Nom Approuvé
@@ -29,12 +29,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Grignotines extends AppCompatActivity {
-
+public class FilmsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grignotines);
+        setContentView(R.layout.activity_films);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -49,18 +48,16 @@ public class Grignotines extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        GrignotinesAdapter adapter = new GrignotinesAdapter(this);
+        FilmsAdapter adapter = new FilmsAdapter(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
     }
 
     public void populateListApi() throws IOException, JSONException {
-        if (Grignotine.GrignotineOnArrayList.size() == 0) {
-            String api = "https://better-walls-retire.loca.lt/api/snacks";
-
+        if (Film.FilmOnArrayList.size() == 0) {
             try {
-                URL obj = new URL(api);
+                URL obj = new URL(getString(R.string.api_url) + "films");
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
                 int responseCode = con.getResponseCode();
@@ -83,14 +80,16 @@ public class Grignotines extends AppCompatActivity {
                         JSONObject movie = movies.getJSONObject(i);
 
                         int id = movie.getInt("id");
-                        String marque = movie.getString("marque");
+                        String titre = movie.getString("titre");
+                        int duration = movie.getInt("duration");
+                        String description = movie.getString("description");
+                        String date_de_sortie = movie.getString("date_de_sortie");
+                        String date_fin_diffusion = movie.getString("date_fin_diffusion");
                         String categorie = movie.getString("categorie");
-                        String format = movie.getString("format");
-                        double prix_vente = movie.getDouble("prix_vente");
-                        String qte_disponible = movie.getString("qte_disponible");
-                        String image = movie.getString("image");
+                        String realisateur = movie.getString("realisateur");
+                        String image_affiche = movie.getString("image_affiche");
 
-                        Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
+                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche));
                     }
                 }
             } catch (Exception e) {

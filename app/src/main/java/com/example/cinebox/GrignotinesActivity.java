@@ -1,7 +1,7 @@
 /****************************************
  * Fichier : Films
  * Auteur : Antoine Auger
- * Fonctionnalité : MFi2, MFi3
+ * Fonctionnalité : MGr2, MGr3
  * Date : 14 mai 2024
  * Vérification :
  * Date Nom Approuvé
@@ -16,19 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
-import android.util.Log;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,13 +28,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
-public class Films extends AppCompatActivity {
+public class GrignotinesActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_films);
+        setContentView(R.layout.activity_grignotines);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -60,18 +49,16 @@ public class Films extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        FilmsAdapter adapter = new FilmsAdapter(this);
+        GrignotinesAdapter adapter = new GrignotinesAdapter(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
     }
 
     public void populateListApi() throws IOException, JSONException {
-        if (Film.FilmOnArrayList.size() == 0) {
-            String api = "http://busy-masks-deny.loca.lt/api/films";
-
+        if (Grignotine.GrignotineOnArrayList.size() == 0) {
             try {
-                URL obj = new URL(api);
+                URL obj = new URL(getString(R.string.api_url) + "snacks");
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
                 int responseCode = con.getResponseCode();
@@ -94,16 +81,14 @@ public class Films extends AppCompatActivity {
                         JSONObject movie = movies.getJSONObject(i);
 
                         int id = movie.getInt("id");
-                        String titre = movie.getString("titre");
-                        int duration = movie.getInt("duration");
-                        String description = movie.getString("description");
-                        String date_de_sortie = movie.getString("date_de_sortie");
-                        String date_fin_diffusion = movie.getString("date_fin_diffusion");
+                        String marque = movie.getString("marque");
                         String categorie = movie.getString("categorie");
-                        String realisateur = movie.getString("realisateur");
-                        String image_affiche = movie.getString("image_affiche");
+                        String format = movie.getString("format");
+                        double prix_vente = movie.getDouble("prix_vente");
+                        String qte_disponible = movie.getString("qte_disponible");
+                        String image = movie.getString("image");
 
-                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche));
+                        Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
                     }
                 }
             } catch (Exception e) {
