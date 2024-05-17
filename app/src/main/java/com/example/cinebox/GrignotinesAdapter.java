@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : GrignotinesAdapter
+ * Auteur : Antoine Auger
+ * Fonctionnalité : N/A
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * Date Nom Description
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import android.annotation.SuppressLint;
@@ -15,25 +27,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.MyViewHolder> {
 
-    private int id[];
+    private Integer id[];
     private String nom[];
     private String images[];
     private Context context;
 
-    public GrignotinesAdapter(Context context, int id[], String nom[], String images[]) {
+    public GrignotinesAdapter(Context context) {
+        ArrayList<Integer> idArray = new ArrayList<>();
+        ArrayList<String> nameArray = new ArrayList<>();
+        ArrayList<String> imagesArray = new ArrayList<>();
+
+        for(Grignotine g: Grignotine.GrignotineOnArrayList) {
+            idArray.add(g.getId());
+            nameArray.add(g.getCategorie() + " (" + g.getFormat() + ")");
+            imagesArray.add(g.getImage());
+        }
+
         this.context = context;
-        this.id = id;
-        this.nom = nom;
-        this.images = images;
+        this.id = idArray.toArray(new Integer[idArray.size()]);
+        this.nom = nameArray.toArray(new String[nameArray.size()]);
+        this.images = imagesArray.toArray(new String[imagesArray.size()]);
     }
 
     @NonNull
     @Override
     public GrignotinesAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.film_item, parent, false);
+        View view = inflater.inflate(R.layout.grignotine_item, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -69,7 +93,7 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
             super(itemView);
             id = itemView.findViewById(R.id.text_id);
             nom = itemView.findViewById(R.id.nom);
-            imageView = itemView.findViewById(R.id.imageInstanceFilm);
+            imageView = itemView.findViewById(R.id.imageInstanceGrignotine);
         }
     }
 }

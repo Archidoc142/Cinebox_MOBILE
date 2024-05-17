@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : HistoriqueAchat
+ * Auteur : Antoine Auger
+ * Fonctionnalité : N/A
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * Date Nom Description
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import java.util.ArrayList;

@@ -1,52 +1,114 @@
+/****************************************
+ * Fichier : Films
+ * Auteur : Antoine Auger
+ * Fonctionnalité : MFi2, MFi3
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * Date Nom Description
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-public class Films extends AppCompatActivity {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+public class Films extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_films);
 
-        String api = "https://genshin.jmp.blue/characters";
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
-        RequestQueue queue = Volley.newRequestQueue(this);
+        try {
+            populateListApi();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, api,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("api", "Response: " + response);
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        FilmsAdapter adapter = new FilmsAdapter(this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+    }
+
+    public void populateListApi() throws IOException, JSONException {
+        if (Film.FilmOnArrayList.size() == 0) {
+            String api = "http://busy-masks-deny.loca.lt/api/films";
+
+            try {
+                URL obj = new URL(api);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("api", "Error: " + error.getMessage());
+                    in.close();
+
+                    JSONObject json = new JSONObject(response.toString());
+
+                    JSONArray movies = json.getJSONArray("data");
+
+                    for (int i = 0; i < movies.length(); i++) {
+                        JSONObject movie = movies.getJSONObject(i);
+
+                        int id = movie.getInt("id");
+                        String titre = movie.getString("titre");
+                        int duration = movie.getInt("duration");
+                        String description = movie.getString("description");
+                        String date_de_sortie = movie.getString("date_de_sortie");
+                        String date_fin_diffusion = movie.getString("date_fin_diffusion");
+                        String categorie = movie.getString("categorie");
+                        String realisateur = movie.getString("realisateur");
+                        String image_affiche = movie.getString("image_affiche");
+
+                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        });
-
-        queue.add(stringRequest);
-
-        // int filmsArray = 0;
-
-        // RecyclerView recyclerView = findViewById(R.id.recycler);
-        // GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        // recyclerView.setLayoutManager(layoutManager);
-        // FilmsAdapter adapter = new FilmsAdapter(this, filmsArray);
-        // recyclerView.setHasFixedSize(true);
-        // recyclerView.setAdapter(adapter);
+        }
     }
 }

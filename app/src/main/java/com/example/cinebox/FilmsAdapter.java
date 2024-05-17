@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : FilmsAdapter
+ * Auteur : Antoine Auger
+ * Fonctionnalité : N/A
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * Date Nom Description
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import android.annotation.SuppressLint;
@@ -14,18 +26,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 public class FilmsAdapter extends RecyclerView.Adapter<FilmsAdapter.MyViewHolder> {
 
-    private int id[];
+    private Integer id[];
     private String nom[];
     private String images[];
     private Context context;
 
-    public FilmsAdapter(Context context, int id[], String nom[], String images[]) {
+    public FilmsAdapter(Context context) {
+        ArrayList<Integer> idArray = new ArrayList<>();
+        ArrayList<String> nameArray = new ArrayList<>();
+        ArrayList<String> imagesArray = new ArrayList<>();
+
+        for(Film f: Film.FilmOnArrayList) {
+            idArray.add(f.getId());
+            nameArray.add(f.getTitre());
+            imagesArray.add(f.getImage_affiche());
+        }
+
         this.context = context;
-        this.id = id;
-        this.nom = nom;
-        this.images = images;
+        this.id = idArray.toArray(new Integer[idArray.size()]);
+        this.nom = nameArray.toArray(new String[nameArray.size()]);
+        this.images = imagesArray.toArray(new String[imagesArray.size()]);
     }
 
     @NonNull
@@ -49,7 +73,7 @@ public class FilmsAdapter extends RecyclerView.Adapter<FilmsAdapter.MyViewHolder
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Film.class);
+                Intent intent = new Intent(context, FilmActivity.class);
                 intent.putExtra("id", id[position]);
                 context.startActivity(intent);
             }
