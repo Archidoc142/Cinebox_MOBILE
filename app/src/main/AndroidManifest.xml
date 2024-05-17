@@ -19,7 +19,7 @@
             android:name=".Inscription"
             android:exported="false" />
         <activity
-            android:name=".Film"
+            android:name=".FilmActivity"
             android:exported="false" />
         <activity
             android:name=".Grignotines"

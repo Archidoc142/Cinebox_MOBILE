@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="6dp"
-    app:cardMaxElevation="6dp"
-    app:cardCornerRadius="6dp"
-    app:cardUseCompatPadding="true"
-    app:cardPreventCornerOverlap="true">
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:orientation="vertical"
         android:padding="8dp">
 
         <ImageView
-            android:id="@+id/imageInstanceFilm"
+            android:id="@+id/imageInstanceGrignotine"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:src="@drawable/image_not_found" />
@@ -36,5 +26,3 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
     </LinearLayout>
-
-</com.google.android.material.card.MaterialCardView>
