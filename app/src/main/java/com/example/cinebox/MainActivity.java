@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         loadFromBDToMemory();
 
-        Intent intent = new Intent(MainActivity.this, Grignotines.class);
+        Intent intent = new Intent(MainActivity.this, AccueilActivity.class);
         startActivity(intent);
     }
 
