@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/fond"
     tools:context=".FilmsActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+
 
         <include
             android:id="@+id/nav"
@@ -23,9 +18,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="36dp"
-            android:fillViewport="true">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,19 +29,22 @@
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="73dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="16dp"
                     android:background="@color/fond"
                     android:gravity="center"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
                     android:text="@string/bienvenue"
                     android:textColor="#FFFFFF"
-                    android:textSize="38sp"
+                    android:textSize="42sp"
                     android:textStyle="bold|italic" />
 
                 <TextView
                     android:id="@+id/films_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:background="@color/fond"
                     android:gravity="center"
                     android:paddingTop="6dp"
@@ -61,7 +57,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/filmRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:padding="25dp"
                     app:spanCount="2" />
 
@@ -69,7 +66,6 @@
                     android:id="@+id/snacks_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:background="@color/fond"
                     android:gravity="center"
                     android:paddingTop="6dp"
@@ -82,13 +78,14 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/snackRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:isScrollContainer="false"
                     android:padding="25dp"
                     app:spanCount="2" />
 
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

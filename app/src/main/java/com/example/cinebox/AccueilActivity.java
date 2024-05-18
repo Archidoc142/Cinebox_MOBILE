@@ -1,6 +1,7 @@
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,48 +21,73 @@ import java.net.URL;
 public class AccueilActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        RecyclerView filmsRecycler = findViewById(R.id.filmRecycler),
+                snacksRecycler = findViewById(R.id.snackRecycler);
 
-        try
-        {
-            populateFilms();
-            populateSnacks();
-
-            RecyclerView filmsRecycler = findViewById(R.id.filmRecycler),
-                         snacksRecycler = findViewById(R.id.snackRecycler);
-
-            GridLayoutManager filmLayoutManager = new GridLayoutManager(this, 2),
-                              snackLayoutManager = new GridLayoutManager(this, 2);
+        filmsRecycler.setNestedScrollingEnabled(false);
+        snacksRecycler.setNestedScrollingEnabled(false);
 
 
-            FilmsAdapter filmAdapter = new FilmsAdapter(this);
-            filmsRecycler.setHasFixedSize(true);
-            filmsRecycler.setAdapter(filmAdapter);
-            filmsRecycler.setLayoutManager(filmLayoutManager);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            GrignotinesAdapter snackAdapter = new GrignotinesAdapter(this);
-            snacksRecycler.setHasFixedSize(true);
-            snacksRecycler.setAdapter(snackAdapter);
-            snacksRecycler.setLayoutManager(snackLayoutManager);
-        }
-        catch (IOException | JSONException e)
-        {
-            throw new RuntimeException(e);
-        }
+                try
+                {
+                    populateFilms();
+                    populateSnacks();
+                }
+                catch (IOException | JSONException e)
+                {
+                    throw new RuntimeException(e);
+                }
+
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        AccueilAdapter accueilAdapter = new AccueilAdapter();
+
+                        AccueilAdapter.FilmsAdapterAccueil filmAdapter = accueilAdapter.new FilmsAdapterAccueil(AccueilActivity.this);
+                        AccueilAdapter.GrignotinesAdapterAccueil snackAdapter = accueilAdapter.new GrignotinesAdapterAccueil(AccueilActivity.this);
+
+                        GridLayoutManager filmLayoutManager = new GridLayoutManager(AccueilActivity.this, 2),
+                                snackLayoutManager = new GridLayoutManager(AccueilActivity.this, 2);
+
+
+                        filmsRecycler.setAdapter(filmAdapter);
+                        filmsRecycler.setLayoutManager(filmLayoutManager);
+
+
+                        snacksRecycler.setAdapter(snackAdapter);
+                        snacksRecycler.setLayoutManager(snackLayoutManager);
+                    }
+                });
+
+            }
+        }).start();
     }
 
-    public void populateFilms() throws IOException, JSONException {
+    public void populateFilms() throws IOException, JSONException
+    {
         if (Film.FilmOnArrayList.size() == 0) {
             try {
                 URL obj = new URL(getString(R.string.api_url) + "films");
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
+
+                System.out.println("fetch request");
                 int responseCode = con.getResponseCode();
+
+                System.out.println(responseCode);
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -73,17 +99,12 @@ public class AccueilActivity extends AppCompatActivity {
                     }
                     in.close();
 
+                    System.out.println(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray movies = json.getJSONArray("data");
 
-                    int lim;
-                    if(movies.length() > 4)
-                        lim = 4;
-                    else
-                        lim = movies.length();
-
-                    for (int i = 0; i < lim; i++) {
+                    for (int i = 0; i < movies.length(); i++) {
                         JSONObject movie = movies.getJSONObject(i);
 
                         int id = movie.getInt("id");
@@ -128,14 +149,7 @@ public class AccueilActivity extends AppCompatActivity {
 
                     JSONArray snacks = json.getJSONArray("data");
 
-                    int lim;
-
-                    if(snacks.length() > 4)
-                        lim = 4;
-                    else
-                        lim = snacks.length();
-
-                    for (int i = 0; i < lim; i++) {
+                    for (int i = 0; i < snacks.length(); i++) {
                         JSONObject snack = snacks.getJSONObject(i);
 
                         int id = snack.getInt("id");

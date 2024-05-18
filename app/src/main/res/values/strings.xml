@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Cinebox</string>
     <string name="panier_vide">Le panier est vide.</string>
-    <string name="api_url">http://early-mangos-divide.loca.lt/api/</string>
+    <string name="api_url">http://hungry-ends-rhyme.loca.lt/api/</string>
     <string name="bienvenue">Bienvenue!</string>
     <string name="films_vedette">Films en vedette</string>
     <string name="snacks_vedette">Grignotines en vedette</string>
