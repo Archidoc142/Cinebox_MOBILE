@@ -37,6 +37,12 @@
             android:name=".FilmsActivity"
             android:exported="true" />
         <activity
+            android:name=".CompteActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ConsulterAchatActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
