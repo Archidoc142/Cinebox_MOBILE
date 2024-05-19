@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.widget.Toast;
+
+import com.bumptech.glide.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +26,6 @@ public class AccueilActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
 
@@ -34,9 +35,9 @@ public class AccueilActivity extends AppCompatActivity {
         filmsRecycler.setNestedScrollingEnabled(false);
         snacksRecycler.setNestedScrollingEnabled(false);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        Utilisateur user = Utilisateur.getInstance();
 
+        Toast.makeText(this, "Bienvenue " + Utilisateur.getInstance().getNom(), Toast.LENGTH_SHORT).show();
 
         new Thread(new Runnable() {
             @Override
@@ -58,10 +59,8 @@ public class AccueilActivity extends AppCompatActivity {
                         GridLayoutManager filmLayoutManager = new GridLayoutManager(AccueilActivity.this, 2),
                                 snackLayoutManager = new GridLayoutManager(AccueilActivity.this, 2);
 
-
                         filmsRecycler.setAdapter(filmAdapter);
                         filmsRecycler.setLayoutManager(filmLayoutManager);
-
 
                         snacksRecycler.setAdapter(snackAdapter);
                         snacksRecycler.setLayoutManager(snackLayoutManager);
@@ -70,5 +69,4 @@ public class AccueilActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 }

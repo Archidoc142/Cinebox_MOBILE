@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -26,6 +28,8 @@ public class APIRequests
     private static final String apiURL = "https://cinebox.taila09363.ts.net/api/";
     private static final String getFilmsURL = apiURL + "films";
     private static final String getSnacksURL = apiURL + "snacks";
+    private static final String postLoginURL = apiURL + "token";
+    private static final String getUserURL = apiURL + "user";
 
     public static void getFilms()
     {
@@ -81,7 +85,7 @@ public class APIRequests
     {
         if (Grignotine.GrignotineOnArrayList.size() == 0){
             try {
-                URL obj = new URL( getSnacksURL);
+                URL obj = new URL(getSnacksURL);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("GET");
                 int responseCode = con.getResponseCode();
@@ -120,102 +124,110 @@ public class APIRequests
         }
     }
 
-    public static void getFilmsVolley(Context context)
+    public static boolean postLoginUser(String mail, String pwd)
     {
-        RequestQueue queue = Volley.newRequestQueue(context);
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getFilmsURL, null,
-            new Response.Listener<JSONObject>()
+        if(Utilisateur.getInstance() == null)
+        {
+            try
             {
-                @Override
-                public void onResponse(JSONObject json)
+                JSONObject body = new JSONObject();
+                body.put("courriel", mail);
+                body.put("mot_de_passe", pwd);
+                body.put("nom_token", "mobile");
+
+                URL obj = new URL(postLoginURL);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                con.setRequestProperty("Accept", "application/json");
+                con.setDoOutput(true);
+
+                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                writer.write(body.toString());
+                writer.flush();
+                writer.close();
+
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK)
                 {
-                    try
-                    {
-                        JSONArray movies = json.getJSONArray("data");
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
 
-                        for (int i = 0; i < movies.length(); i++)
-                        {
-                            JSONObject movie = movies.getJSONObject(i);
-
-                            int id = movie.getInt("id");
-                            String titre = movie.getString("titre");
-                            int duration = movie.getInt("duration");
-                            String description = movie.getString("description");
-                            String date_de_sortie = movie.getString("date_de_sortie");
-                            String date_fin_diffusion = movie.getString("date_fin_diffusion");
-                            String categorie = movie.getString("categorie");
-                            String realisateur = movie.getString("realisateur");
-                            String image_affiche = movie.getString("image_affiche");
-
-                            Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche));
-                        }
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
                     }
-                    catch(JSONException e)
-                    {
-                        throw new RuntimeException(e);
-                    }
+                    in.close();
+
+                    JSONObject json = new JSONObject(response.toString());
+
+                    String token = json.getString("token");
+
+                    addUser(token);
+
+                    return true;
                 }
-            },
-            new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error)
+                else
                 {
-                    System.out.println("fetch failed");
+                    System.out.println("fail: " + responseCode);
+                    return false;
                 }
             }
-        );
-
-        queue.add(request);
+            catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    public static void getSnacksVolley(Context context)
+    public static void addUser(String token)
     {
-        RequestQueue queue = Volley.newRequestQueue(context);
+        try
+        {
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, getSnacksURL, null,
-                new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject json)
-                    {
-                        try
-                        {
-                            JSONArray snacks = json.getJSONArray("data");
+            URL obj = new URL(getUserURL);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + token);
 
-                            for (int i = 0; i < snacks.length(); i++)
-                            {
-                                JSONObject snack = snacks.getJSONObject(i);
+            int responseCode = con.getResponseCode();
 
-                                int id = snack.getInt("id");
-                                String marque = snack.getString("marque");
-                                String categorie = snack.getString("categorie");
-                                String format = snack.getString("format");
-                                double prix_vente = snack.getDouble("prix_vente");
-                                String qte_disponible = snack.getString("qte_disponible");
-                                String image = snack.getString("image");
+            if (responseCode == HttpURLConnection.HTTP_OK)
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
-                                Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
-                            }
-                        }
-                        catch(JSONException e)
-                        {
-                            throw new RuntimeException(e);
-                        }
-
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        System.out.println("fetch failed");
-                    }
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
-        );
+                in.close();
 
-        queue.add(request);
+                JSONObject userJ = new JSONObject(response.toString());
+
+                int id = userJ.getInt("id");
+
+                String nom = userJ.getString("nom_famille");
+                String prenom = userJ.getString("prenom");
+                String nomUtilisateur = userJ.getString("name");
+                String courriel = userJ.getString("email");
+                String telephone = userJ.getString("telephone");
+
+                Utilisateur.setInstance(token, id, nom, prenom, nomUtilisateur, courriel, telephone);
+            }
+            else
+            {
+                System.out.println("fail: " + responseCode);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

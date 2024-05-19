@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         loadFromBDToMemory();
 
         //Intent intent = new Intent(MainActivity.this, AccueilActivity.class);
-        Intent intent = new Intent(MainActivity.this, CompteActivity.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 

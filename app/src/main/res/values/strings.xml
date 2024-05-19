@@ -4,4 +4,10 @@
     <string name="bienvenue">Bienvenue!</string>
     <string name="films_vedette">Films en vedette</string>
     <string name="snacks_vedette">Grignotines en vedette</string>
+    <string name="login_title">Connexion</string>
+    <string name="username_label">Nom d\'utilisateur</string>
+    <string name="password_label">Mot de passe</string>
+    <string name="login_btn">Se connecter</string>
+    <string name="forgot_pwd"><u>Mot de passe oublié?</u></string>
+    <string name="new_user"><u>Nouvel utilisateur? Inscrivez-vous.</u></string>
 </resources>

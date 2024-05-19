@@ -82,10 +82,10 @@ public class SQLiteManager extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("nom", utilisateur.getNom());
         contentValues.put("prenom", utilisateur.getPrenom());
-        contentValues.put("nom_utilisateur", utilisateur.getNom_utilisateur());
+        contentValues.put("nom_utilisateur", utilisateur.getNomUtilisateur());
         contentValues.put("courriel", utilisateur.getCourriel());
         contentValues.put("telephone", utilisateur.getTelephone());
-        contentValues.put("mot_de_passe", utilisateur.getMot_de_passe());
+        //contentValues.put("mot_de_passe", utilisateur.getMotDePasse());
         contentValues.put("image", utilisateur.getImage());
 
         db.insert(TABLE_NAME2, null, contentValues);
@@ -109,10 +109,10 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("id", utilisateur.getId());
         contentValues.put("nom", utilisateur.getNom());
         contentValues.put("prenom", utilisateur.getPrenom());
-        contentValues.put("nom_utilisateur", utilisateur.getNom_utilisateur());
+        contentValues.put("nom_utilisateur", utilisateur.getNomUtilisateur());
         contentValues.put("courriel", utilisateur.getCourriel());
         contentValues.put("telephone", utilisateur.getTelephone());
-        contentValues.put("mot_de_passe", utilisateur.getMot_de_passe());
+        //contentValues.put("mot_de_passe", utilisateur.getMotDePasse());
         contentValues.put("image", utilisateur.getImage());
 
         sqLiteDatabase.update(TABLE_NAME2, contentValues, "id" + " =?", new String[]{String.valueOf(utilisateur.getId())});
@@ -122,7 +122,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         HistoriqueAchat.HistoriqueAchatOnArrayList.clear();
-        Utilisateur.UtilisateurOnArrayList.clear();
+        //Utilisateur.UtilisateurOnArrayList.clear();
 
         try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME1, null)) {
             if (result.getCount() != 0) {
@@ -145,10 +145,15 @@ public class SQLiteManager extends SQLiteOpenHelper {
                     String telephone = result.getString(5);
                     String mot_de_passe = result.getString(6);
                     byte[] image = result.getBlob(7);
-                    Utilisateur utilisateur = new Utilisateur(nom, prenom, nom_utilisateur, courriel, telephone, mot_de_passe, image);
-                    Utilisateur.UtilisateurOnArrayList.add(utilisateur);
+                    //Utilisateur utilisateur = new Utilisateur(nom, prenom, nom_utilisateur, courriel, telephone, mot_de_passe, image);
+                    //Utilisateur.UtilisateurOnArrayList.add(utilisateur);
                 }
             }
         }
+    }
+
+    public void insertUtilisateur()
+    {
+
     }
 }

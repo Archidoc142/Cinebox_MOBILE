@@ -1,6 +1,6 @@
 /****************************************
  * Fichier : Utilisateur
- * Auteur : Antoine Auger
+ * Auteur : Antoine Auger, Hicham Abekiri
  * Fonctionnalité : N/A
  * Date : 14 mai 2024
  * Vérification :
@@ -14,45 +14,61 @@ package com.example.cinebox;
 
 import java.util.ArrayList;
 
-public class Utilisateur {
-    public static ArrayList<Utilisateur> UtilisateurOnArrayList = new ArrayList<Utilisateur>();
+public class Utilisateur
+{
+    private static Utilisateur instance;
 
-    public int id;
-    public String nom;
-    public String prenom;
-    public String nom_utilisateur;
-    public String courriel;
-    public String telephone;
-    public String mot_de_passe;
+    private int token;
+    private int id;
+    private String nom;
+    private String prenom;
+    private String nomUtilisateur;
+    private String courriel;
+    private String telephone;
+    //private String motDePasse;
     private byte[] image;
 
-    public Utilisateur () {
-        id = 0;
-        nom = null;
-        prenom = null;
-        nom_utilisateur = null;
-        courriel = null;
-        telephone = null;
-        mot_de_passe = null;
-        image = null;
-    }
-
-    public Utilisateur (String nom, String prenom, String nom_utilisateur, String courriel, String telephone, String mot_de_passe, byte[] image) {
+    private Utilisateur (String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone)
+    {
         this.nom = nom;
         this.prenom = prenom;
-        this.nom_utilisateur = nom_utilisateur;
+        this.nomUtilisateur = nomUtilisateur;
         this.courriel = courriel;
         this.telephone = telephone;
-        this.mot_de_passe = mot_de_passe;
-        this.image = image;
+        //this.motDePasse = motDePasse;
+        //this.image = image;
     }
 
-    public String getNom_utilisateur() {
-        return nom_utilisateur;
+    public static void setInstance(String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone)
+    {
+        if(instance == null)
+            instance = new Utilisateur(token, id, nom, prenom, nomUtilisateur, courriel, telephone);
     }
 
-    public void setNom_utilisateur(String nom_utilisateur) {
-        this.nom_utilisateur = nom_utilisateur;
+    public static void logOutUser()
+    {
+        instance = null;
+    }
+
+    public static Utilisateur getInstance()
+    {
+        return instance;
+    }
+
+    public int getToken() {
+        return token;
+    }
+
+    public void setToken(int token) {
+        this.token = token;
+    }
+
+    public String getNomUtilisateur() {
+        return nomUtilisateur;
+    }
+
+    public void setNomUtilisateur(String nomUtilisateur) {
+        this.nomUtilisateur = nomUtilisateur;
     }
 
     public int getId() {
@@ -94,15 +110,15 @@ public class Utilisateur {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-
-    public String getMot_de_passe() {
-        return mot_de_passe;
+/*
+    public String getMotDePasse() {
+        return motDePasse;
     }
 
-    public void setMot_de_passe(String mot_de_passe) {
-        this.mot_de_passe = mot_de_passe;
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
     }
-
+*/
     public byte[] getImage() {
         return image;
     }
