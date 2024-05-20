@@ -35,13 +35,26 @@ public class GrignotinesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grignotines);
 
-        APIRequests.getSnacks();
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                APIRequests.getSnacks();
 
-        RecyclerView recyclerView = findViewById(R.id.recycler);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        GrignotinesAdapter adapter = new GrignotinesAdapter(this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(layoutManager);
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        RecyclerView recyclerView = findViewById(R.id.recycler);
+                        GridLayoutManager layoutManager = new GridLayoutManager(GrignotinesActivity.this, 2);
+                        GrignotinesAdapter adapter = new GrignotinesAdapter(GrignotinesActivity.this);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(layoutManager);
+                    }
+                });
+            }
+        }).start();
     }
 }

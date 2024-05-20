@@ -8,8 +8,6 @@
     android:background="@color/fond"
     tools:context=".FilmsActivity">
 
-
-
         <include
             android:id="@+id/nav"
             layout="@layout/nav"
