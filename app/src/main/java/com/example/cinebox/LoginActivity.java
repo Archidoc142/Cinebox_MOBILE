@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
     private EditText userInput;
     private EditText pwdInput;
+    private TextView inscriptionTxt;
     private Button loginBtn;
 
     @Override
@@ -24,12 +26,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userInput = findViewById(R.id.username_input);
         pwdInput = findViewById(R.id.password_input);
         loginBtn = findViewById(R.id.login_btn);
+        inscriptionTxt = findViewById(R.id.inscriptionTxt);
 
         loginBtn.setOnClickListener(this);
+        inscriptionTxt.setOnClickListener(this);
     }
 
     public void onClick(View v)
     {
+        if(v.getId() == R.id.inscriptionTxt)
+        {
+            Intent intent = new Intent(LoginActivity.this, InscriptionActivity.class);
+            startActivity(intent);
+        }
         if(v.getId() == R.id.login_btn)
         {
             String username = userInput.getText().toString();
@@ -43,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void run()
                     {
-                        if(APIRequests.postLoginUser(username, pwd))
+                        if(APIRequests.postLoginUser(username, pwd, LoginActivity.this))
                         {
                             runOnUiThread(new Runnable()
                             {

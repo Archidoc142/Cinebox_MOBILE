@@ -35,6 +35,22 @@ public class APIRequests
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
     private static final String getTarifsURL = apiURL + "tarifs";
 
+    public class TokenValidRunnable implements Runnable
+    {
+        private volatile boolean valid;
+
+        @Override
+        public void run()
+        {
+            valid = isTokenValid();
+        }
+
+        public boolean isValid()
+        {
+            return valid;
+        }
+    }
+
     public static void getFilms()
     {
         if (Film.FilmOnArrayList.size() == 0) {
@@ -128,7 +144,7 @@ public class APIRequests
         }
     }
 
-    public static boolean postLoginUser(String mail, String pwd)
+    public static boolean postLoginUser(String mail, String pwd, Context context)
     {
         if(Utilisateur.getInstance() == null)
         {
@@ -167,8 +183,7 @@ public class APIRequests
                     JSONObject json = new JSONObject(response.toString());
 
                     String token = json.getString("token");
-
-                    addUser(token);
+                    getUser(token, context);
 
                     return true;
                 }
@@ -189,7 +204,7 @@ public class APIRequests
         }
     }
 
-    public static void addUser(String token)
+    private static void getUser(String token, Context context)
     {
         try
         {
@@ -221,7 +236,7 @@ public class APIRequests
                 String courriel = userJ.getString("email");
                 String telephone = userJ.getString("telephone");
 
-                Utilisateur.setInstance(token, id, nom, prenom, nomUtilisateur, courriel, telephone);
+                Utilisateur.initUser(context, token, id, nom, prenom, nomUtilisateur, courriel, telephone, null);
             }
             else
             {
@@ -231,6 +246,29 @@ public class APIRequests
         catch (Exception e)
         {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isTokenValid() {
+        if (Utilisateur.getInstance() != null) {
+            try {
+                URL obj = new URL(getUserURL);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                con.setRequestProperty("Authorization", "Bearer " + Utilisateur.getInstance().getToken());
+
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    return true;
+                }
+
+                return false;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return false;
         }
     }
 
