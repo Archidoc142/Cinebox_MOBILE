@@ -17,9 +17,15 @@ import java.util.ArrayList;
 public class HistoriqueAchat {
     public static ArrayList<HistoriqueAchat> HistoriqueAchatOnArrayList = new ArrayList<HistoriqueAchat>();
 
-    public int id;
-    public String date;
-    public float montant;
+    private int id;
+    private String date;
+    private float montant;
+
+    public HistoriqueAchat(int id, String date, float montant) {
+        this.id = id;
+        this.date = date;
+        this.montant = montant;
+    }
 
     public HistoriqueAchat () {
         id = 0;
