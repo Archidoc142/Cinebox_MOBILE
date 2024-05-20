@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".TarifsActivity"
     android:background="@color/fond">
 
@@ -16,14 +17,15 @@
     <TextView
         android:id="@+id/tarifsTitre"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="73dp"
         android:textSize="32sp"
-        android:layout_margin="20dp"
+        android:layout_marginBottom="16dp"
         android:text="Tarifs"
         android:gravity="center"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        android:layout_below="@id/nav"/>
+        android:textStyle="bold"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_tarifs"
@@ -32,4 +34,4 @@
         android:layout_below="@+id/tarifsTitre"
         android:layout_margin="20dp"/>
 
-</RelativeLayout>
+</LinearLayout>

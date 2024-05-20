@@ -36,14 +36,26 @@ public class FilmsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_films);
 
-        APIRequests.getFilms();
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                APIRequests.getFilms();
 
-        RecyclerView recyclerView = findViewById(R.id.recycler);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        FilmsAdapter adapter = new FilmsAdapter(this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(layoutManager);
-
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        RecyclerView recyclerView = findViewById(R.id.recycler);
+                        GridLayoutManager layoutManager = new GridLayoutManager(FilmsActivity.this, 2);
+                        FilmsAdapter adapter = new FilmsAdapter(FilmsActivity.this);
+                        recyclerView.setHasFixedSize(true);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setLayoutManager(layoutManager);
+                    }
+                });
+            }
+        }).start();
     }
 }
