@@ -39,6 +39,16 @@ public class Utilisateur
         //this.image = image;
     }
 
+    public Utilisateur() {
+        this.nom = "defaultNom";
+        this.prenom = "defaultPrénom";
+        this.nomUtilisateur = "defaultUsername";
+        this.courriel = "default@gmail.com";
+        this.telephone = "(123) 456 7890";
+        //this.motDePasse = motDePasse;
+        //this.image = image;
+    }
+
     public static void setInstance(String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone)
     {
         if(instance == null)
