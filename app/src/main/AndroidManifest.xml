@@ -21,7 +21,6 @@
         <activity
             android:name=".AccueilActivity"
             android:exported="false" />
-
         <activity
             android:name=".PanierActivity"
             android:exported="false" />
