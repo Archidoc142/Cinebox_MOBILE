@@ -15,8 +15,13 @@ package com.example.cinebox;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.ByteArrayInputStream;
 import java.sql.Blob;
 
 public class SQLiteManager extends SQLiteOpenHelper {
@@ -25,15 +30,21 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "cinebox";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_NAME1 = "historique_achats";
-    private static final String TABLE_NAME2 = "utilisateur";
+    private static final String TABLE_ACHATS = "historique_achats";
+    private static final String TABLE_USER = "utilisateur";
 
-    public SQLiteManager(Context context) {
+    private Context context;
+
+    public SQLiteManager(Context context)
+    {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
-    public static SQLiteManager instanceOfDatabase(Context context) {
-        if (sqLiteManager == null) {
+    public static SQLiteManager instanceOfDatabase(Context context)
+    {
+        if (sqLiteManager == null)
+        {
             sqLiteManager = new SQLiteManager(context);
         }
 
@@ -41,26 +52,27 @@ public class SQLiteManager extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME1);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME2);
+    public void onCreate(SQLiteDatabase db)
+    {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACHATS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
 
         db.execSQL(
-                "CREATE TABLE " + TABLE_NAME1 + " (" +
+                "CREATE TABLE " + TABLE_ACHATS + " (" +
                         "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "date" + " TEXT," +
                         "montant" + " REAL)"
         );
 
         db.execSQL(
-                "CREATE TABLE " + TABLE_NAME2 + " (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "CREATE TABLE " + TABLE_USER + " (" +
+                        "id INTEGER, " +
+                        "token" + " TEXT, " +
                         "nom" + " TEXT," +
                         "prenom" + " TEXT," +
                         "nom_utilisateur" + " TEXT," +
                         "courriel" + " TEXT," +
                         "telephone" + " TEXT," +
-                        "mot_de_passe" + " TEXT," +
                         "image" + " BLOB)"
         );
     }
@@ -75,20 +87,78 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("date", historiqueAchat.getDate());
         contentValues.put("montant", historiqueAchat.getMontant());
 
-        db.insert(TABLE_NAME1, null, contentValues);
+        db.insert(TABLE_ACHATS, null, contentValues);
     }
 
-    public void ajouterUtilisateur(Utilisateur utilisateur, SQLiteDatabase db) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("nom", utilisateur.getNom());
-        contentValues.put("prenom", utilisateur.getPrenom());
-        contentValues.put("nom_utilisateur", utilisateur.getNomUtilisateur());
-        contentValues.put("courriel", utilisateur.getCourriel());
-        contentValues.put("telephone", utilisateur.getTelephone());
-        //contentValues.put("mot_de_passe", utilisateur.getMotDePasse());
-        contentValues.put("image", utilisateur.getImage());
+    public void insertUserToDB()
+    {
+        Utilisateur user = Utilisateur.getInstance();
 
-        db.insert(TABLE_NAME2, null, contentValues);
+        if(user != null)
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+
+            ContentValues val = new ContentValues();
+            val.put("id", user.getId());
+            val.put("token", user.getToken());
+            val.put("nom", user.getNom());
+            val.put("prenom", user.getPrenom());
+            val.put("nom_utilisateur", user.getNomUtilisateur());
+            val.put("courriel", user.getCourriel());
+            val.put("telephone", user.getTelephone());
+
+            db.insert(TABLE_USER, null, val);
+        }
+    }
+
+    public void getUserFromDB()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor result = db.rawQuery("SELECT * FROM " + TABLE_USER, null);
+
+        if (result.getCount() != 0)
+        {
+            result.moveToFirst();
+            int id = result.getInt(0);
+            String token = result.getString(1);
+            String nom = result.getString(2);
+            String prenom = result.getString(3);
+            String nomUtilisateur = result.getString(4);
+            String courriel = result.getString(5);
+            String telephone = result.getString(6);
+            byte[] imageBlob = result.getBlob(7);
+
+            Bitmap bitmap = null;
+
+            if(imageBlob != null)
+            {
+                ByteArrayInputStream imgStream = new ByteArrayInputStream(imageBlob);
+                bitmap = BitmapFactory.decodeStream(imgStream);
+            }
+
+            Utilisateur.initUser(context, token, id, nom, prenom, nomUtilisateur, courriel, telephone, bitmap);
+        }
+
+
+    }
+
+    public boolean userExistsInDB()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long rows = DatabaseUtils.queryNumEntries(db, TABLE_USER);
+
+        if(rows == 0)
+            return false;
+
+        return true;
+    }
+
+    public void clearUserDB()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("DELETE FROM " + TABLE_USER);
     }
 
     public void updateHistoriqueAchat(HistoriqueAchat historiqueAchat) {
@@ -99,9 +169,10 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("date", historiqueAchat.getDate());
         contentValues.put("montant", historiqueAchat.getMontant());
 
-        sqLiteDatabase.update(TABLE_NAME1, contentValues, "id" + " =?", new String[]{String.valueOf(historiqueAchat.getId())});
+        sqLiteDatabase.update(TABLE_ACHATS, contentValues, "id" + " =?", new String[]{String.valueOf(historiqueAchat.getId())});
     }
 
+    // à modifier
     public void updateUtilisateur(Utilisateur utilisateur) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -113,18 +184,17 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("courriel", utilisateur.getCourriel());
         contentValues.put("telephone", utilisateur.getTelephone());
         //contentValues.put("mot_de_passe", utilisateur.getMotDePasse());
-        contentValues.put("image", utilisateur.getImage());
+        //contentValues.put("image", utilisateur.getImage());
 
-        sqLiteDatabase.update(TABLE_NAME2, contentValues, "id" + " =?", new String[]{String.valueOf(utilisateur.getId())});
+        sqLiteDatabase.update(TABLE_USER, contentValues, "id" + " =?", new String[]{String.valueOf(utilisateur.getId())});
     }
 
     public void populateLists() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         HistoriqueAchat.HistoriqueAchatOnArrayList.clear();
-        //Utilisateur.UtilisateurOnArrayList.clear();
 
-        try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME1, null)) {
+        try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_ACHATS, null)) {
             if (result.getCount() != 0) {
                 while (result.moveToNext()) {
                     String date = result.getString(1);
@@ -135,25 +205,6 @@ public class SQLiteManager extends SQLiteOpenHelper {
             }
         }
 
-        try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_NAME2, null)) {
-            if (result.getCount() != 0) {
-                while (result.moveToNext()) {
-                    String nom = result.getString(1);
-                    String prenom = result.getString(2);
-                    String nom_utilisateur = result.getString(3);
-                    String courriel = result.getString(4);
-                    String telephone = result.getString(5);
-                    String mot_de_passe = result.getString(6);
-                    byte[] image = result.getBlob(7);
-                    //Utilisateur utilisateur = new Utilisateur(nom, prenom, nom_utilisateur, courriel, telephone, mot_de_passe, image);
-                    //Utilisateur.UtilisateurOnArrayList.add(utilisateur);
-                }
-            }
-        }
-    }
-
-    public void insertUtilisateur()
-    {
-
+        getUserFromDB();
     }
 }
