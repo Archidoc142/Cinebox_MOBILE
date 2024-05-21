@@ -1,3 +1,20 @@
+/****************************************
+ * Fichier : Billet.java
+ * Auteur : Arthur Andrianjafisolo
+ * Fonctionnalité : Object billet permettant de stocker les info de chaque billet vendu pour détail dans ConsulterAchatActivity
+ * Date : 19/05/2023
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 public class Billet {
