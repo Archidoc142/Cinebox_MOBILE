@@ -1,3 +1,20 @@
+/****************************************
+ * Fichier : ConsulterAchatActivity.java
+ * Auteur : Arthur Andrianjafisolo
+ * Fonctionnalité : Affichage des détails de chaque facture
+ * Date : 18/05/2023
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 import android.os.Bundle;
