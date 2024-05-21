@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/fond"
     tools:context=".InscriptionActivity">
 
-    <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <include
+        android:id="@+id/nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/nav" />
 
-        <include
-            android:id="@+id/nav"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/nav" />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="@color/titleBG"
+        android:gravity="center"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:text="Inscription"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,20 +41,6 @@
             android:paddingBottom="20dp">
 
             <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@color/titleBG"
-                android:gravity="center"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:text="Inscription"
-                android:textColor="#FFFFFF"
-                android:textSize="32sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +48,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/nom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,6 +59,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="#FFFFFF"
+                android:inputType="text"
                 android:textSize="18sp" />
 
             <TextView
@@ -73,7 +70,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/prenom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,6 +81,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="#FFFFFF"
+                android:inputType="text"
                 android:textSize="18sp" />
 
             <TextView
@@ -94,7 +92,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,6 +103,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:textColor="#FFFFFF"
+                android:inputType="text"
                 android:textSize="18sp" />
 
             <TextView
@@ -115,7 +114,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/courriel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -137,7 +136,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/telephone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -159,8 +158,30 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/mot_de_passe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/border_blue"
+                android:inputType="textPassword"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Confirmer le mot de passe :"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/confirmation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -188,13 +209,13 @@
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
 
-                <ImageButton
-                    android:id="@+id/imageButton"
+                <Button
+                    android:id="@+id/camera"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/camera" />
+                    android:text="Activer Cam." />
 
             </LinearLayout>
 
@@ -209,6 +230,6 @@
                 app:cornerRadius="10dp" />
 
         </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

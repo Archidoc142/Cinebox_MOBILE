@@ -79,7 +79,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // the cake is lie
+        // the cake (Paper) is a lie
     }
 
     public void ajouterHistoriqueAchat(HistoriqueAchat historiqueAchat, SQLiteDatabase db) {
@@ -139,8 +139,6 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
             Utilisateur.initUser(context, token, id, nom, prenom, nomUtilisateur, courriel, telephone, bitmap);
         }
-
-
     }
 
     public boolean userExistsInDB()
