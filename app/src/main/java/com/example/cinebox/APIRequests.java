@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -32,6 +33,8 @@ public class APIRequests
     private static final String getSnacksURL = apiURL + "snacks";
     private static final String postLoginURL = apiURL + "token";
     private static final String getUserURL = apiURL + "user";
+    private static final String addUserURL = apiURL + "client/ajout";
+    private static final String getTarifsURL = apiURL + "tarifs";
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
 
     public class TokenValidRunnable implements Runnable
