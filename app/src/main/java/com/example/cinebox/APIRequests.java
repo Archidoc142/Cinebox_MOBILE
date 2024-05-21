@@ -19,11 +19,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -34,7 +32,6 @@ public class APIRequests
     private static final String getSnacksURL = apiURL + "snacks";
     private static final String postLoginURL = apiURL + "token";
     private static final String getUserURL = apiURL + "user";
-    private static final String addUserURL = apiURL + "client/ajout";
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
 
     public class TokenValidRunnable implements Runnable
@@ -305,6 +302,46 @@ public class APIRequests
                         //create billet object
                         //create grignotine vente object
                         HistoriqueAchat.HistoriqueAchatOnArrayList.add(new HistoriqueAchat(id, "none", montant));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void getTarifs()
+    {
+        if (Tarif.TarifOnArrayList.size() == 0){
+            try {
+                URL obj = new URL(getTarifsURL);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    JSONObject json = new JSONObject(response.toString());
+
+                    JSONArray tarifs = json.getJSONArray("data");
+
+                    for (int i = 0; i < tarifs.length(); i++) {
+                        JSONObject tarif = tarifs.getJSONObject(i);
+
+                        int id = tarif.getInt("id_tarif");
+                        String categorie = tarif.getString("categorie");
+                        double prix = tarif.getDouble("prix");
+                        String description = tarif.getString("description");
+
+                        Tarif.TarifOnArrayList.add(new Tarif(id, categorie, prix, description));
                     }
                 }
             } catch (Exception e) {
