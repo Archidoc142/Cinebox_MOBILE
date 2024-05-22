@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
         {
             intent = new Intent(MainActivity.this, AccueilActivity.class);
         } else {
-            intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent = new Intent(MainActivity.this, CompteActivity.class);
             // intent = new Intent(MainActivity.this, TarifsActivity.class);
         }
 
