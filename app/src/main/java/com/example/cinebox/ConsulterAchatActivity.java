@@ -1,12 +1,16 @@
 package com.example.cinebox;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ConsulterAchatActivity extends AppCompatActivity implements RecyclerViewInterface{
+public class ConsulterAchatActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
     private String[] nomMovie = {"Movie1", "Movie2", "Movie3", "Movie4", "Movie5", "Movie6"};
     private String[] categorieMovie = {"Adulte", "Adolescent", "Enfant", "Vieux", "Jeune", "Moins Jeune"};
     private Integer[] qteMovie = {1, 2, 3, 4, 5, 6};
@@ -40,5 +44,37 @@ public class ConsulterAchatActivity extends AppCompatActivity implements Recycle
     @Override
     public void onItemClick(int position) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.filmsNav) {
+            Intent intent = new Intent(ConsulterAchatActivity.this, FilmsActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.grignotinesNav) {
+            Intent intent = new Intent(ConsulterAchatActivity.this, GrignotinesActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.tarifsNav) {
+            Intent intent = new Intent(ConsulterAchatActivity.this, TarifsActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.listNav) {
+            LinearLayout nav_elements = findViewById(R.id.nav_elements);
+            if (nav_elements.getVisibility() == View.GONE) {
+                nav_elements.setVisibility(View.VISIBLE);
+            } else {
+                nav_elements.setVisibility(View.GONE);
+            }
+        } else if (v.getId() == R.id.connexionNav) {
+            if (Utilisateur.getInstance() != null) {
+                Utilisateur.logOutUser(this);
+
+                View nav = findViewById(R.id.nav);
+                TextView connexion = nav.findViewById(R.id.connexionNav);
+                connexion.setText("Se connecter");
+            } else {
+                Intent intent = new Intent(ConsulterAchatActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 }

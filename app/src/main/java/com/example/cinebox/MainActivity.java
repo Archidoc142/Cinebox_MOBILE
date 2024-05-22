@@ -16,15 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         loadFromBDToMemory();
         Intent intent;
 
@@ -33,14 +35,11 @@ public class MainActivity extends AppCompatActivity
             La page d'accueil resterait toujours la page initiale peu importe le type d'utilisateur.
          */
 
-        if(Utilisateur.loggedIn(this))
-        {
+        if(Utilisateur.loggedIn(this)) {
             intent = new Intent(MainActivity.this, AccueilActivity.class);
-        }
-        else
-        {
-            //intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent = new Intent(MainActivity.this, TarifsActivity.class);
+        } else {
+            intent = new Intent(MainActivity.this, LoginActivity.class);
+            // intent = new Intent(MainActivity.this, TarifsActivity.class);
         }
 
         finish();
@@ -48,7 +47,6 @@ public class MainActivity extends AppCompatActivity
         //Intent intent = new Intent(MainActivity.this, CompteActivity.class);
 
         startActivity(intent);
-
     }
 
     private void loadFromBDToMemory()
