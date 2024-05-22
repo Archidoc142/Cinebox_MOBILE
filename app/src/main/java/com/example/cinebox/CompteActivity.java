@@ -44,7 +44,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
 
-public class CompteActivity extends AppCompatActivity implements RecyclerViewInterface {
+public class CompteActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
     private Bitmap image_data;
@@ -62,7 +62,6 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     ImageView editButton;
     ImageView skipEditButton;
     ImageView saveEditButton;
-public class CompteActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
     private Integer[] id = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     private String[] date = {"2023/01/01", "2023/02/01", "2023/03/01", "2023/04/01", "2023/05/01", "2023/06/01", "2023/01/01", "2023/02/01", "2023/03/01", "2023/04/01", "2023/05/01", "2023/06/01"};
     private double[] montant = {10.5, 20.0, 15.75, 30.0, 25.5, 50.0, 10.5, 20.0, 15.75, 30.0, 25.5, 50.0};
