@@ -22,7 +22,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayInputStream;
-import java.sql.Blob;
 
 public class SQLiteManager extends SQLiteOpenHelper {
 
@@ -34,6 +33,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
     private static final String TABLE_USER = "utilisateur";
     private static final String TABLE_SNACKS = "grignotines";
     private static final String TABLE_BILLETS = "billets";
+    private static final String TABLE_ACHAT_SNACK = "achat_grignotine";
 
     private Context context;
 
@@ -60,13 +60,6 @@ public class SQLiteManager extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
 
         db.execSQL(
-                "CREATE TABLE " + TABLE_ACHATS + " (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "date" + " TEXT," +
-                        "montant" + " REAL)"
-        );
-
-        db.execSQL(
                 "CREATE TABLE " + TABLE_USER + " (" +
                         "id INTEGER, " +
                         "token" + " TEXT, " +
@@ -79,13 +72,24 @@ public class SQLiteManager extends SQLiteOpenHelper {
         );
 
         db.execSQL(
+                "CREATE TABLE " + TABLE_ACHATS + " (" +
+                        "id INTEGER, " +
+                        "date" + " TEXT," +
+                        "total_brut" + " REAL," +
+                        "tps" + " REAL," +
+                        "tvq" + " REAL," +
+                        "total_final" + " REAL)"
+        );
+
+        db.execSQL(
                 "CREATE TABLE " + TABLE_SNACKS + " (" +
                         "id INTEGER, " +
                         "prix_vente REAL, " +
                         "quantite_disponible INTEGER, " +
                         "categorie TEXT, " +
                         "format TEXT, " +
-                        "marque TEXT)"
+                        "marque TEXT, " +
+                        "image BLOB)"
         );
 
         db.execSQL(
@@ -93,19 +97,35 @@ public class SQLiteManager extends SQLiteOpenHelper {
                         "id INTEGER, " +
                         "montant_achat REAL, " +
                         "type_tarif TEXT, " +
-                        "film TEXT)"
+                        "film TEXT, " +
+                        "id_achat INTEGER, " +
+                        "FOREIGN KEY(id_achat) REFERENCES " + TABLE_USER + "(id) )"
+        );
+
+        db.execSQL(
+                "CREATE TABLE " + TABLE_ACHAT_SNACK + " (" +
+                        "id_achat INTEGER, " +
+                        "id_grignotine INTEGER, " +
+                        "prix_unitaire REAL, " +
+                        "quantite INTEGER, " +
+                        "FOREIGN KEY(id_achat) REFERENCES " + TABLE_USER + "(id), " +
+                        "FOREIGN KEY(id_grignotine) REFERENCES " + TABLE_SNACKS + "(id) )"
         );
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // the cake is lie
-    }
+    @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {/* the cake is lie*/}
 
-    public void ajouterHistoriqueAchat(HistoriqueAchat historiqueAchat, SQLiteDatabase db) {
+    public void ajouterAchat(Achat achat)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
-        contentValues.put("date", historiqueAchat.getDate());
-        contentValues.put("montant", historiqueAchat.getMontant());
+        contentValues.put("id", achat.getId());
+        contentValues.put("date", achat.getDate());
+        contentValues.put("total_brut", achat.getmontantBrut());
+        contentValues.put("tps", achat.getTps());
+        contentValues.put("tvq", achat.getTvq());
+        contentValues.put("total_final", achat.getMontantFinal());
 
         db.insert(TABLE_ACHATS, null, contentValues);
     }
@@ -181,15 +201,18 @@ public class SQLiteManager extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + TABLE_USER);
     }
 
-    public void updateHistoriqueAchat(HistoriqueAchat historiqueAchat) {
+    public void updateHistoriqueAchat(Achat achat) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put("id", historiqueAchat.getId());
-        contentValues.put("date", historiqueAchat.getDate());
-        contentValues.put("montant", historiqueAchat.getMontant());
+        contentValues.put("id", achat.getId());
+        contentValues.put("date", achat.getDate());
+        contentValues.put("total_brut", achat.getmontantBrut());
+        contentValues.put("tps", achat.getTps());
+        contentValues.put("tvq", achat.getTvq());
+        contentValues.put("total_final", achat.getMontantFinal());
 
-        sqLiteDatabase.update(TABLE_ACHATS, contentValues, "id" + " =?", new String[]{String.valueOf(historiqueAchat.getId())});
+        sqLiteDatabase.update(TABLE_ACHATS, contentValues, "id" + " =?", new String[]{String.valueOf(achat.getId())});
     }
 
     // à modifier
@@ -212,15 +235,15 @@ public class SQLiteManager extends SQLiteOpenHelper {
     public void populateLists() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
-        HistoriqueAchat.HistoriqueAchatOnArrayList.clear();
+        Achat.HistoriqueAchats.clear();
 
         try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_ACHATS, null)) {
             if (result.getCount() != 0) {
                 while (result.moveToNext()) {
                     String date = result.getString(1);
                     float montant = result.getFloat(2);
-                    HistoriqueAchat historiqueAchat = new HistoriqueAchat(date, montant);
-                    HistoriqueAchat.HistoriqueAchatOnArrayList.add(historiqueAchat);
+                    Achat achat = new Achat(date, montant);
+                    Achat.HistoriqueAchats.add(achat);
                 }
             }
         }

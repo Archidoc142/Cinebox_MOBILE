@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity
             La page d'accueil resterait toujours la page initiale peu importe le type d'utilisateur.
          */
 
+
         if(Utilisateur.loggedIn(this))
         {
             intent = new Intent(MainActivity.this, AccueilActivity.class);
@@ -40,9 +41,11 @@ public class MainActivity extends AppCompatActivity
         else
         {
             //intent = new Intent(MainActivity.this, LoginActivity.class);
-            intent = new Intent(MainActivity.this, CompteActivity.class);
-        }
+            intent = new Intent(MainActivity.this, LoginActivity.class);
+        }/*
 
+        intent = new Intent(MainActivity.this, LoginActivity.class);
+        */
         finish();
 
         //Intent intent = new Intent(MainActivity.this, CompteActivity.class);

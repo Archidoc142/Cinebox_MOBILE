@@ -1,29 +1,16 @@
 package com.example.cinebox;
 
 import android.content.Context;
-import android.content.res.Resources;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.util.Util;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
 
 public class APIRequests
 {
@@ -273,7 +260,7 @@ public class APIRequests
     }
 
     public static void getHistoriqueAchat() {
-        if (HistoriqueAchat.HistoriqueAchatOnArrayList.size() == 0){
+        if (Achat.HistoriqueAchats.size() == 0){
             try {
                 URL obj = new URL(getHistoriqueAchatURL);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -303,7 +290,7 @@ public class APIRequests
 
                         //create billet object
                         //create grignotine vente object
-                        HistoriqueAchat.HistoriqueAchatOnArrayList.add(new HistoriqueAchat(id, "none", montant));
+                        Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
                     }
                 }
             } catch (Exception e) {
