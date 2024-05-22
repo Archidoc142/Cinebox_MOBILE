@@ -50,6 +50,7 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setImageBitmap(null);
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }

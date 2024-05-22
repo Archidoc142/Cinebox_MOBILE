@@ -33,6 +33,8 @@ public class TarifsActivity extends AppCompatActivity implements View.OnClickLis
             connexion.setText("Se déconnecter");
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
+            imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }

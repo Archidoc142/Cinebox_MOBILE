@@ -86,15 +86,19 @@ public class APIRequests
 
                         int id = movie.getInt("id");
                         String titre = movie.getString("titre");
-                        int duration = movie.getInt("duration");
+                        String duration = movie.getString("duration");
                         String description = movie.getString("description");
                         String date_de_sortie = movie.getString("date_de_sortie");
                         String date_fin_diffusion = movie.getString("date_fin_diffusion");
                         String categorie = movie.getString("categorie");
                         String realisateur = movie.getString("realisateur");
                         String image_affiche = movie.getString("image_affiche");
+                        String etat_film = movie.getString("id_etat_film");
+                        String type_siege = movie.getString("typeSiege");
+                        String typeEcran = movie.getString("typeEcran");
+                        JSONArray seance = movie.getJSONArray("seance");
 
-                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche));
+                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche, etat_film, type_siege, typeEcran, seance));
                     }
                 }
             } catch (Exception e) {

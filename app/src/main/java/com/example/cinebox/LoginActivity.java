@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setImageBitmap(null);
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }

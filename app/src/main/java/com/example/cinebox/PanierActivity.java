@@ -30,8 +30,10 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
             connexion.setText("Se déconnecter");
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
+            imageUser.setVisibility(View.INVISIBLE);
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
-            cartNav.setVisibility(View.INVISIBLE);
+            cartNav.setVisibility(View.INVISIBLE);imageUser.setVisibility(View.INVISIBLE);
         }
 
         connexion.setOnClickListener(this);

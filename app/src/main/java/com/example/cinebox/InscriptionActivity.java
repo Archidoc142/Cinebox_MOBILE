@@ -58,7 +58,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             connexion.setText("Se déconnecter");
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
-            imageUser.setVisibility(View.INVISIBLE); // Juste pour inscription
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
