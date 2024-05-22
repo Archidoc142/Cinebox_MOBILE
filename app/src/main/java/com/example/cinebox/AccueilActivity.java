@@ -5,8 +5,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.util.Util;
@@ -21,13 +27,39 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class AccueilActivity extends AppCompatActivity {
+public class AccueilActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
+
+        View nav = findViewById(R.id.nav);
+
+        TextView films = nav.findViewById(R.id.filmsNav);
+        TextView grignotines = nav.findViewById(R.id.grignotinesNav);
+        TextView tarifs = nav.findViewById(R.id.tarifsNav);
+        TextView connexion = nav.findViewById(R.id.connexionNav);
+        ImageView imageUser = nav.findViewById(R.id.imageInstanceFilm);
+        ImageView listNav = nav.findViewById(R.id.listNav);
+        ImageView cartNav = nav.findViewById(R.id.cartNav);
+
+        if (Utilisateur.getInstance() != null) {
+            connexion.setText("Se déconnecter");
+            imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+        } else {
+            imageUser.setImageBitmap(null);
+            listNav.setVisibility(View.INVISIBLE);
+            cartNav.setVisibility(View.INVISIBLE);
+        }
+
+        connexion.setOnClickListener(this);
+        connexion.setOnClickListener(this);
+        films.setOnClickListener(this);
+        grignotines.setOnClickListener(this);
+        tarifs.setOnClickListener(this);
+        listNav.setOnClickListener(this);
 
         RecyclerView filmsRecycler = findViewById(R.id.filmRecycler),
                 snacksRecycler = findViewById(R.id.snackRecycler);
@@ -68,5 +100,37 @@ public class AccueilActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.filmsNav) {
+            Intent intent = new Intent(AccueilActivity.this, FilmsActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.grignotinesNav) {
+            Intent intent = new Intent(AccueilActivity.this, GrignotinesActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.tarifsNav) {
+            Intent intent = new Intent(AccueilActivity.this, TarifsActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.listNav) {
+            LinearLayout nav_elements = findViewById(R.id.nav_elements);
+            if (nav_elements.getVisibility() == View.GONE) {
+                nav_elements.setVisibility(View.VISIBLE);
+            } else {
+                nav_elements.setVisibility(View.GONE);
+            }
+        } else if (v.getId() == R.id.connexionNav) {
+            if (Utilisateur.getInstance() != null) {
+                Utilisateur.logOutUser(this);
+
+                View nav = findViewById(R.id.nav);
+                TextView connexion = nav.findViewById(R.id.connexionNav);
+                connexion.setText("Se connecter");
+            } else {
+                Intent intent = new Intent(AccueilActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 }

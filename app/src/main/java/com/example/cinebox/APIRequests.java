@@ -1,16 +1,6 @@
 package com.example.cinebox;
 
 import android.content.Context;
-import android.content.res.Resources;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -32,8 +23,9 @@ public class APIRequests
     private static final String getSnacksURL = apiURL + "snacks";
     private static final String postLoginURL = apiURL + "token";
     private static final String getUserURL = apiURL + "user";
-    private static final String getHistoriqueAchatURL = apiURL + "ventes";
+    private static final String addUserURL = apiURL + "client/ajout";
     private static final String getTarifsURL = apiURL + "tarifs";
+    private static final String getHistoriqueAchatURL = apiURL + "ventes";
 
     public class TokenValidRunnable implements Runnable
     {
@@ -181,7 +173,6 @@ public class APIRequests
                     in.close();
 
                     JSONObject json = new JSONObject(response.toString());
-
                     String token = json.getString("token");
                     getUser(token, context);
 
@@ -273,7 +264,7 @@ public class APIRequests
     }
 
     public static void getHistoriqueAchat() {
-        if (HistoriqueAchat.HistoriqueAchatOnArrayList.size() == 0){
+        if (Achat.HistoriqueAchats.size() == 0){
             try {
                 URL obj = new URL(getHistoriqueAchatURL);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -303,7 +294,8 @@ public class APIRequests
 
                         //create billet object
                         //create grignotine vente object
-                        HistoriqueAchat.HistoriqueAchatOnArrayList.add(new HistoriqueAchat(id, "none", montant));
+                        //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
+                        Achat.HistoriqueAchats.add(new Achat( "none", montant));
                     }
                 }
             } catch (Exception e) {
@@ -350,5 +342,48 @@ public class APIRequests
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public static boolean addUser(JSONObject body) {
+        try {
+            URL obj = new URL(addUserURL);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+
+            OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+            writer.write(body.toString());
+            writer.flush();
+            writer.close();
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK || true) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                JSONObject json = new JSONObject(response.toString());
+                System.out.println(json);
+
+                return !true;
+            } else {
+                System.out.println("POST request not worked");
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

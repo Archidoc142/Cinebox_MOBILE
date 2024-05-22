@@ -1,3 +1,20 @@
+/****************************************
+ * Fichier : HistoriqueAchatAdapter.java
+ * Auteur : Arthur Andrianjafisolo
+ * Fonctionnalité : Adapter pour recycle view de l'historique d'achat
+ * Date : 18/05/2023
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 import android.annotation.SuppressLint;
