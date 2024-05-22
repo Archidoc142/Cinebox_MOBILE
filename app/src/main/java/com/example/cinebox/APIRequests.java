@@ -1,16 +1,6 @@
 package com.example.cinebox;
 
 import android.content.Context;
-import android.content.res.Resources;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,11 +84,8 @@ public class APIRequests
                         String realisateur = movie.getString("realisateur");
                         String image_affiche = movie.getString("image_affiche");
                         String etat_film = movie.getString("id_etat_film");
-                        String type_siege = movie.getString("typeSiege");
-                        String typeEcran = movie.getString("typeEcran");
-                        JSONArray seance = movie.getJSONArray("seance");
 
-                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche, etat_film, type_siege, typeEcran, seance));
+                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche, etat_film));
                     }
                 }
             } catch (Exception e) {
@@ -278,7 +265,7 @@ public class APIRequests
     }
 
     public static void getHistoriqueAchat() {
-        if (HistoriqueAchat.HistoriqueAchatOnArrayList.size() == 0){
+        if (Achat.HistoriqueAchats.size() == 0){
             try {
                 URL obj = new URL(getHistoriqueAchatURL);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -308,7 +295,8 @@ public class APIRequests
 
                         //create billet object
                         //create grignotine vente object
-                        HistoriqueAchat.HistoriqueAchatOnArrayList.add(new HistoriqueAchat(id, "none", montant));
+                        //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
+                        Achat.HistoriqueAchats.add(new Achat( "none", montant));
                     }
                 }
             } catch (Exception e) {

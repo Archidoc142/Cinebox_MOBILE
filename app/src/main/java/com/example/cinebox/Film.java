@@ -29,11 +29,8 @@ public class Film {
     private String realisateur;
     private String image_affiche;
     private String etat_film;
-    private String type_siege;
-    private String typeEcran;
-    private JSONArray seance;
 
-    public Film(int id, String titre, String duration, String description, String date_de_sortie, String date_fin_diffusion, String categorie, String realisateur, String image_affiche, String etat_film, String type_siege, String typeEcran, JSONArray seance) {
+    public Film(int id, String titre, String duration, String description, String date_de_sortie, String date_fin_diffusion, String categorie, String realisateur, String image_affiche, String etat_film) {
         this.id = id;
         this.titre = titre;
         this.duration = duration;
@@ -44,17 +41,6 @@ public class Film {
         this.realisateur = realisateur;
         this.image_affiche = image_affiche;
         this.etat_film = etat_film;
-        this.type_siege = type_siege;
-        this.typeEcran = typeEcran;
-        this.seance = seance;
-    }
-
-    public JSONArray getSeance() {
-        return seance;
-    }
-
-    public void setSeance(JSONArray seance) {
-        this.seance = seance;
     }
 
     public String getEtat_film() {
@@ -63,22 +49,6 @@ public class Film {
 
     public void setEtat_film(String etat_film) {
         this.etat_film = etat_film;
-    }
-
-    public String getType_siege() {
-        return type_siege;
-    }
-
-    public void setType_siege(String type_siege) {
-        this.type_siege = type_siege;
-    }
-
-    public String getTypeEcran() {
-        return typeEcran;
-    }
-
-    public void setTypeEcran(String typeEcran) {
-        this.typeEcran = typeEcran;
     }
 
     public int getId() {

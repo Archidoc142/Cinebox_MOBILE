@@ -1,68 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PanierActivity"
-    android:background="@color/fond">
+    android:background="@color/fond"
+    android:orientation="vertical">
 
-    <include
-        android:id="@+id/nav"
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0">
+
+        <include
+            android:id="@+id/nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/nav" />
+
+        <TextView
+            android:id="@+id/panierTitre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nav"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:text="Panier"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_panierTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/panierTitre"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="@string/panierTemporaire"
+            android:textColor="@color/gris_pale"
+            android:textSize="20sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/panierVide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="@string/panier_vide"
+            android:textColor="@color/gris_pale"
+            android:textSize="25sp"
+            android:textStyle="italic"
+            android:visibility="gone"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_panier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_panierTemp"
+                android:layout_margin="20dp" />
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomPanier"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/nav" />
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="left|bottom">
 
-    <TextView
-        android:id="@+id/panierTitre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="32sp"
-        android:layout_margin="20dp"
-        android:text="Panier"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:layout_below="@+id/nav"/>
+        <View
+            android:id="@+id/panierLine"
+            android:layout_width="150dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/bleu" />
+
+        <TextView
+            android:id="@+id/avanttaxe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="3dp"
+            android:text="avant"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/tpsPanier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="TPS : "
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/tvqPanier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="TPS : "
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/panierTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:paddingTop="3dp"
+            android:text="Total : "
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="30dp">
+
+        <Button
+            android:id="@+id/btn_payerPanier"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_blue"
+            android:text="Payer"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_marginEnd="20dp"/>
 
 
-    <TextView
-        android:id="@+id/panierVide"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        android:gravity="center"
-        android:text="@string/panier_vide"
-        android:textColor="@color/prix_gris"
-        android:textSize="25sp"
-        android:textStyle="italic"
-        android:visibility="gone"/>
+        <Button
+            android:id="@+id/btn_viderPanier"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_gray"
+            android:text="Vider"
+            android:textColor="@color/fond"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_marginStart="20dp"/>
+    </LinearLayout>
+    </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_panier"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/panierTitre"
-        android:layout_margin="20dp" />
 
-    <View
-        android:layout_width="100dp"
-        android:layout_height="2dp"
-        android:layout_margin="20dp"
-        android:background="@color/bleu"
-        android:layout_below="@+id/recycler_panier" />
-
-    <TextView
-        android:id="@+id/panierTotal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:paddingTop="3dp"
-        android:text="Total : "
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:layout_below="@id/recycler_panier"/>
-
-</RelativeLayout>
+</LinearLayout>

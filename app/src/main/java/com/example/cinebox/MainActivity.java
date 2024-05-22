@@ -36,9 +36,11 @@ public class MainActivity extends AppCompatActivity
         if(Utilisateur.loggedIn(this))
         {
             intent = new Intent(MainActivity.this, AccueilActivity.class);
-        } else {
+        }
+        else
+        {
+            //intent = new Intent(MainActivity.this, LoginActivity.class);
             intent = new Intent(MainActivity.this, LoginActivity.class);
-            // intent = new Intent(MainActivity.this, TarifsActivity.class);
         }
 
         finish();
