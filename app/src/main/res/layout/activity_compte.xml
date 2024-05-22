@@ -29,7 +29,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/list"
+                    android:id="@+id/listNav"
                     android:layout_width="38dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -63,7 +63,7 @@
                     android:src="@drawable/profil_image" />
 
                 <ImageView
-                    android:id="@+id/cart"
+                    android:id="@+id/cartNav"
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
@@ -83,7 +83,7 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/connexion"
+                    android:id="@+id/connexionNav"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/navElement"
@@ -95,7 +95,7 @@
                     android:textSize="22sp" />
 
                 <TextView
-                    android:id="@+id/films"
+                    android:id="@+id/filmsNav"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
@@ -107,7 +107,7 @@
                     android:textSize="22sp" />
 
                 <TextView
-                    android:id="@+id/grignotines"
+                    android:id="@+id/grignotinesNav"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/navElement"
@@ -119,7 +119,7 @@
                     android:textSize="22sp" />
 
                 <TextView
-                    android:id="@+id/tarifs"
+                    android:id="@+id/tarifsNav"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
@@ -358,6 +358,7 @@
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:visibility="gone"/>
+                        android:textSize="24sp" />
 
                 </LinearLayout>
 
