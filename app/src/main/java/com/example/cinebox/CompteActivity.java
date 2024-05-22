@@ -14,6 +14,7 @@
  * =========================================================
  * 19/05/2023   Arthur  Test récupération des données depuis BD Infructueux
  * 21/05/2023   Arthur  Ajout fonctionnement de la caméra et modification des champs
+ * 22/05/2023   Arthur  Ajout notification après modification information compte
  *
  * ****************************************/
 
@@ -100,8 +101,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
 
-        //Utilisateur user = Utilisateur.getInstance();
-//        Utilisateur user = Utilisateur.getInstance();
+        Utilisateur user = Utilisateur.getInstance();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerAchats);
         nomUtilisateur = (TextView) findViewById(R.id.nomUtilisateur);
@@ -128,11 +128,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        /*nomUtilisateur.setText(user.getNomUtilisateur());
+        nomUtilisateur.setText(user.getNomUtilisateur());
         prenomUser.setText(user.getPrenom());
         nomUser.setText(user.getNom());
         courrielUser.setText(user.getCourriel());
-        phoneUser.setText(user.getTelephone());*/
+        phoneUser.setText(user.getTelephone());
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
