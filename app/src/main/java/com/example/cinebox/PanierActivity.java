@@ -1,75 +1,75 @@
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class PanierActivity extends AppCompatActivity implements View.OnClickListener {
+public class PanierActivity extends AppCompatActivity {
+    TextView videtxt, temptxt;
+    LinearLayout bottomPanier;
+    Button payer, vider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_panier);
 
-        View nav = findViewById(R.id.nav);
+        videtxt = findViewById(R.id.panierVide);
+        temptxt = findViewById(R.id.txt_panierTemp);
 
-        TextView films = nav.findViewById(R.id.filmsNav);
-        TextView grignotines = nav.findViewById(R.id.grignotinesNav);
-        TextView tarifs = nav.findViewById(R.id.tarifsNav);
-        TextView connexion = nav.findViewById(R.id.connexionNav);
-        ImageView imageUser = nav.findViewById(R.id.imageInstanceFilm);
-        ImageView listNav = nav.findViewById(R.id.listNav);
-        ImageView cartNav = nav.findViewById(R.id.cartNav);
+        bottomPanier = findViewById(R.id.bottomPanier);
 
-        if (Utilisateur.getInstance() != null) {
-            connexion.setText("Se déconnecter");
-            imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+        payer = findViewById(R.id.btn_payerPanier);
+        vider = findViewById(R.id.btn_viderPanier);
+
+        //(int id, String marque, String categorie, String format, double prix_vente, String qte_disponible, String image) {
+
+        Grignotine g = new Grignotine(1, "marque", "categorie", "format", 12.3, "100", "une image");
+      //  Panier.Snack_PanierList.add(g);
+
+        if(Panier.Snack_PanierList.isEmpty() && Panier.Billet_PanierList.isEmpty()) {
+            temptxt.setVisibility(View.INVISIBLE);
+            bottomPanier.setVisibility(View.GONE);
+
+            videtxt.setVisibility(View.VISIBLE);
         } else {
-            listNav.setVisibility(View.INVISIBLE);
-            cartNav.setVisibility(View.INVISIBLE);
-        }
+            temptxt.setVisibility(View.VISIBLE);
+            bottomPanier.setVisibility(View.VISIBLE);
 
-        connexion.setOnClickListener(this);
-        films.setOnClickListener(this);
-        grignotines.setOnClickListener(this);
-        tarifs.setOnClickListener(this);
-        listNav.setOnClickListener(this);
-    }
+            videtxt.setVisibility(View.GONE);
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.filmsNav) {
-            Intent intent = new Intent(PanierActivity.this, FilmsActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.grignotinesNav) {
-            Intent intent = new Intent(PanierActivity.this, GrignotinesActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.tarifsNav) {
-            Intent intent = new Intent(PanierActivity.this, TarifsActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.listNav) {
-            LinearLayout nav_elements = findViewById(R.id.nav_elements);
-            if (nav_elements.getVisibility() == View.GONE) {
-                nav_elements.setVisibility(View.VISIBLE);
-            } else {
-                nav_elements.setVisibility(View.GONE);
-            }
-        } else if (v.getId() == R.id.connexionNav) {
-            if (Utilisateur.getInstance() != null) {
-                    Utilisateur.logOutUser(this);
+            RecyclerView recyclerView = findViewById(R.id.recycler_panier);
+            PanierAdapter adapter = new PanierAdapter(PanierActivity.this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(PanierActivity.this));
 
-                    View nav = findViewById(R.id.nav);
-                    TextView connexion = nav.findViewById(R.id.connexionNav);
-                    connexion.setText("Se connecter");
-            } else {
-                Intent intent = new Intent(PanierActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
+            payer.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Panier.payerPanier();
+                }
+            });
+
+            vider.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Panier.viderPanier();
+                   // finish();
+                   // startActivity(getIntent());
+                    recreate();
+                }
+            });
         }
     }
 }
