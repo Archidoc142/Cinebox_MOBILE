@@ -32,6 +32,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_ACHATS = "historique_achats";
     private static final String TABLE_USER = "utilisateur";
+    private static final String TABLE_SNACKS = "grignotines";
+    private static final String TABLE_BILLETS = "billets";
 
     private Context context;
 
@@ -74,6 +76,24 @@ public class SQLiteManager extends SQLiteOpenHelper {
                         "courriel" + " TEXT," +
                         "telephone" + " TEXT," +
                         "image" + " BLOB)"
+        );
+
+        db.execSQL(
+                "CREATE TABLE " + TABLE_SNACKS + " (" +
+                        "id INTEGER, " +
+                        "prix_vente REAL, " +
+                        "quantite_disponible INTEGER, " +
+                        "categorie TEXT, " +
+                        "format TEXT, " +
+                        "marque TEXT)"
+        );
+
+        db.execSQL(
+                "CREATE TABLE " + TABLE_BILLETS + " (" +
+                        "id INTEGER, " +
+                        "montant_achat REAL, " +
+                        "type_tarif TEXT, " +
+                        "film TEXT)"
         );
     }
 
