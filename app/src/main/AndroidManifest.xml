@@ -2,7 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -17,12 +24,10 @@
         tools:targetApi="31">
         <activity
             android:name=".LoginActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".AccueilActivity"
-            android:exported="true">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".PanierActivity"
             android:exported="false" />

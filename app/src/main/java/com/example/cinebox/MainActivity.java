@@ -39,10 +39,14 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            intent = new Intent(MainActivity.this, LoginActivity.class);
+            //intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent = new Intent(MainActivity.this, CompteActivity.class);
         }
 
         finish();
+
+        //Intent intent = new Intent(MainActivity.this, CompteActivity.class);
+
         startActivity(intent);
 
     }

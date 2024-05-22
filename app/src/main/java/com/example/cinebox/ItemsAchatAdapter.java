@@ -1,3 +1,20 @@
+/****************************************
+ * Fichier : ItemAchatAdapter.java
+ * Auteur : Arthur Andrianjafisolo
+ * Fonctionnalité : Adapter pour chaque item dans les recycler view du détail de fatcure (billet comme grignotines)
+ * Date : 18/05/2023
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 import android.content.Context;

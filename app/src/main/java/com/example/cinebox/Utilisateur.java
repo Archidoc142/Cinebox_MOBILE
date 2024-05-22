@@ -42,6 +42,7 @@ public class Utilisateur
         this.image = image;
     }
 
+
     public static void initUser(Context context, String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone, Bitmap image)
     {
         setInstance(token, id, nom, prenom, nomUtilisateur, courriel, telephone, image);
@@ -51,6 +52,20 @@ public class Utilisateur
         if(!sql.userExistsInDB())
             addUserToDB(context);
     }
+  
+    /*
+      public Utilisateur() {
+          this.nom = "defaultNom";
+          this.prenom = "defaultPrénom";
+          this.nomUtilisateur = "defaultUsername";
+          this.courriel = "default@gmail.com";
+          this.telephone = "(123) 456 7890";
+          //this.motDePasse = motDePasse;
+          //this.image = image;
+      }
+
+      public static void setInstance(String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone)
+    */
 
     private static void setInstance(String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone, Bitmap image)
     {
