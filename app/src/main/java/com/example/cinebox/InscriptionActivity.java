@@ -54,15 +54,16 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
 
-        if (Utilisateur.loggedIn(this)) {
+        if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setVisibility(View.INVISIBLE); // Juste pour inscription
-            // listNav.setVisibility(View.INVISIBLE);
+            listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
+        connexion.setOnClickListener(this);
         films.setOnClickListener(this);
         grignotines.setOnClickListener(this);
         tarifs.setOnClickListener(this);
@@ -133,6 +134,17 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 nav_elements.setVisibility(View.VISIBLE);
             } else {
                 nav_elements.setVisibility(View.GONE);
+            }
+        } else if (v.getId() == R.id.connexionNav) {
+            if (Utilisateur.getInstance() != null) {
+                Utilisateur.logOutUser(this);
+
+                View nav = findViewById(R.id.nav);
+                TextView connexion = nav.findViewById(R.id.connexionNav);
+                connexion.setText("Se connecter");
+            } else {
+                Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         }
     }
