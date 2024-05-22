@@ -20,6 +20,7 @@
 package com.example.cinebox;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -38,6 +39,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +65,8 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     ImageView editButton;
     ImageView skipEditButton;
     ImageView saveEditButton;
+    private static final String CHANNEL_ID = "0";
+
     private Integer[] id = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     private String[] date = {"2023/01/01", "2023/02/01", "2023/03/01", "2023/04/01", "2023/05/01", "2023/06/01", "2023/01/01", "2023/02/01", "2023/03/01", "2023/04/01", "2023/05/01", "2023/06/01"};
     private double[] montant = {10.5, 20.0, 15.75, 30.0, 25.5, 50.0, 10.5, 20.0, 15.75, 30.0, 25.5, 50.0};
@@ -146,14 +151,23 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         skipEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Context context = view.getContext();
+
                 showText();
+
+                //TODO: clean each editText ?
+                makeNotification(context, "Statut des informations du compte", "Les modifications apporté n'ont été annulé");
+
             }
         });
 
         saveEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Context context = view.getContext();
                 //TODO: Save Data in DB
+
+                makeNotification(context, "Statut des informations du compte", "Vos information de compte on bien été sauvegardé");
             }
         });
     }
@@ -177,6 +191,8 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
                 // Retrieve the image from the intent data
                 image_data = (Bitmap) data.getExtras().get("data");
                 avatar.setImageBitmap(image_data);
+
+                //TODO: Save the image in the bd
             } else {
                 Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
             }
@@ -268,5 +284,30 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         courrielUserEdit.setVisibility(View.GONE);
         phoneUser.setVisibility(View.VISIBLE);
         phoneUserEdit.setVisibility(View.GONE);
+    }
+
+    public void makeNotification(Context context, String titleNotif, String contentNotif) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.profil_image)
+                .setContentTitle(titleNotif)
+                .setContentText(contentNotif)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        //Nécéssaire pour afficher la notification
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        notificationManager.notify(0, builder.build());
+
     }
 }
