@@ -32,7 +32,7 @@ public class PanierActivity extends AppCompatActivity {
         //(int id, String marque, String categorie, String format, double prix_vente, String qte_disponible, String image) {
 
         Grignotine g = new Grignotine(1, "marque", "categorie", "format", 12.3, "100", "une image");
-      //  Panier.Snack_PanierList.add(g);
+        Panier.Snack_PanierList.add(g);
 
         if(Panier.Snack_PanierList.isEmpty() && Panier.Billet_PanierList.isEmpty()) {
             temptxt.setVisibility(View.INVISIBLE);
@@ -48,7 +48,7 @@ public class PanierActivity extends AppCompatActivity {
             RecyclerView recyclerView = findViewById(R.id.recycler_panier);
             PanierAdapter adapter = new PanierAdapter(PanierActivity.this);
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(PanierActivity.this));
+            //recyclerView.setLayoutManager(new LinearLayoutManager(PanierActivity.this));
 
             payer.setOnClickListener(new View.OnClickListener()
             {

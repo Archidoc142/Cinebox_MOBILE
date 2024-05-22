@@ -3,15 +3,18 @@ package com.example.cinebox;
 import android.content.Context;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 
 public class APIRequests
 {
@@ -291,7 +294,8 @@ public class APIRequests
 
                         //create billet object
                         //create grignotine vente object
-                        Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
+                        //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
+                        Achat.HistoriqueAchats.add(new Achat( "none", montant));
                     }
                 }
             } catch (Exception e) {
