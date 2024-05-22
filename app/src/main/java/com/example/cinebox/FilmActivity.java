@@ -13,6 +13,8 @@
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +23,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FilmActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,6 +50,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
             connexion.setText("Se déconnecter");
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
@@ -54,8 +61,43 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
 
-        Toast.makeText(this, "Bienvenue " + Utilisateur.getInstance().getNom(), Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                try {
+                    Intent intent = getIntent();
+                    Film movie = Film.FilmOnArrayList.get(intent.getIntExtra("id", 0));
 
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run() {
+                            TextView title = findViewById(R.id.title);
+                            TextView etat = findViewById(R.id.etat);
+                            TextView salle = findViewById(R.id.salle);
+                            TextView seance = findViewById(R.id.seance);
+                            String seances = "";
+
+                            for (int i=0; i < movie.getSeance().length(); i++) {
+                                try {
+                                    seances += movie.getSeance().getJSONObject(i).getString("date_heure").substring(11, 16) + "\n";
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+
+                            title.setText(movie.getTitre());
+                            etat.setText(movie.getEtat_film());
+                            salle.setText("Siège : " + movie.getType_siege() + "\nÉcran : " + movie.getTypeEcran() + "\nDurée" +  movie.getDuration());
+                            seance.setText(seances);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override

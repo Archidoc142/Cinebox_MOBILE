@@ -74,6 +74,7 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
                 imageUser.setImageResource(R.drawable.profil_image);
         } else {
             imageUser.setImageBitmap(null);
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }

@@ -32,7 +32,8 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Arrays;
+
 
 public class APIRequests
 {
@@ -94,15 +95,16 @@ public class APIRequests
 
                         int id = movie.getInt("id");
                         String titre = movie.getString("titre");
-                        int duration = movie.getInt("duration");
+                        String duration = movie.getString("duration");
                         String description = movie.getString("description");
                         String date_de_sortie = movie.getString("date_de_sortie");
                         String date_fin_diffusion = movie.getString("date_fin_diffusion");
                         String categorie = movie.getString("categorie");
                         String realisateur = movie.getString("realisateur");
                         String image_affiche = movie.getString("image_affiche");
+                        String etat_film = movie.getString("id_etat_film");
 
-                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche));
+                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche, etat_film));
                     }
                 }
             } catch (Exception e) {
@@ -280,6 +282,48 @@ public class APIRequests
             return false;
         }
     }
+
+    public static void getHistoriqueAchat() {
+        if (Achat.HistoriqueAchats.size() == 0){
+            try {
+                URL obj = new URL(getHistoriqueAchatURL);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    JSONObject json = new JSONObject(response.toString());
+
+                    JSONArray achats = json.getJSONArray("data");
+
+                    for (int i = 0; i < achats.length(); i++) {
+                        JSONObject achat = achats.getJSONObject(i);
+
+                        int id = achat.getInt("id");
+                        //String date = achat.getString("marque");      //--> date dans la table billet
+                        float montant = BigDecimal.valueOf(achat.getDouble("total_brut")).floatValue();
+
+                        //create billet object
+                        //create grignotine vente object
+                        //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
+                        Achat.HistoriqueAchats.add(new Achat( "none", montant));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+  
     public static void getTarifs()
     {
         if (Tarif.TarifOnArrayList.size() == 0){
