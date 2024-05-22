@@ -22,7 +22,7 @@
         android:text="Tarifs"
         android:gravity="center"
         android:paddingTop="6dp"
-        android:paddingBottom="6dp"
+        android:layout_marginTop="10dp"
         android:textColor="@color/white"
         android:textStyle="bold"/>
 
