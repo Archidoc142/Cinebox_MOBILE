@@ -56,17 +56,9 @@ public class TarifsAdapter  extends RecyclerView.Adapter<TarifsAdapter.MyViewHol
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //holder.id.setText(String.valueOf(id[position]));
         holder.categorie.setText(categorie[position]);
+        //holder.prix.setText(String.format("%.2f", prix[position] + "$"));
         holder.prix.setText(prix[position] + "$");
         holder.description.setText(description[position]);
-
-        //Button ajoutPanier = (Button)
-
-        holder.categorie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Ajouter au panier
-            }
-        });
     }
 
     @Override
@@ -84,5 +76,4 @@ public class TarifsAdapter  extends RecyclerView.Adapter<TarifsAdapter.MyViewHol
             description = itemView.findViewById(R.id.tarifDesc);
         }
     }
-
 }
