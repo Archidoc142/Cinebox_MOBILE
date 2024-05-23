@@ -3,9 +3,11 @@ package com.example.cinebox;
 import android.content.Context;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
@@ -291,7 +293,7 @@ public class APIRequests
 
                         //create billet object
                         //create grignotine vente object
-                        Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
+                        //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
                     }
                 }
             } catch (Exception e) {
@@ -381,5 +383,46 @@ public class APIRequests
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void postVente()
+    {
+        if(!Panier.isEmpty()) {
+            try {
+                JSONObject body = new JSONObject();
+
+                JSONObject billets = new JSONObject();
+                JSONObject grignotines = new JSONObject();
+
+                if (!Panier.Billet_PanierList.isEmpty()) {
+                    int i = 0;
+
+                    for (Billet b : Panier.Billet_PanierList) {
+                        JSONObject billet = new JSONObject();
+                        billet.put("id_tarif", b.getTarif().getId());
+                        billet.put("id_seance", b.getSeance().getId());
+
+                        billets.put(Integer.toString(i), billet);
+                    }
+                }
+
+                if (!Panier.Snack_PanierList.isEmpty()) {
+                    int i = 0;
+
+                    for (Grignotine g : Panier.Snack_PanierList) {
+                        JSONObject billet = new JSONObject();
+                        billet.put("id_grignotine", g.getId());
+
+                        // en attente de la complétion du panier pour contenir les quantités des snacks
+
+                        // billet.put("id_seance", b.getSeance().getId());
+
+                        billets.put(Integer.toString(i), billet);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

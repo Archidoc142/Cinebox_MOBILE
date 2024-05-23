@@ -33,14 +33,17 @@ public class Achat
     private double tvq;
     private double montantFinal;
 
-    public void ajouterAchat()
+    public static void ajouterAchatPanier()
     {
+        Achat achatPanier = new Achat(Panier.Billet_PanierList, Panier.Snack_PanierList);
+
 
     }
 
-    public Achat()
+    public Achat(ArrayList<Billet> billets, ArrayList<Grignotine> grignotines)
     {
-
+        billetsAchat = billets;
+        grignotinesAchat = grignotines;
     }
 
     // constructeur importation depuis BD
