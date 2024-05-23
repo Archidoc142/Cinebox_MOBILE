@@ -4,11 +4,13 @@
  * Fonctionnalité : N/A
  * Date : 14 mai 2024
  * Vérification :
- * Date Nom Approuvé
+ * Date     Nom     Approuvé
  * =========================================================
+ *
  * Historique de modifications :
- * Date Nom Description
+ * Date     Nom     Description
  * =========================================================
+ * 22/05/2024   Arthur  Ajout des lists billetsAchat et grignotinesAchat au constructeur pour importation depuis BD
  *
  * ****************************************/
 
@@ -44,7 +46,7 @@ public class Achat
     }
 
     // constructeur importation depuis BD
-    public Achat(int id, String date, double montantBrut, double tps, double tvq, double montantFinal)
+    public Achat(int id, String date, double montantBrut, double tps, double tvq, double montantFinal, ArrayList<Billet> billetsAchat, ArrayList<Grignotine> grignotinesAchat)
     {
         this.id = id;
         this.date = date;
@@ -52,6 +54,8 @@ public class Achat
         this.tps = tps;
         this.tvq = tvq;
         this.montantFinal = montantFinal;
+        this.billetsAchat = billetsAchat;
+        this.grignotinesAchat = grignotinesAchat;
     }
 
     /*

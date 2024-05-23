@@ -58,7 +58,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         TextView grignotines = nav.findViewById(R.id.grignotinesNav);
         TextView tarifs = nav.findViewById(R.id.tarifsNav);
         TextView connexion = nav.findViewById(R.id.connexionNav);
-        ImageView imageUser = nav.findViewById(R.id.imageInstanceFilm);
+        ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
 
@@ -66,7 +66,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             connexion.setText("Se déconnecter");
             imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
-            imageUser.setVisibility(View.INVISIBLE); // Juste pour inscription
+            imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
