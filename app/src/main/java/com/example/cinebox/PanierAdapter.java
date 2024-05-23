@@ -46,10 +46,10 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
 
         for (Billet b : Panier.Billet_PanierList) {
             idArray.add(b.getId());
-            nomArray.add(b.getFilm());
-            prixArray.add(String.valueOf(b.getMontant_achat()));
+            nomArray.add(b.getSeance().getFilm().getTitre());
+            prixArray.add(String.valueOf(b.getMontant()));
             typeArray.add("Billet");
-            formatArray.add(b.getType_billet());
+            formatArray.add(b.getTarif().getCategorie());
         }
 
         Grignotine gr = new Grignotine(2, "mmmarque", "cccategorie", "ffformat", 112.3, "12200", "lll image");

@@ -115,7 +115,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {/* the cake is lie*/}
 
-    public void ajouterAchat(Achat achat)
+    public void insertAchatToDB(Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 

@@ -472,4 +472,45 @@ public class APIRequests
             throw new RuntimeException(e);
         }
     }
+
+    public static void postVente()
+    {
+        if(!Panier.isEmpty()) {
+            try {
+                JSONObject body = new JSONObject();
+
+                JSONObject billets = new JSONObject();
+                JSONObject grignotines = new JSONObject();
+
+                if (!Panier.Billet_PanierList.isEmpty()) {
+                    int i = 0;
+
+                    for (Billet b : Panier.Billet_PanierList) {
+                        JSONObject billet = new JSONObject();
+                        billet.put("id_tarif", b.getTarif().getId());
+                        billet.put("id_seance", b.getSeance().getId());
+
+                        billets.put(Integer.toString(i), billet);
+                    }
+                }
+
+                if (!Panier.Snack_PanierList.isEmpty()) {
+                    int i = 0;
+
+                    for (Grignotine g : Panier.Snack_PanierList) {
+                        JSONObject billet = new JSONObject();
+                        billet.put("id_grignotine", g.getId());
+
+                        // en attente de la complétion du panier pour contenir les quantités des snacks
+
+                        // billet.put("id_seance", b.getSeance().getId());
+
+                        billets.put(Integer.toString(i), billet);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
