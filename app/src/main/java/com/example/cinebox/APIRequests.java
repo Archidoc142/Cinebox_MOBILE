@@ -32,12 +32,13 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class APIRequests
 {
-    private static final String apiURL = "https://cinebox.taila09363.ts.net/api/";
+    private static final String apiURL = "http://20.121.131.16/api/";
     private static final String getFilmsURL = apiURL + "films";
     private static final String getSnacksURL = apiURL + "snacks";
     private static final String postLoginURL = apiURL + "token";

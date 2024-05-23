@@ -10,12 +10,12 @@
  *
  *
  * Historique de modifications :
- * Date     Nom     Description
+ * Date         Nom     Description
  * =========================================================
  * 19/05/2023   Arthur  Test récupération des données depuis BD Infructueux
  * 21/05/2023   Arthur  Ajout fonctionnement de la caméra et modification des champs
  * 22/05/2023   Arthur  Ajout notification après modification information compte
- *
+ * 23/05/2024   Arthur  Save modification into DB
  * ****************************************/
 
 package com.example.cinebox;
@@ -66,6 +66,8 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     ImageView editButton;
     ImageView skipEditButton;
     ImageView saveEditButton;
+
+    Utilisateur user;
     private static final String CHANNEL_ID = "0";
 
     private Integer[] id = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
@@ -101,7 +103,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
 
-        Utilisateur user = Utilisateur.getInstance();
+        user = Utilisateur.getInstance();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerAchats);
         nomUtilisateur = (TextView) findViewById(R.id.nomUtilisateur);
@@ -122,6 +124,14 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         saveEditButton = (ImageView) findViewById(R.id.saveEdit);
 
         avatar = (ImageView) findViewById(R.id.avatar);
+
+        //Si il y à une image dan DB alors on l'affiche comme avatar
+        if(user.getImage() != null)
+            avatar.setImageBitmap(user.getImage());
+        else
+            avatar.setImageResource(R.drawable.profil_image);
+
+        fillEditText();
 
         HistoriqueAchatAdapter myAdapter = new HistoriqueAchatAdapter(this, id, date, montant, this);
 
@@ -165,7 +175,20 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
-                //TODO: Save Data in DB
+
+                user.setNomUtilisateur(nomUtilisateurEdit.getText().toString());
+                user.setPrenom(prenomUserEdit.getText().toString());
+                user.setNom(nomUserEdit.getText().toString());
+                user.setCourriel(courrielUserEdit.getText().toString());
+                user.setTelephone(phoneUserEdit.getText().toString());
+
+                saveToDB();
+
+                //Ce bout de code permet de "refresh" la page sans transition pour afficher les modifications
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);
 
                 makeNotification(context, "Statut des informations du compte", "Vos information de compte on bien été sauvegardé");
             }
@@ -190,9 +213,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             if (resultCode == RESULT_OK && data != null) {
                 // Retrieve the image from the intent data
                 image_data = (Bitmap) data.getExtras().get("data");
-                avatar.setImageBitmap(image_data);
+                user.setImage(image_data);
 
-                //TODO: Save the image in the bd
+                avatar.setImageBitmap(user.getImage());
+
+                saveToDB();
             } else {
                 Toast.makeText(this, "Failed to capture image", Toast.LENGTH_SHORT).show();
             }
@@ -309,5 +334,19 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         }
         notificationManager.notify(0, builder.build());
 
+    }
+
+    public void saveToDB() {
+        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
+
+        sqLiteManager.updateUtilisateur(user);
+    }
+
+    public void fillEditText() {
+        nomUtilisateurEdit.setText(user.getNomUtilisateur());
+        prenomUserEdit.setText(user.getPrenom());
+        nomUserEdit.setText(user.getNom());
+        courrielUserEdit.setText(user.getCourriel());
+        phoneUserEdit.setText(user.getTelephone());
     }
 }

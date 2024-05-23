@@ -213,7 +213,7 @@
                         android:autoSizeTextType="uniform"
                         android:gravity="center_vertical"
                         android:lines="1"
-                        android:paddingLeft="15dp"
+                        android:paddingLeft="25dp"
                         android:text="[insérer un nom d'utilisateur]"
                         android:textColor="#FFFFFF"
                         android:textSize="32sp"

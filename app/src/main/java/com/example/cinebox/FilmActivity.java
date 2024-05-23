@@ -79,7 +79,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                             TextView seance = findViewById(R.id.seance);
                             String seances = "";
 
-                            for (int i=0; i < movie.getSeance().length(); i++) {
+                            /*for (int i=0; i < movie.getSeance().length(); i++) {
                                 try {
                                     seances += movie.getSeance().getJSONObject(i).getString("date_heure").substring(11, 16) + "\n";
                                 } catch (JSONException e) {
@@ -90,7 +90,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                             title.setText(movie.getTitre());
                             etat.setText(movie.getEtat_film());
                             salle.setText("Siège : " + movie.getType_siege() + "\nÉcran : " + movie.getTypeEcran() + "\nDurée" +  movie.getDuration());
-                            seance.setText(seances);
+                            seance.setText(seances);*/
                         }
                     });
                 } catch (Exception e) {
