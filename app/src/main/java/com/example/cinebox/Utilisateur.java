@@ -3,18 +3,23 @@
  * Auteur : Antoine Auger, Hicham Abekiri
  * Fonctionnalité : N/A
  * Date : 14 mai 2024
+ *
  * Vérification :
  * Date Nom Approuvé
  * =========================================================
+ *
  * Historique de modifications :
- * Date Nom Description
- * =========================================================****************************************/
+ * Date         Nom     Description
+ * =========================================================
+ * 23/05/2024   Arthur  Ajout fonction bitmapToArray() pour sauvegarder l'image dans la BD as Blob
+ * ****************************************/
 
 package com.example.cinebox;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class Utilisateur
@@ -198,5 +203,15 @@ public class Utilisateur
 
     public void setImage(Bitmap image) {
         this.image = image;
+    }
+
+    public byte[] bitmapToArray() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        this.image.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+        byte[] image_data = stream.toByteArray();
+
+        return image_data;
     }
 }
