@@ -43,7 +43,6 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
 
         View nav = findViewById(R.id.nav);
 
-        TextView films = nav.findViewById(R.id.filmsNav);
         TextView grignotines = nav.findViewById(R.id.grignotinesNav);
         TextView tarifs = nav.findViewById(R.id.tarifsNav);
         TextView connexion = nav.findViewById(R.id.connexionNav);
@@ -61,7 +60,6 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         }
 
         connexion.setOnClickListener(this);
-        films.setOnClickListener(this);
         grignotines.setOnClickListener(this);
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
@@ -91,10 +89,7 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.filmsNav) {
-            Intent intent = new Intent(FilmsActivity.this, FilmsActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.grignotinesNav) {
+        if (v.getId() == R.id.grignotinesNav) {
             Intent intent = new Intent(FilmsActivity.this, GrignotinesActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
