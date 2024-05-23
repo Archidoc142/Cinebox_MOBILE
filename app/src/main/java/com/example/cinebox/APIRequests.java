@@ -1,3 +1,21 @@
+/****************************************
+ * Fichier : APIRequest.java
+ * Auteur : ???
+ * Fonctionnalité : Cette class permet de centraliser les requêtes à l'API
+ * Date : ?????
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ * 22/05/2023   Arthur  Début Ajout getAchat()
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 import android.content.Context;
@@ -14,6 +32,8 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+
 
 public class APIRequests
 {
@@ -75,15 +95,16 @@ public class APIRequests
 
                         int id = movie.getInt("id");
                         String titre = movie.getString("titre");
-                        int duration = movie.getInt("duration");
+                        String duration = movie.getString("duration");
                         String description = movie.getString("description");
                         String date_de_sortie = movie.getString("date_de_sortie");
                         String date_fin_diffusion = movie.getString("date_fin_diffusion");
                         String categorie = movie.getString("categorie");
                         String realisateur = movie.getString("realisateur");
                         String image_affiche = movie.getString("image_affiche");
+                        String etat_film = movie.getString("id_etat_film");
 
-                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche));
+                        Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche, etat_film));
                     }
                 }
             } catch (Exception e) {
@@ -294,6 +315,7 @@ public class APIRequests
                         //create billet object
                         //create grignotine vente object
                         //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
+                        Achat.HistoriqueAchats.add(new Achat( "none", montant));
                     }
                 }
             } catch (Exception e) {
@@ -301,7 +323,7 @@ public class APIRequests
             }
         }
     }
-
+  
     public static void getTarifs()
     {
         if (Tarif.TarifOnArrayList.size() == 0){
@@ -383,6 +405,72 @@ public class APIRequests
             e.printStackTrace();
         }
         return false;
+    }
+    private static void getAchats(String token, Context context)
+    {
+        try
+        {
+            URL obj = new URL(getUserURL);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + token);
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK)
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                JSONObject achatJ = new JSONObject(response.toString());
+                JSONObject billetJ = new JSONObject(achatJ.getString("billets"));
+                JSONObject grignotineJ = new JSONObject(achatJ.getString("grignotines"));
+
+                int id = achatJ.getInt("no_vente");
+
+                String date = achatJ.getString("date_facturation");
+                double montantBrut = achatJ.getDouble("total_brut");
+                double tps = achatJ.getDouble("tps");
+                double tvq = achatJ.getDouble("tvq");
+                double montantFinal = achatJ.getDouble("total_final");
+
+                ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
+                int idBillet = billetJ.getInt("id_billet");
+
+                String seance = billetJ.getString("seance");
+                String film = billetJ.getString("film");
+                String dateBillet = billetJ.getString("date_heure_achat");
+                float montantBillet = Float.parseFloat(billetJ.getString("montant_achat"));
+                String typeBillet = billetJ.getString("type_billet");
+
+                ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
+                /*int idGrignotine = billetJ.getInt("id_billet");
+
+                String marque = billetJ.getString("seance");
+                String categorie = billetJ.getString("film");
+                String format = billetJ.getString("date_heure_achat");
+                float prix = Float.parseFloat(billetJ.getString("montant_achat"));
+                String typeBillet = billetJ.getString("type_billet");*/
+
+                billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
+                grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
+                Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
+            }
+            else
+            {
+                System.out.println("fail: " + responseCode);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void postVente()

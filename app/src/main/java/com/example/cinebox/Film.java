@@ -12,6 +12,8 @@
 
 package com.example.cinebox;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 public class Film {
@@ -19,15 +21,16 @@ public class Film {
 
     private int id;
     private String titre;
-    private int duration;
+    private String duration;
     private String description;
     private String date_de_sortie;
     private String date_fin_diffusion;
     private String categorie;
     private String realisateur;
     private String image_affiche;
+    private String etat_film;
 
-    public Film(int id, String titre, int duration, String description, String date_de_sortie, String date_fin_diffusion, String categorie, String realisateur, String image_affiche) {
+    public Film(int id, String titre, String duration, String description, String date_de_sortie, String date_fin_diffusion, String categorie, String realisateur, String image_affiche, String etat_film) {
         this.id = id;
         this.titre = titre;
         this.duration = duration;
@@ -37,6 +40,15 @@ public class Film {
         this.categorie = categorie;
         this.realisateur = realisateur;
         this.image_affiche = image_affiche;
+        this.etat_film = etat_film;
+    }
+
+    public String getEtat_film() {
+        return etat_film;
+    }
+
+    public void setEtat_film(String etat_film) {
+        this.etat_film = etat_film;
     }
 
     public int getId() {
@@ -55,11 +67,11 @@ public class Film {
         this.titre = titre;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

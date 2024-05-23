@@ -42,7 +42,7 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:id="@+id/imageInstanceFilm"
+                android:id="@+id/imageProfil"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"

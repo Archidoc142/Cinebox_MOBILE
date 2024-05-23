@@ -358,7 +358,6 @@
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:visibility="gone"/>
-                        android:textSize="24sp" />
 
                 </LinearLayout>
 
