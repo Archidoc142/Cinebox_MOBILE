@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         {
             //intent = new Intent(MainActivity.this, LoginActivity.class);
 
-            intent = new Intent(MainActivity.this, InscriptionActivity.class);
+            intent = new Intent(MainActivity.this, PanierActivity.class);
         }
 
         finish();

@@ -10,4 +10,20 @@ public class GrignotineQuantite
         this.grignotine = grignotine;
         this.quantite = quantite;
     }
+
+    public Grignotine getGrignotine() {
+        return grignotine;
+    }
+
+    public void setGrignotine(Grignotine grignotine) {
+        this.grignotine = grignotine;
+    }
+
+    public int getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(int quantite) {
+        this.quantite = quantite;
+    }
 }

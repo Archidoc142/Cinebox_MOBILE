@@ -440,7 +440,7 @@ public class APIRequests
                 double tvq = achatJ.getDouble("tvq");
                 double montantFinal = achatJ.getDouble("total_final");
 
-                ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
+               // ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
                 int idBillet = billetJ.getInt("id_billet");
 
                 String seance = billetJ.getString("seance");
@@ -449,7 +449,7 @@ public class APIRequests
                 float montantBillet = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");
 
-                ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
+               // ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
                 /*int idGrignotine = billetJ.getInt("id_billet");
 
                 String marque = billetJ.getString("seance");
@@ -458,9 +458,9 @@ public class APIRequests
                 float prix = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");*/
 
-                billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
-                grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
-                Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
+               // billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
+               // grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
+                ///Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
             }
             else
             {
@@ -497,9 +497,9 @@ public class APIRequests
                 if (!Panier.Snack_PanierList.isEmpty()) {
                     int i = 0;
 
-                    for (Grignotine g : Panier.Snack_PanierList) {
+                    for (GrignotineQuantite g : Panier.Snack_PanierList) {
                         JSONObject billet = new JSONObject();
-                        billet.put("id_grignotine", g.getId());
+                        billet.put("id_grignotine", g.getGrignotine().getId());
 
                         // en attente de la complétion du panier pour contenir les quantités des snacks
 

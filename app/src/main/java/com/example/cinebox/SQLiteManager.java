@@ -73,7 +73,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
         db.execSQL(
                 "CREATE TABLE " + TABLE_ACHATS + " (" +
-                        "id INTEGER, " +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "date" + " TEXT," +
                         "total_brut" + " REAL," +
                         "tps" + " REAL," +
@@ -120,7 +120,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put("id", achat.getId());
+        //contentValues.put("id", achat.getId());
         contentValues.put("date", achat.getDate());
         contentValues.put("total_brut", achat.getmontantBrut());
         contentValues.put("tps", achat.getTps());
@@ -240,8 +240,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
                 while (result.moveToNext()) {
                     String date = result.getString(1);
                     float montant = result.getFloat(2);
-                    Achat achat = new Achat(date, montant);
-                    Achat.HistoriqueAchats.add(achat);
+          //          Achat achat = new Achat(date, montant);
+           //         Achat.HistoriqueAchats.add(achat);
                 }
             }
         }

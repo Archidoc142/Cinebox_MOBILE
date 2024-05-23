@@ -52,15 +52,15 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
             formatArray.add(b.getTarif().getCategorie());
         }
 
-        Grignotine gr = new Grignotine(2, "mmmarque", "cccategorie", "ffformat", 112.3, "12200", "lll image");
+        //Grignotine gr = new Grignotine(2, "mmmarque", "cccategorie", "ffformat", 112.3, "12200", "lll image");
         //Panier.Snack_PanierList.add(gr);
 
-        for (Grignotine g : Panier.Snack_PanierList) {
-            idArray.add(g.getId());
-            nomArray.add(g.getMarque());
-            prixArray.add(String.valueOf(g.getPrix_vente()));
-            typeArray.add(g.getCategorie());
-            formatArray.add(g.getFormat());
+        for (GrignotineQuantite g : Panier.Snack_PanierList) {
+            idArray.add(g.getGrignotine().getId());
+            nomArray.add(g.getGrignotine().getMarque());
+            prixArray.add(String.valueOf(g.getGrignotine().getPrix_vente()));
+            typeArray.add(g.getGrignotine().getCategorie());
+            formatArray.add(g.getGrignotine().getFormat());
         }
 
         this.context = context;
@@ -98,7 +98,6 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView supp;
-
         TextView nom, prix, type, format, total, tps, tvq, vraitotal;
 
 
@@ -119,6 +118,7 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
             supp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     //supprimer cet éélément
                 }
             });

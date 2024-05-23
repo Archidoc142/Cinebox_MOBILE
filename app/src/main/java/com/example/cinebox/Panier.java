@@ -4,31 +4,45 @@ import java.util.ArrayList;
 
 public class Panier {
     public static ArrayList<Billet> Billet_PanierList = new ArrayList<Billet>();
+    public static ArrayList<GrignotineQuantite> Snack_PanierList = new ArrayList<GrignotineQuantite>();
 
-    /* TODO: Remplacer Grignotine par GrignotineQuantite et adapter le code
-             (pour conserver les quantités des snacks pour l'API)
-
-                            vvvvvvvvvv                               */
-    public static ArrayList<Grignotine> Snack_PanierList = new ArrayList<Grignotine>();
+    private static double TPS = 0.05;
+    private static double TVQ = 0.09975;
 
     public static double getTotal() {
         double total = 0;
 
         for(Billet b: Panier.Billet_PanierList) {
-            //total += b.getMontant_achat();
+            total += b.getMontant();
         }
 
-        for(Grignotine g: Panier.Snack_PanierList) {
-            total += g.getPrix_vente();
+        for(GrignotineQuantite g: Panier.Snack_PanierList) {
+            total += g.getGrignotine().getPrix_vente();
         }
 
         return total;
+    }
+
+    public static double getTPS() {
+        return (getTotal() * TPS);
+    }
+
+    public static double getTVQ() {
+        return (getTotal() * TVQ);
+    }
+
+    public static double getTotalFinal() {
+        return  getTotal() * (TPS + TVQ);
     }
 
     public static void payerPanier() {
         //ajouter à la BD
         //vider les listes
         //faire un Toast "paiement effectué"
+
+       // Achat achatPanier = new Achat();
+
+
     }
 
     public static void viderPanier() {

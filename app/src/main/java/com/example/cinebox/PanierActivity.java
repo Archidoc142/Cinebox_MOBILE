@@ -57,10 +57,11 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
 
         //(int id, String marque, String categorie, String format, double prix_vente, String qte_disponible, String image) {
 
-        // Grignotine g = new Grignotine(1, "marque", "categorie", "format", 12.3, "100", "une image");
-        // Panier.Snack_PanierList.add(g);
+        Grignotine g = new Grignotine(1, "marque", "categorie", "format", 12.3, "100", "une image");
+        GrignotineQuantite gq = new GrignotineQuantite(g, 2);
+        Panier.Snack_PanierList.add(gq);
 
-        if(Panier.Snack_PanierList.isEmpty() && Panier.Billet_PanierList.isEmpty()) {
+        if(Panier.isEmpty()) {
             temptxt.setVisibility(View.INVISIBLE);
             bottomPanier.setVisibility(View.GONE);
 
@@ -71,9 +72,9 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
 
             videtxt.setVisibility(View.GONE);
 
-            RecyclerView recyclerView = findViewById(R.id.recycler_panier);
-            PanierAdapter adapter = new PanierAdapter(PanierActivity.this);
-            recyclerView.setAdapter(adapter);
+            //RecyclerView recyclerView = findViewById(R.id.recycler_panier);
+            //PanierAdapter adapter = new PanierAdapter(PanierActivity.this);
+            //recyclerView.setAdapter(adapter);
             //recyclerView.setLayoutManager(new LinearLayoutManager(PanierActivity.this));
 
             payer.setOnClickListener(new View.OnClickListener()
