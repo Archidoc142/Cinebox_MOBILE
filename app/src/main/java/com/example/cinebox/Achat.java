@@ -16,17 +16,18 @@
 
 package com.example.cinebox;
 
+import android.content.Context;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Achat
 {
-    private static double TPS = 0.05;
-    private static double TVQ = 0.09975;
-
     public static ArrayList<Achat> HistoriqueAchats = new ArrayList<Achat>();
 
     private ArrayList<Billet> billetsAchat;
-    private ArrayList<Grignotine> grignotinesAchat;
+    private ArrayList<GrignotineQuantite> grignotinesAchat;
 
     private int id;
     private String date;
@@ -42,14 +43,31 @@ public class Achat
 
     }
 
-    public Achat(ArrayList<Billet> billets, ArrayList<Grignotine> grignotines)
+    public Achat(Context context)
+    {
+        if(!Panier.isEmpty()) {
+            billetsAchat = Panier.Billet_PanierList;
+            grignotinesAchat = Panier.Snack_PanierList;
+
+            this.date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            this.montantBrut = Panier.getTotal();
+            this.tps = Panier.getTPS();
+            this.tvq = Panier.getTVQ();
+            this.montantFinal = Panier.getTotalFinal();
+
+            SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+            sqLiteManager.insertAchatToDB(this);
+        }
+    }
+
+    public Achat(ArrayList<Billet> billets, ArrayList<GrignotineQuantite> grignotinesqte)
     {
         billetsAchat = billets;
-        grignotinesAchat = grignotines;
+        grignotinesAchat = grignotinesqte;
     }
 
     // constructeur importation depuis BD
-    public Achat(int id, String date, double montantBrut, double tps, double tvq, double montantFinal, ArrayList<Billet> billetsAchat, ArrayList<Grignotine> grignotinesAchat)
+    public Achat(int id, String date, double montantBrut, double tps, double tvq, double montantFinal, ArrayList<Billet> billetsAchat, ArrayList<GrignotineQuantite> grignotinesAchat)
     {
         this.id = id;
         this.date = date;
@@ -68,13 +86,14 @@ public class Achat
         montantBrut = 0;
     }*/
 
+    /*
     public Achat(String date, float montantBrut) {
         this.date = date;
         this.montantBrut = montantBrut;
         this.tps = montantBrut * TPS;
         this.tvq = montantBrut * TVQ;
         this.montantFinal = this.tps + this.tvq;
-    }
+    }*/
 
     public int getId() {
         return id;
