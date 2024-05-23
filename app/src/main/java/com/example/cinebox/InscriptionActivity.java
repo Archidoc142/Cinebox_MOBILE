@@ -92,42 +92,56 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
 
             EditText mot_de_passe = findViewById(R.id.mot_de_passe);
             EditText confirmation = findViewById(R.id.confirmation);
+            EditText nom = findViewById(R.id.nom);
+            EditText prenom = findViewById(R.id.prenom);
+            EditText username = findViewById(R.id.username);
+            EditText courriel = findViewById(R.id.courriel);
+            EditText telephone = findViewById(R.id.telephone);
 
-            if (mot_de_passe.getText().toString().equals(confirmation.getText().toString())) {
-                EditText nom = findViewById(R.id.nom);
-                EditText prenom = findViewById(R.id.prenom);
-                EditText username = findViewById(R.id.username);
-                EditText courriel = findViewById(R.id.courriel);
-                EditText telephone = findViewById(R.id.telephone);
+            if (!mot_de_passe.getText().toString().isEmpty() &&
+                    !confirmation.getText().toString().isEmpty() &&
+                    !nom.getText().toString().isEmpty() &&
+                    !prenom.getText().toString().isEmpty() &&
+                    !username.getText().toString().isEmpty() &&
+                    !courriel.getText().toString().isEmpty() &&
+                    !telephone.getText().toString().isEmpty()) {
 
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("nom_utilisateur", username.getText().toString());
-                    data.put("nom_famille", nom.getText().toString());
-                    data.put("prenom", prenom.getText().toString());
-                    data.put("courriel", courriel.getText().toString());
-                    data.put("telephone", telephone.getText().toString());
-                    data.put("mdp", mot_de_passe.getText().toString());
+                if (mot_de_passe.getText().toString().equals(confirmation.getText().toString())) {
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            boolean response = APIRequests.addUser(data);
-                            System.out.println("Response: " + response);
+                    JSONObject data = new JSONObject();
+                    try {
+                        data.put("nom_utilisateur", username.getText().toString());
+                        data.put("nom_famille", nom.getText().toString());
+                        data.put("prenom", prenom.getText().toString());
+                        data.put("courriel", courriel.getText().toString());
+                        data.put("telephone", telephone.getText().toString());
+                        data.put("mdp", mot_de_passe.getText().toString());
 
-                            if (response) {
-                                APIRequests.postLoginUser(courriel.getText().toString(), mot_de_passe.getText().toString(), InscriptionActivity.this);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                boolean response = APIRequests.addUser(data);
+                                System.out.println("Response: " + response);
+
+                                if (response) {
+                                    APIRequests.postLoginUser(courriel.getText().toString(), mot_de_passe.getText().toString(), InscriptionActivity.this);
+                                }
                             }
-                        }
-                    }).start();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        }).start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    getLocalisation();
+                } else {
+                    Toast.makeText(InscriptionActivity.this, "Not the same password", Toast.LENGTH_SHORT).show();
                 }
 
-                getLocalisation();
             } else {
-                Toast.makeText(InscriptionActivity.this, "Not the same password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(InscriptionActivity.this, "Un ou plusieurs champs vide!!!", Toast.LENGTH_SHORT).show();
             }
+
+
 
         } else if (v.getId() == R.id.filmsNav) {
             Intent intent = new Intent(InscriptionActivity.this, FilmsActivity.class);

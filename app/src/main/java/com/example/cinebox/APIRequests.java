@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -191,6 +192,8 @@ public class APIRequests
                         response.append(inputLine);
                     }
                     in.close();
+
+                    System.out.println(response);
 
                     JSONObject json = new JSONObject(response.toString());
                     String token = json.getString("token");
@@ -380,20 +383,8 @@ public class APIRequests
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK || true) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                JSONObject json = new JSONObject(response.toString());
-                System.out.println(json);
-
-                return !true;
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
             } else {
                 System.out.println("POST request not worked");
             }
@@ -401,11 +392,10 @@ public class APIRequests
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
         return false;
     }
+
     private static void getAchats(String token, Context context)
     {
         try
