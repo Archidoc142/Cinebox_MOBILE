@@ -14,16 +14,22 @@ package com.example.cinebox;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +42,8 @@ import org.json.JSONObject;
 public class InscriptionActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int CAMERA_PERM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE = 102;
+    private static final int REQUEST_GPS = 1;
+    LocationManager locationManager;
     Bitmap bmp = null;
 
     @Override
@@ -115,6 +123,8 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                getLocalisation();
             } else {
                 Toast.makeText(InscriptionActivity.this, "Not the same password", Toast.LENGTH_SHORT).show();
             }
@@ -147,6 +157,69 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                 startActivity(intent);
             }
         }
+    }
+
+    private void getLocalisation() {
+        //PERMISSION DU GPS -----------
+        ActivityCompat.requestPermissions(this, new String[]
+                {android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_GPS);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //vérif si le GPS est actif ou non
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // activer le gps
+            activerGPS();
+        }
+
+        //Vérif permissions à nouveau
+        if(ActivityCompat.checkSelfPermission(InscriptionActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(InscriptionActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]
+                    {android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_GPS);
+        }
+        else {
+            Location locationGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location locationNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location locationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+            if(locationGps != null) {
+                double Slat = locationGps.getLatitude();
+                double Slon = locationGps.getLongitude();
+                Toast.makeText(this, Slat + " x " + Slon, Toast.LENGTH_SHORT).show();
+            }
+            else if(locationNetwork != null) {
+                double Slat = locationNetwork.getLatitude();
+                double Slon = locationNetwork.getLongitude();
+                Toast.makeText(this, Slat + " x " + Slon, Toast.LENGTH_SHORT).show();
+            }
+            else if(locationPassive != null) {
+                double Slat = locationPassive.getLatitude();
+                double Slon = locationPassive.getLongitude();
+                Toast.makeText(this, Slat + " x " + Slon, Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Location introuvable", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void activerGPS() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Activer le GPS").setCancelable(false).setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        }).setNegativeButton("ANNULER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void askCameraPermissions() {
