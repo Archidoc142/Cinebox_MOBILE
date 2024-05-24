@@ -56,7 +56,7 @@ public class Achat
             this.montantFinal = Panier.getTotalFinal();
 
             SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
-            sqLiteManager.insertAchatToDB(this);
+            sqLiteManager.insertAchat(this);
         }
     }
 

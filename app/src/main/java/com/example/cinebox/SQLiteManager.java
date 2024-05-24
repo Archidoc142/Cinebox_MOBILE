@@ -118,7 +118,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {/* the cake is lie*/}
 
-    public void ajouterAchat(Achat achat)
+    public void insertAchat(Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -272,7 +272,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     public void addAchat(Achat achat)
     {
-        ajouterAchat(achat);
+        insertAchat(achat);
 
         if(!achat.getBilletsAchat().isEmpty())
         {
@@ -314,7 +314,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put("
+        //contentValues.put("
 
         db.insert(TABLE_USER, null, contentValues);
     }

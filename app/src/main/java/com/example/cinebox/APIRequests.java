@@ -87,6 +87,7 @@ public class APIRequests
                     in.close();
 
                     System.out.println(response);
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray movies = json.getJSONArray("data");
@@ -132,7 +133,7 @@ public class APIRequests
                         response.append(inputLine);
                     }
                     in.close();
-
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray snacks = json.getJSONArray("data");
@@ -191,10 +192,12 @@ public class APIRequests
                     StringBuffer response = new StringBuffer();
 
                     while ((inputLine = in.readLine()) != null) {
+                        System.out.println(inputLine);
                         response.append(inputLine);
                     }
                     in.close();
-
+                    System.out.println(response.toString());
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
                     String token = json.getString("token");
                     getUser(token, context);
@@ -236,10 +239,12 @@ public class APIRequests
                 StringBuffer response = new StringBuffer();
 
                 while ((inputLine = in.readLine()) != null) {
+                    System.out.println(inputLine);
                     response.append(inputLine);
                 }
                 in.close();
-
+                System.out.println(response);
+                response = fixJSON(response);
                 JSONObject userJ = new JSONObject(response.toString());
 
                 int id = userJ.getInt("id");
@@ -303,7 +308,7 @@ public class APIRequests
                         response.append(inputLine);
                     }
                     in.close();
-
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray achats = json.getJSONArray("data");
@@ -345,7 +350,7 @@ public class APIRequests
                         response.append(inputLine);
                     }
                     in.close();
-
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray tarifs = json.getJSONArray("data");
@@ -448,9 +453,9 @@ public class APIRequests
                 float prix = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");*/
 
-                billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
+                //billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
                 grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
-                Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
+                //Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
             }
             else
             {
@@ -502,5 +507,17 @@ public class APIRequests
                 e.printStackTrace();
             }
         }
+    }
+
+    public static StringBuffer fixJSON(StringBuffer response)
+    {
+        // Pourquoi.
+        String lastChar = response.substring(response.length() - 1);
+        if(lastChar != "}")
+        {
+            response.append("}");
+        }
+        
+        return response;
     }
 }
