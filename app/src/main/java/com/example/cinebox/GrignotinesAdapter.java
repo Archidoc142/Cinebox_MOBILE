@@ -79,6 +79,7 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
                 //int oldqte = 0; || GrignotineQuantite.grignotineQuantiteList.get(position).getQuantite() == (oldqte + 1) //dans if
                 //boolean dansListe = false;
 
+
                 Panier.Snack_PanierList.add(new GrignotineQuantite(Grignotine.GrignotineOnArrayList.get(position), 1));
 
                 if(Panier.Snack_PanierList.size() == (oldsize + 1)) {

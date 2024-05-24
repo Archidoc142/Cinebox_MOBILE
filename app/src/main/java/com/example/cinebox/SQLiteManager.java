@@ -7,8 +7,10 @@
  * Date Nom Approuvé
  * =========================================================
  * Historique de modifications :
- * Date Nom Description
- * =========================================================****************************************/
+ * Date         Nom     Description
+ * =========================================================
+ * 23/05/2024   Arthur  Save user into DB
+ * ****************************************/
 
 package com.example.cinebox;
 
@@ -22,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class SQLiteManager extends SQLiteOpenHelper {
 
@@ -115,12 +118,12 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {/* the cake is lie*/}
 
-    public void insertAchatToDB(Achat achat)
+    public void insertAchat(Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        //contentValues.put("id", achat.getId());
+        contentValues.put("id", achat.getId());
         contentValues.put("date", achat.getDate());
         contentValues.put("total_brut", achat.getmontantBrut());
         contentValues.put("tps", achat.getTps());
@@ -225,7 +228,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("courriel", utilisateur.getCourriel());
         contentValues.put("telephone", utilisateur.getTelephone());
         //contentValues.put("mot_de_passe", utilisateur.getMotDePasse());
-        //contentValues.put("image", utilisateur.getImage());
+        contentValues.put("image", utilisateur.bitmapToArray());
 
         sqLiteDatabase.update(TABLE_USER, contentValues, "id" + " =?", new String[]{String.valueOf(utilisateur.getId())});
     }
@@ -248,4 +251,75 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
         getUserFromDB();
     }
+
+    public void insertSnacks() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_SNACKS);
+
+        for (Grignotine g: Grignotine.GrignotineOnArrayList) {
+            ContentValues val = new ContentValues();
+            val.put("id", g.getId());
+            val.put("prix_vente", g.getPrix_vente());
+            val.put("quantite_disponible", g.getQte_disponible());
+            val.put("categorie", g.getCategorie());
+            val.put("format", g.getFormat());
+            val.put("marque", g.getMarque());
+            val.put("image", g.getImage());
+
+            db.insert(TABLE_SNACKS, null, val);
+        }
+    }
+
+    public void insertAchatFromPanier(Achat achat)
+    {
+        insertAchat(achat);
+
+        if(!achat.getBilletsAchat().isEmpty())
+        {
+            for(Billet b: achat.getBilletsAchat())
+            {
+                insertBillet(b, achat);
+            }
+        }
+
+        if(!achat.getGrignotinesAchat().isEmpty())
+        {
+            for(GrignotineQuantite gq: achat.getGrignotinesAchat())
+            {
+                insertGrignotineQte(gq, achat);
+            }
+        }
+    }
+
+    public void insertBillet(Billet billet, Achat achat)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("id_achat", achat.getId());
+        contentValues.put("seance", billet.getSeance().getId());
+        contentValues.put("film", billet.getSeance().getFilm().getId());
+        contentValues.put("montant", billet.getMontant());
+        contentValues.put("type_billet", billet.getTarif().getCategorie());
+
+        db.insert(TABLE_USER, null, contentValues);
+        //contentValues.put("id", utilisateur.getId());
+    }
+
+    public void insertGrignotineQte(GrignotineQuantite gq, Achat achat)
+    {
+        Grignotine g = gq.getGrignotine();
+        int qte = gq.getQuantite();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("id_achat", achat.getId());
+        contentValues.put("id_grignotine", g.getId());
+        contentValues.put("prix_unitaire", g.getPrix_vente());
+        contentValues.put("quantite", qte);
+
+        db.insert(TABLE_ACHAT_SNACK, null, contentValues);
+    }
+
 }

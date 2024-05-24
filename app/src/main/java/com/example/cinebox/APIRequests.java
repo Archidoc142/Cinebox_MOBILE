@@ -31,13 +31,15 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
 public class APIRequests
 {
-    private static final String apiURL = "https://cinebox.taila09363.ts.net/api/";
+    private static final String apiURL = "http://20.121.131.16/api/";
     private static final String getFilmsURL = apiURL + "films";
     private static final String getSnacksURL = apiURL + "snacks";
     private static final String postLoginURL = apiURL + "token";
@@ -45,6 +47,8 @@ public class APIRequests
     private static final String addUserURL = apiURL + "client/ajout";
     private static final String getTarifsURL = apiURL + "tarifs";
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
+    private static final String getNextAchatIdURL = apiURL + "vente/nextId";
+    private static final String postVenteAjoutURL = apiURL + "vente/ajout";
 
     public class TokenValidRunnable implements Runnable
     {
@@ -86,6 +90,7 @@ public class APIRequests
                     in.close();
 
                     System.out.println(response);
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray movies = json.getJSONArray("data");
@@ -113,7 +118,7 @@ public class APIRequests
         }
     }
 
-    public static void getSnacks()
+    public static void getSnacks(Context context)
     {
         if (Grignotine.GrignotineOnArrayList.size() == 0){
             try {
@@ -131,7 +136,7 @@ public class APIRequests
                         response.append(inputLine);
                     }
                     in.close();
-
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray snacks = json.getJSONArray("data");
@@ -148,6 +153,8 @@ public class APIRequests
                         String image = snack.getString("image");
 
                         Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
+                        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+                        sqLiteManager.insertSnacks();
                     }
                 }
             } catch (Exception e) {
@@ -188,10 +195,12 @@ public class APIRequests
                     StringBuffer response = new StringBuffer();
 
                     while ((inputLine = in.readLine()) != null) {
+                        System.out.println(inputLine);
                         response.append(inputLine);
                     }
                     in.close();
-
+                    System.out.println(response.toString());
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
                     String token = json.getString("token");
                     getUser(token, context);
@@ -233,10 +242,12 @@ public class APIRequests
                 StringBuffer response = new StringBuffer();
 
                 while ((inputLine = in.readLine()) != null) {
+                    System.out.println(inputLine);
                     response.append(inputLine);
                 }
                 in.close();
-
+                System.out.println(response);
+                response = fixJSON(response);
                 JSONObject userJ = new JSONObject(response.toString());
 
                 int id = userJ.getInt("id");
@@ -283,7 +294,32 @@ public class APIRequests
         }
     }
 
-    public static void getHistoriqueAchat() {
+    public static void getNextAchatId()
+    {
+        try
+        {
+            URL obj = new URL(getUserURL);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK)
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                int id = Integer.getInteger(in.readLine());
+                Achat.incrementNextAchatId();
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getHistoriqueAchat()
+    {
         if (Achat.HistoriqueAchats.size() == 0){
             try {
                 URL obj = new URL(getHistoriqueAchatURL);
@@ -300,7 +336,7 @@ public class APIRequests
                         response.append(inputLine);
                     }
                     in.close();
-
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray achats = json.getJSONArray("data");
@@ -315,7 +351,7 @@ public class APIRequests
                         //create billet object
                         //create grignotine vente object
                         //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
-                     //   Achat.HistoriqueAchats.add(new Achat( "none", montant));
+                        //Achat.HistoriqueAchats.add(new Achat( "none", montant));
                     }
                 }
             } catch (Exception e) {
@@ -342,7 +378,7 @@ public class APIRequests
                         response.append(inputLine);
                     }
                     in.close();
-
+                    response = fixJSON(response);
                     JSONObject json = new JSONObject(response.toString());
 
                     JSONArray tarifs = json.getJSONArray("data");
@@ -380,20 +416,8 @@ public class APIRequests
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK || true) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                JSONObject json = new JSONObject(response.toString());
-                System.out.println(json);
-
-                return !true;
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
             } else {
                 System.out.println("POST request not worked");
             }
@@ -401,11 +425,10 @@ public class APIRequests
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
         return false;
     }
+
     private static void getAchats(String token, Context context)
     {
         try
@@ -440,7 +463,7 @@ public class APIRequests
                 double tvq = achatJ.getDouble("tvq");
                 double montantFinal = achatJ.getDouble("total_final");
 
-               // ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
+                ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
                 int idBillet = billetJ.getInt("id_billet");
 
                 String seance = billetJ.getString("seance");
@@ -449,7 +472,7 @@ public class APIRequests
                 float montantBillet = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");
 
-               // ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
+                ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
                 /*int idGrignotine = billetJ.getInt("id_billet");
 
                 String marque = billetJ.getString("seance");
@@ -458,9 +481,9 @@ public class APIRequests
                 float prix = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");*/
 
-               // billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
-               // grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
-                ///Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
+                //billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
+                grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
+                //Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
             }
             else
             {
@@ -473,44 +496,87 @@ public class APIRequests
         }
     }
 
-    public static void postVente()
+    public static boolean postVente()
     {
-        if(!Panier.isEmpty()) {
-            try {
+        if(!Panier.isEmpty() && Utilisateur.getInstance() != null)
+        {
+            try
+            {
                 JSONObject body = new JSONObject();
 
                 JSONObject billets = new JSONObject();
                 JSONObject grignotines = new JSONObject();
 
-                if (!Panier.Billet_PanierList.isEmpty()) {
+                if (!Panier.Billet_PanierList.isEmpty())
+                {
                     int i = 0;
-
-                    for (Billet b : Panier.Billet_PanierList) {
+                    for (Billet b : Panier.Billet_PanierList)
+                    {
                         JSONObject billet = new JSONObject();
                         billet.put("id_tarif", b.getTarif().getId());
                         billet.put("id_seance", b.getSeance().getId());
 
                         billets.put(Integer.toString(i), billet);
                     }
+
+                    body.put("billets", billets);
                 }
 
-                if (!Panier.Snack_PanierList.isEmpty()) {
+                if (!Panier.Snack_PanierList.isEmpty())
+                {
                     int i = 0;
+                    for (GrignotineQuantite g : Panier.Snack_PanierList)
+                    {
+                        JSONObject grignotineQte = new JSONObject();
+                        grignotineQte.put("id_grignotine", g.getGrignotine().getId());
+                        grignotineQte.put("id_quantite", g.getQuantite());
 
-                    for (GrignotineQuantite g : Panier.Snack_PanierList) {
-                        JSONObject billet = new JSONObject();
-                        billet.put("id_grignotine", g.getGrignotine().getId());
-
-                        // en attente de la complétion du panier pour contenir les quantités des snacks
-
-                        // billet.put("id_seance", b.getSeance().getId());
-
-                        billets.put(Integer.toString(i), billet);
+                        grignotines.put(Integer.toString(i), grignotineQte);
                     }
+
+                    body.put("grignotines", grignotines);
                 }
-            } catch (JSONException e) {
+
+                URL obj = new URL(postVenteAjoutURL);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", "Bearer " + Utilisateur.getInstance().getToken());
+
+                con.setDoOutput(true);
+
+                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                writer.write(body.toString());
+                writer.flush();
+                writer.close();
+
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK)
+                {
+                    return true;
+                }
+
+                return false;
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        return false;
+    }
+
+    public static StringBuffer fixJSON(StringBuffer response)
+    {
+        // Pourquoi.
+        String lastChar = response.substring(response.length() - 1);
+        if(lastChar != "}")
+        {
+            response.append("}");
+        }
+        
+        return response;
     }
 }

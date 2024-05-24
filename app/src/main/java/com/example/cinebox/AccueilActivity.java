@@ -101,8 +101,8 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void run()
             {
-                //APIRequests.getFilms();
-                //APIRequests.getSnacks();
+                APIRequests.getFilms();
+                APIRequests.getSnacks(AccueilActivity.this);
 
                 runOnUiThread(new Runnable()
                 {
@@ -137,7 +137,7 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent(AccueilActivity.this, GrignotinesActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
-            //Intent intent = new Intent(AccueilActivity.this, TarifsActivity.class);
+            //////////////////////////////////////////////////////////////////////////Intent intent = new Intent(AccueilActivity.this, TarifsActivity.class);
             Intent intent = new Intent(AccueilActivity.this, PanierActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.imageProfil) {

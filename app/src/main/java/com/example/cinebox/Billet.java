@@ -25,6 +25,15 @@ public class Billet
     private Seance seance;
     private Achat achat;
 
+    public Billet(int id, float montant, Tarif tarif, Seance seance, Achat achat)
+    {
+        this.id = id;
+        this.montant = montant;
+        this.tarif = tarif;
+        this.seance = seance;
+        this.achat = achat;
+    }
+
     public Tarif getTarif() {
         return tarif;
     }

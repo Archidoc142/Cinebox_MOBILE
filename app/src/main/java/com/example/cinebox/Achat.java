@@ -25,6 +25,7 @@ import java.util.Date;
 public class Achat
 {
     public static ArrayList<Achat> HistoriqueAchats = new ArrayList<Achat>();
+    private static int nextAchatId = 0;
 
     private ArrayList<Billet> billetsAchat;
     private ArrayList<GrignotineQuantite> grignotinesAchat;
@@ -39,8 +40,6 @@ public class Achat
     public static void ajouterAchatPanier()
     {
         Achat achatPanier = new Achat(Panier.Billet_PanierList, Panier.Snack_PanierList);
-
-
     }
 
     public Achat(Context context)
@@ -49,6 +48,7 @@ public class Achat
             billetsAchat = Panier.Billet_PanierList;
             grignotinesAchat = Panier.Snack_PanierList;
 
+            this.id = nextAchatId;
             this.date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
             this.montantBrut = Panier.getTotal();
             this.tps = Panier.getTPS();
@@ -56,7 +56,9 @@ public class Achat
             this.montantFinal = Panier.getTotalFinal();
 
             SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
-            sqLiteManager.insertAchatToDB(this);
+            sqLiteManager.insertAchat(this);
+
+            nextAchatId++;
         }
     }
 
@@ -129,5 +131,39 @@ public class Achat
 
     public double getMontantFinal() {
         return montantFinal;
+    }
+
+    public ArrayList<Billet> getBilletsAchat() {
+        return billetsAchat;
+    }
+
+    public ArrayList<GrignotineQuantite> getGrignotinesAchat() {
+        return grignotinesAchat;
+    }
+
+    public static int getNextAchatId()
+    {
+        return nextAchatId;
+    }
+
+    public static void setNextAchatId(int id)
+    {
+        nextAchatId = id;
+    }
+
+    public static void incrementNextAchatId()
+    {
+        nextAchatId++;
+    }
+
+    public void envoyerAchat(Context context)
+    {
+        SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
+        sql.insertAchatFromPanier(this);
+
+        if(APIRequests.postVente())
+        {
+            incrementNextAchatId();
+        }
     }
 }

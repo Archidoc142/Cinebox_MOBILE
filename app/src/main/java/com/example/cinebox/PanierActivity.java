@@ -58,13 +58,6 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
         payer = findViewById(R.id.btn_payerPanier);
         vider = findViewById(R.id.btn_viderPanier);
 
-        Grignotine g = new Grignotine(1, "marque", "boisson", "format", 12.3, "100", "une image");
-        Grignotine g1 = new Grignotine(1, "hello", "categorie", "format", 212.3, "100", "une image");
-        GrignotineQuantite gq = new GrignotineQuantite(g, 2);
-        GrignotineQuantite gq1 = new GrignotineQuantite(g1, 2);
-        Panier.Snack_PanierList.add(gq);
-        Panier.Snack_PanierList.add(gq1);
-
         if(Panier.isEmpty()) {
             temptxt.setVisibility(View.INVISIBLE);
             bottomPanier.setVisibility(View.GONE);
@@ -98,7 +91,7 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
                 public void onClick(View v)
                 {
                     Panier.viderPanier();
-                    //recreate();
+                    recreate();
                 }
             });
         }
@@ -106,16 +99,16 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
 
     private void putTotal() {
         total = (TextView) findViewById(R.id.avanttaxe);
-        total.setText(String.format("%.2f", Panier.getTotal()) + "$");
+        total.setText("SOUS-TOTAL : " + String.format("%.2f", Panier.getTotal()) + "$");
 
         tps = (TextView) findViewById(R.id.tpsPanier);
-        tps.setText(String.format("%.2f", Panier.getTPS()) + "$");
+        tps.setText("TPS : " + String.format("%.2f", Panier.getTPS()) + "$");
 
         tvq = (TextView) findViewById(R.id.tvqPanier);
-        tvq.setText(String.format("%.2f", Panier.getTVQ()) + "$");
+        tvq.setText("TVQ : " + String.format("%.2f", Panier.getTVQ()) + "$");
 
         vraitotal = (TextView) findViewById(R.id.panierTotal);
-        vraitotal.setText(String.format("%.2f", Panier.getTotalFinal())  + "$");
+        vraitotal.setText("TOTAL : " + String.format("%.2f", Panier.getTotalFinal())  + "$");
     }
 
     @Override
