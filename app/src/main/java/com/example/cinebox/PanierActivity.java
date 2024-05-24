@@ -82,7 +82,7 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onClick(View v)
                 {
-                    Panier.payerPanier();
+                    Panier.payerPanier(PanierActivity.this);
                 }
             });
 

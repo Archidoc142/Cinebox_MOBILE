@@ -31,6 +31,7 @@ import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +47,8 @@ public class APIRequests
     private static final String addUserURL = apiURL + "client/ajout";
     private static final String getTarifsURL = apiURL + "tarifs";
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
+    private static final String getNextAchatIdURL = apiURL + "vente/nextId";
+    private static final String postVenteAjoutURL = apiURL + "vente/ajout";
 
     public class TokenValidRunnable implements Runnable
     {
@@ -291,7 +294,32 @@ public class APIRequests
         }
     }
 
-    public static void getHistoriqueAchat() {
+    public static void getNextAchatId()
+    {
+        try
+        {
+            URL obj = new URL(getUserURL);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+
+            int responseCode = con.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK)
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+                int id = Integer.getInteger(in.readLine());
+                Achat.incrementNextAchatId();
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getHistoriqueAchat()
+    {
         if (Achat.HistoriqueAchats.size() == 0){
             try {
                 URL obj = new URL(getHistoriqueAchatURL);
@@ -468,45 +496,76 @@ public class APIRequests
         }
     }
 
-    public static void postVente()
+    public static boolean postVente()
     {
-        if(!Panier.isEmpty()) {
-            try {
+        if(!Panier.isEmpty() && Utilisateur.getInstance() != null)
+        {
+            try
+            {
                 JSONObject body = new JSONObject();
 
                 JSONObject billets = new JSONObject();
                 JSONObject grignotines = new JSONObject();
 
-                if (!Panier.Billet_PanierList.isEmpty()) {
+                if (!Panier.Billet_PanierList.isEmpty())
+                {
                     int i = 0;
-
-                    for (Billet b : Panier.Billet_PanierList) {
+                    for (Billet b : Panier.Billet_PanierList)
+                    {
                         JSONObject billet = new JSONObject();
                         billet.put("id_tarif", b.getTarif().getId());
                         billet.put("id_seance", b.getSeance().getId());
 
                         billets.put(Integer.toString(i), billet);
                     }
+
+                    body.put("billets", billets);
                 }
 
-                if (!Panier.Snack_PanierList.isEmpty()) {
+                if (!Panier.Snack_PanierList.isEmpty())
+                {
                     int i = 0;
+                    for (GrignotineQuantite g : Panier.Snack_PanierList)
+                    {
+                        JSONObject grignotineQte = new JSONObject();
+                        grignotineQte.put("id_grignotine", g.getGrignotine().getId());
+                        grignotineQte.put("id_quantite", g.getQuantite());
 
-                    for (GrignotineQuantite g : Panier.Snack_PanierList) {
-                        JSONObject billet = new JSONObject();
-                        billet.put("id_grignotine", g.getGrignotine().getId());
-
-                        // en attente de la complétion du panier pour contenir les quantités des snacks
-
-                        // billet.put("id_seance", b.getSeance().getId());
-
-                        billets.put(Integer.toString(i), billet);
+                        grignotines.put(Integer.toString(i), grignotineQte);
                     }
+
+                    body.put("grignotines", grignotines);
                 }
-            } catch (JSONException e) {
+
+                URL obj = new URL(postVenteAjoutURL);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                con.setRequestProperty("Accept", "application/json");
+                con.setRequestProperty("Authorization", "Bearer " + Utilisateur.getInstance().getToken());
+
+                con.setDoOutput(true);
+
+                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                writer.write(body.toString());
+                writer.flush();
+                writer.close();
+
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK)
+                {
+                    return true;
+                }
+
+                return false;
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        return false;
     }
 
     public static StringBuffer fixJSON(StringBuffer response)

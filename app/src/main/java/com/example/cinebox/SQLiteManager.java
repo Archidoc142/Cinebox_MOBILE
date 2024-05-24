@@ -123,7 +123,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        //contentValues.put("id", achat.getId());
+        contentValues.put("id", achat.getId());
         contentValues.put("date", achat.getDate());
         contentValues.put("total_brut", achat.getmontantBrut());
         contentValues.put("tps", achat.getTps());
@@ -254,9 +254,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     public void insertSnacks() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SNACKS);
+        db.execSQL("DELETE FROM " + TABLE_SNACKS);
 
-        for (Grignotine g:Grignotine.GrignotineOnArrayList) {
+        for (Grignotine g: Grignotine.GrignotineOnArrayList) {
             ContentValues val = new ContentValues();
             val.put("id", g.getId());
             val.put("prix_vente", g.getPrix_vente());
@@ -270,7 +270,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
-    public void addAchat(Achat achat)
+    public void insertAchatFromPanier(Achat achat)
     {
         insertAchat(achat);
 
@@ -314,9 +314,12 @@ public class SQLiteManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        //contentValues.put("
+        contentValues.put("id_achat", achat.getId());
+        contentValues.put("id_grignotine", g.getId());
+        contentValues.put("prix_unitaire", g.getPrix_vente());
+        contentValues.put("quantite", qte);
 
-        db.insert(TABLE_USER, null, contentValues);
+        db.insert(TABLE_ACHAT_SNACK, null, contentValues);
     }
 
 }

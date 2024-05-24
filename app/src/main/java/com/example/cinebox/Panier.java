@@ -1,5 +1,7 @@
 package com.example.cinebox;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 public class Panier {
@@ -35,14 +37,15 @@ public class Panier {
         return  getTotal() * (TPS + TVQ);
     }
 
-    public static void payerPanier() {
-        //ajouter à la BD
-        //vider les listes
+    public static void payerPanier(Context context)
+    {
+        Achat achat = new Achat(context);
+        achat.envoyerAchat(context);
+
+        Billet_PanierList.clear();
+        Snack_PanierList.clear();
+
         //faire un Toast "paiement effectué"
-
-       // Achat achatPanier = new Achat();
-
-
     }
 
     public static void viderPanier() {
