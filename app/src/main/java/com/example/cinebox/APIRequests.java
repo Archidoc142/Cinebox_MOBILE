@@ -315,7 +315,7 @@ public class APIRequests
                         //create billet object
                         //create grignotine vente object
                         //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
-                        Achat.HistoriqueAchats.add(new Achat( "none", montant));
+                     //   Achat.HistoriqueAchats.add(new Achat( "none", montant));
                     }
                 }
             } catch (Exception e) {

@@ -12,10 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class PanierActivity extends AppCompatActivity implements View.OnClickListener {
+public class PanierActivity extends AppCompatActivity implements View.OnClickListener, PanierAdapter.suppClickListener {
     TextView videtxt, temptxt;
+    TextView total, tps, tvq, vraitotal;
     LinearLayout bottomPanier;
     Button payer, vider;
+    ImageView supp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
-            imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            //imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
@@ -51,15 +53,17 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
         temptxt = findViewById(R.id.txt_panierTemp);
 
         bottomPanier = findViewById(R.id.bottomPanier);
+        ////////supp = nav.findViewById(R.id.btn_poubelle);
 
         payer = findViewById(R.id.btn_payerPanier);
         vider = findViewById(R.id.btn_viderPanier);
 
-        //(int id, String marque, String categorie, String format, double prix_vente, String qte_disponible, String image) {
-
-        Grignotine g = new Grignotine(1, "marque", "categorie", "format", 12.3, "100", "une image");
+        Grignotine g = new Grignotine(1, "marque", "boisson", "format", 12.3, "100", "une image");
+        Grignotine g1 = new Grignotine(1, "hello", "categorie", "format", 212.3, "100", "une image");
         GrignotineQuantite gq = new GrignotineQuantite(g, 2);
+        GrignotineQuantite gq1 = new GrignotineQuantite(g1, 2);
         Panier.Snack_PanierList.add(gq);
+        Panier.Snack_PanierList.add(gq1);
 
         if(Panier.isEmpty()) {
             temptxt.setVisibility(View.INVISIBLE);
@@ -72,17 +76,19 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
 
             videtxt.setVisibility(View.GONE);
 
-            //RecyclerView recyclerView = findViewById(R.id.recycler_panier);
-            //PanierAdapter adapter = new PanierAdapter(PanierActivity.this);
-            //recyclerView.setAdapter(adapter);
-            //recyclerView.setLayoutManager(new LinearLayoutManager(PanierActivity.this));
+            RecyclerView recyclerView = findViewById(R.id.recycler_panier);
+            PanierAdapter adapter = new PanierAdapter(PanierActivity.this, PanierActivity.this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(PanierActivity.this));
+
+            putTotal();
 
             payer.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    Panier.payerPanier();
+                    //Panier.payerPanier();
                 }
             });
 
@@ -92,12 +98,24 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
                 public void onClick(View v)
                 {
                     Panier.viderPanier();
-                    // finish();
-                    // startActivity(getIntent());
-                    recreate();
+                    //recreate();
                 }
             });
         }
+    }
+
+    private void putTotal() {
+        total = (TextView) findViewById(R.id.avanttaxe);
+        total.setText(String.format("%.2f", Panier.getTotal()) + "$");
+
+        tps = (TextView) findViewById(R.id.tpsPanier);
+        tps.setText(String.format("%.2f", Panier.getTPS()) + "$");
+
+        tvq = (TextView) findViewById(R.id.tvqPanier);
+        tvq.setText(String.format("%.2f", Panier.getTVQ()) + "$");
+
+        vraitotal = (TextView) findViewById(R.id.panierTotal);
+        vraitotal.setText(String.format("%.2f", Panier.getTotalFinal())  + "$");
     }
 
     @Override
@@ -130,5 +148,16 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(intent);
             }
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        vraitotal.setText(position);/*
+        if (position < Panier.Billet_PanierList.size()) {
+            Panier.Billet_PanierList.remove(position);
+        } else {
+            position -= Panier.Billet_PanierList.size();
+            Panier.Snack_PanierList.remove(position);
+        }*/
     }
 }

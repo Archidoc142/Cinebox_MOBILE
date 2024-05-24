@@ -1,5 +1,7 @@
 package com.example.cinebox;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class Panier {
@@ -20,6 +22,10 @@ public class Panier {
             total += g.getGrignotine().getPrix_vente();
         }
 
+       // BigDecimal total_format = new BigDecimal(total).setScale(2, RoundingMode.DOWN);
+
+       // total = total_format;
+
         return total;
     }
 
@@ -32,7 +38,7 @@ public class Panier {
     }
 
     public static double getTotalFinal() {
-        return  getTotal() * (TPS + TVQ);
+        return  getTotal() + (getTVQ() + getTPS());
     }
 
     public static void payerPanier() {

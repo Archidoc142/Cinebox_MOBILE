@@ -10,9 +10,9 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:layout_weight="0">
+        android:layout_weight="2">
 
         <include
             android:id="@+id/nav"
@@ -65,17 +65,12 @@
             android:textStyle="italic"
             android:visibility="gone"/>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_panier"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_below="@+id/txt_panierTemp"
                 android:layout_margin="20dp" />
-        </ScrollView>
     </LinearLayout>
 
     <LinearLayout

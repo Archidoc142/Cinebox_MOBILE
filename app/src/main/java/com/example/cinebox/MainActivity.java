@@ -39,9 +39,7 @@ public class MainActivity extends AppCompatActivity
         }
         else
         {
-            //intent = new Intent(MainActivity.this, LoginActivity.class);
-
-            intent = new Intent(MainActivity.this, PanierActivity.class);
+            intent = new Intent(MainActivity.this, LoginActivity.class);
         }
 
         finish();
