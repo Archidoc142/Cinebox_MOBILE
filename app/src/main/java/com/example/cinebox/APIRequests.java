@@ -149,6 +149,7 @@ public class APIRequests
                         String image = snack.getString("image");
 
                         Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
+
                     }
                 }
             } catch (Exception e) {
@@ -316,7 +317,7 @@ public class APIRequests
                         //create billet object
                         //create grignotine vente object
                         //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
-                        Achat.HistoriqueAchats.add(new Achat( "none", montant));
+                        //Achat.HistoriqueAchats.add(new Achat( "none", montant));
                     }
                 }
             } catch (Exception e) {

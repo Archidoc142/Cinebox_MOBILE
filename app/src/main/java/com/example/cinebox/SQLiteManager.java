@@ -290,7 +290,15 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     public void insertGrignotineQte(GrignotineQuantite gq, Achat achat)
     {
+        Grignotine g = gq.getGrignotine();
+        int qte = gq.getQuantite();
 
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("
+
+        db.insert(TABLE_USER, null, contentValues);
     }
 
 }
