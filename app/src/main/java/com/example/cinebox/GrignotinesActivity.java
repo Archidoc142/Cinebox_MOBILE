@@ -69,7 +69,7 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void run()
             {
-                APIRequests.getSnacks();
+                APIRequests.getSnacks(GrignotinesActivity.this);
 
                 runOnUiThread(new Runnable()
                 {

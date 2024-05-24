@@ -64,27 +64,13 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run()
-            {
-                APIRequests.getFilms();
 
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        RecyclerView recyclerView = findViewById(R.id.recycler);
-                        GridLayoutManager layoutManager = new GridLayoutManager(FilmsActivity.this, 2);
-                        FilmsAdapter adapter = new FilmsAdapter(FilmsActivity.this);
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(layoutManager);
-                    }
-                });
-            }
-        }).start();
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        GridLayoutManager layoutManager = new GridLayoutManager(FilmsActivity.this, 2);
+        FilmsAdapter adapter = new FilmsAdapter(FilmsActivity.this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override

@@ -102,7 +102,7 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
             public void run()
             {
                 APIRequests.getFilms();
-                APIRequests.getSnacks();
+                APIRequests.getSnacks(AccueilActivity.this);
 
                 runOnUiThread(new Runnable()
                 {

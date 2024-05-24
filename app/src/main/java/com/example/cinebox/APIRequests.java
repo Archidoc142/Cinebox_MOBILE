@@ -114,7 +114,7 @@ public class APIRequests
         }
     }
 
-    public static void getSnacks()
+    public static void getSnacks(Context context)
     {
         if (Grignotine.GrignotineOnArrayList.size() == 0){
             try {
@@ -149,6 +149,8 @@ public class APIRequests
                         String image = snack.getString("image");
 
                         Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
+                        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+                        sqLiteManager.insertSnacks();
                     }
                 }
             } catch (Exception e) {

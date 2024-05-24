@@ -77,7 +77,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                             TextView etat = findViewById(R.id.etat);
                             /*TextView salle = findViewById(R.id.salle);
                             TextView seance = findViewById(R.id.seance);
-                            String seances = "";*/
+                            String seances = "";
 
                             /*for (int i=0; i < movie.getSeance().length(); i++) {
                                 try {
