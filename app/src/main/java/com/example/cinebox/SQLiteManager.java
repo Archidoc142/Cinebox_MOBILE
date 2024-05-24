@@ -7,8 +7,10 @@
  * Date Nom Approuvé
  * =========================================================
  * Historique de modifications :
- * Date Nom Description
- * =========================================================****************************************/
+ * Date         Nom     Description
+ * =========================================================
+ * 23/05/2024   Arthur  Save user into DB
+ * ****************************************/
 
 package com.example.cinebox;
 
@@ -22,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class SQLiteManager extends SQLiteOpenHelper {
 
@@ -225,7 +228,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("courriel", utilisateur.getCourriel());
         contentValues.put("telephone", utilisateur.getTelephone());
         //contentValues.put("mot_de_passe", utilisateur.getMotDePasse());
-        //contentValues.put("image", utilisateur.getImage());
+        contentValues.put("image", utilisateur.bitmapToArray());
 
         sqLiteDatabase.update(TABLE_USER, contentValues, "id" + " =?", new String[]{String.valueOf(utilisateur.getId())});
     }
