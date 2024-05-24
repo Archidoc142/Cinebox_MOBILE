@@ -114,7 +114,7 @@ public class APIRequests
         }
     }
 
-    public static void getSnacks()
+    public static void getSnacks(Context context)
     {
         if (Grignotine.GrignotineOnArrayList.size() == 0){
             try {
@@ -149,7 +149,8 @@ public class APIRequests
                         String image = snack.getString("image");
 
                         Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
-
+                        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+                        sqLiteManager.insertSnacks();
                     }
                 }
             } catch (Exception e) {
@@ -382,20 +383,8 @@ public class APIRequests
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK || true) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                JSONObject json = new JSONObject(response.toString());
-                System.out.println(json);
-
-                return !true;
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                return true;
             } else {
                 System.out.println("POST request not worked");
             }
@@ -403,11 +392,10 @@ public class APIRequests
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
         return false;
     }
+
     private static void getAchats(String token, Context context)
     {
         try
@@ -442,7 +430,7 @@ public class APIRequests
                 double tvq = achatJ.getDouble("tvq");
                 double montantFinal = achatJ.getDouble("total_final");
 
-               // ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
+                ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
                 int idBillet = billetJ.getInt("id_billet");
 
                 String seance = billetJ.getString("seance");
@@ -451,7 +439,7 @@ public class APIRequests
                 float montantBillet = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");
 
-               // ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
+                ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
                 /*int idGrignotine = billetJ.getInt("id_billet");
 
                 String marque = billetJ.getString("seance");
@@ -460,9 +448,9 @@ public class APIRequests
                 float prix = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");*/
 
-               // billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
-               // grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
-                ///Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
+                billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
+                grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
+                Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
             }
             else
             {

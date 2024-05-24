@@ -118,7 +118,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {/* the cake is lie*/}
 
-    public void insertAchatToDB(Achat achat)
+    public void ajouterAchat(Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -252,9 +252,27 @@ public class SQLiteManager extends SQLiteOpenHelper {
         getUserFromDB();
     }
 
+    public void insertSnacks() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SNACKS);
+
+        for (Grignotine g:Grignotine.GrignotineOnArrayList) {
+            ContentValues val = new ContentValues();
+            val.put("id", g.getId());
+            val.put("prix_vente", g.getPrix_vente());
+            val.put("quantite_disponible", g.getQte_disponible());
+            val.put("categorie", g.getCategorie());
+            val.put("format", g.getFormat());
+            val.put("marque", g.getMarque());
+            val.put("image", g.getImage());
+
+            db.insert(TABLE_SNACKS, null, val);
+        }
+    }
+
     public void addAchat(Achat achat)
     {
-        insertAchatToDB(achat);
+        ajouterAchat(achat);
 
         if(!achat.getBilletsAchat().isEmpty())
         {
