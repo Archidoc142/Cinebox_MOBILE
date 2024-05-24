@@ -1,5 +1,7 @@
 package com.example.cinebox;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class Panier {
     }
 
     public static double getTotalFinal() {
-        return  getTotal() * (TPS + TVQ);
+        return  getTotal() + (getTVQ() + getTPS());
     }
 
     public static void payerPanier(Context context)
@@ -46,6 +48,10 @@ public class Panier {
         Snack_PanierList.clear();
 
         //faire un Toast "paiement effectué"
+
+       // Achat achatPanier = new Achat();
+
+
     }
 
     public static void viderPanier() {

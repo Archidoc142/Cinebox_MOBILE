@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : Tarif
+ * Auteur : Amélie
+ * Fonctionnalité : N/A
+ * Date : 20 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * Date Nom Description
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import java.util.ArrayList;

@@ -1,7 +1,10 @@
 package com.example.cinebox;
 
+import java.util.ArrayList;
+
 public class GrignotineQuantite
 {
+    public static ArrayList<GrignotineQuantite> grignotineQuantiteList = new ArrayList<>();
     private Grignotine grignotine;
     private int quantite;
 

@@ -36,8 +36,10 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
     private String type[];
     private String format[];
     private Context context;
+    suppClickListener itemClickListener;
 
-    public PanierAdapter(Context context) {
+
+    public PanierAdapter(Context context, suppClickListener itemClickListener) {
         ArrayList<Integer> idArray = new ArrayList<>();
         ArrayList<String> nomArray = new ArrayList<>();
         ArrayList<String> prixArray = new ArrayList<>();
@@ -64,6 +66,7 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
         }
 
         this.context = context;
+        this.itemClickListener = itemClickListener;
         this.id = idArray.toArray(new Integer[idArray.size()]);
         this.nom = nomArray.toArray(new String[nomArray.size()]);
         this.prix = prixArray.toArray(new String[prixArray.size()]);
@@ -77,18 +80,15 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
         LayoutInflater infl = LayoutInflater.from(context);
         View v = infl.inflate(R.layout.panier_item, parent, false);
 
-        return new PanierAdapter.MyViewHolder(v);
+        return new PanierAdapter.MyViewHolder(v, this.itemClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PanierAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        //holder.id.setText(String.valueOf(id[position]));
         holder.nom.setText(nom[position]);
         holder.prix.setText(prix[position] + "$");
         holder.type.setText(type[position]);
         holder.format.setText(format[position]);
-
-        holder.total.setText("Total : " + String.format("%.2f", String.valueOf(Panier.getTotal()) + "$"));
     }
 
     @Override
@@ -96,12 +96,13 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
         return nom.length;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView supp;
-        TextView nom, prix, type, format, total, tps, tvq, vraitotal;
+        TextView nom, prix, type, format;
+        suppClickListener itemClickListener;
 
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, suppClickListener itemClickListener) {
             super(itemView);
 
             nom = itemView.findViewById(R.id.panierNom);
@@ -109,19 +110,26 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
             type = itemView.findViewById(R.id.panierType);
             format = itemView.findViewById(R.id.panierFormat);
 
-            total = itemView.findViewById(R.id.avanttaxe);
-            tps = itemView.findViewById(R.id.tpsPanier);
-            tvq = itemView.findViewById(R.id.tvqPanier);
-            vraitotal = itemView.findViewById(R.id.panierTotal);
-
             supp = itemView.findViewById(R.id.btn_poubelle);
-            supp.setOnClickListener(new View.OnClickListener() {
+           /* supp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                   // Panier.suppItem(itemView.getId());
 
                     //supprimer cet éélément
                 }
-            });
+            });*/
+
+            supp.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            itemClickListener.onItemClick(getAdapterPosition());
+        }
+    }
+
+    public interface suppClickListener {
+        void onItemClick(int position);
     }
 }

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,7 +75,18 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
         holder.nom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ajouter au panier
+                int oldsize = Panier.Snack_PanierList.size();
+                //int oldqte = 0; || GrignotineQuantite.grignotineQuantiteList.get(position).getQuantite() == (oldqte + 1) //dans if
+                //boolean dansListe = false;
+
+
+                Panier.Snack_PanierList.add(new GrignotineQuantite(Grignotine.GrignotineOnArrayList.get(position), 1));
+
+                if(Panier.Snack_PanierList.size() == (oldsize + 1)) {
+                    Toast.makeText(context, "La grignotine a été ajoutée au panier. ->", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "La grignotine n'a pas été ajoutée au panier.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

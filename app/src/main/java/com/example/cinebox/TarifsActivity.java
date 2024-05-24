@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : TarifsActivity
+ * Auteur : Amélie
+ * Fonctionnalité : Lister tous les tarifs de l'API
+ * Date : 20 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * Date Nom Description
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,14 +69,10 @@ public class TarifsActivity extends AppCompatActivity implements View.OnClickLis
                     public void run()
                     {
                         RecyclerView recyclerView = findViewById(R.id.recycler_tarifs);
-                       // GridLayoutManager layoutManager = new GridLayoutManager(TarifsActivity.this, 1);
                         TarifsAdapter adapter = new TarifsAdapter(TarifsActivity.this);
-                       // recyclerView.setHasFixedSize(true);
                         recyclerView.setAdapter(adapter);
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(TarifsActivity.this));
-
-                        //recyclerView.setLayoutManager(layoutManager);
                     }
                 });
             }
