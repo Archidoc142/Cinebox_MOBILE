@@ -248,4 +248,46 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
         getUserFromDB();
     }
+
+    public void addAchat(Achat achat)
+    {
+        insertAchatToDB(achat);
+
+        if(!achat.getBilletsAchat().isEmpty())
+        {
+            for(Billet b: achat.getBilletsAchat())
+            {
+                insertBillet(b, achat);
+            }
+        }
+
+        if(!achat.getGrignotinesAchat().isEmpty())
+        {
+            for(GrignotineQuantite gq: achat.getGrignotinesAchat())
+            {
+                insertGrignotineQte(gq, achat);
+            }
+        }
+    }
+
+    public void insertBillet(Billet billet, Achat achat)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("id_achat", achat.getId());
+        contentValues.put("seance", billet.getSeance().getId());
+        contentValues.put("film", billet.getSeance().getFilm().getId());
+        contentValues.put("montant", billet.getMontant());
+        contentValues.put("type_billet", billet.getTarif().getCategorie());
+
+        db.insert(TABLE_USER, null, contentValues);
+        //contentValues.put("id", utilisateur.getId());
+    }
+
+    public void insertGrignotineQte(GrignotineQuantite gq, Achat achat)
+    {
+
+    }
+
 }

@@ -130,4 +130,12 @@ public class Achat
     public double getMontantFinal() {
         return montantFinal;
     }
+
+    public ArrayList<Billet> getBilletsAchat() {
+        return billetsAchat;
+    }
+
+    public ArrayList<GrignotineQuantite> getGrignotinesAchat() {
+        return grignotinesAchat;
+    }
 }
