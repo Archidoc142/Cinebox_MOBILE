@@ -21,7 +21,7 @@ public class Panier {
         }
 
         for(GrignotineQuantite g: Panier.Snack_PanierList) {
-            total += g.getGrignotine().getPrix_vente();
+            total += g.getPrixQte();
         }
 
         return total;
@@ -43,9 +43,6 @@ public class Panier {
     {
         Achat achat = new Achat(context);
         achat.envoyerAchat(context);
-
-        Billet_PanierList.clear();
-        Snack_PanierList.clear();
 
         //faire un Toast "paiement effectué"
 

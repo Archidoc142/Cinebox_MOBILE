@@ -56,5 +56,12 @@ public class MainActivity extends AppCompatActivity
     {
         SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
         sqLiteManager.populateLists();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                APIRequests.getNextAchatId();
+            }
+        }).start();
     }
 }

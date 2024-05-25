@@ -36,4 +36,9 @@ public class GrignotineQuantite
     {
         return id;
     }
+
+    public double getPrixQte()
+    {
+        return grignotine.getPrix_vente() * quantite;
+    }
 }

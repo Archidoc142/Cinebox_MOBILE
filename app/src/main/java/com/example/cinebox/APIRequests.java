@@ -298,7 +298,7 @@ public class APIRequests
     {
         try
         {
-            URL obj = new URL(getUserURL);
+            URL obj = new URL(getNextAchatIdURL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");
 
@@ -308,8 +308,21 @@ public class APIRequests
             {
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                int id = Integer.getInteger(in.readLine());
-                Achat.incrementNextAchatId();
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null)
+                {
+                    System.out.println(inputLine);
+                    response.append(inputLine);
+                }
+                in.close();
+
+                response = fixJSON(response);
+                JSONObject json = new JSONObject(response.toString());
+
+                int id = json.getInt("id");
+                Achat.setNextAchatId(id);
             }
         }
         catch (Exception e)
@@ -517,6 +530,7 @@ public class APIRequests
                         billet.put("id_seance", b.getSeance().getId());
 
                         billets.put(Integer.toString(i), billet);
+                        i++;
                     }
 
                     body.put("billets", billets);
@@ -529,9 +543,10 @@ public class APIRequests
                     {
                         JSONObject grignotineQte = new JSONObject();
                         grignotineQte.put("id_grignotine", g.getGrignotine().getId());
-                        grignotineQte.put("id_quantite", g.getQuantite());
+                        grignotineQte.put("quantite", g.getQuantite());
 
                         grignotines.put(Integer.toString(i), grignotineQte);
+                        i++;
                     }
 
                     body.put("grignotines", grignotines);
@@ -550,6 +565,8 @@ public class APIRequests
                 writer.write(body.toString());
                 writer.flush();
                 writer.close();
+
+                System.out.println("sending achat...");
 
                 int responseCode = con.getResponseCode();
 

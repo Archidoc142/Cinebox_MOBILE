@@ -76,7 +76,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
         db.execSQL(
                 "CREATE TABLE " + TABLE_ACHATS + " (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "id INTEGER, " +
                         "date" + " TEXT," +
                         "total_brut" + " REAL," +
                         "tps" + " REAL," +

@@ -39,36 +39,9 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
 
 
     public PanierAdapter(Context context) {
-        ArrayList<Integer> idArray = new ArrayList<>();
-        ArrayList<String> nomArray = new ArrayList<>();
-        ArrayList<String> prixArray = new ArrayList<>();
-        ArrayList<String> typeArray = new ArrayList<>();
-        ArrayList<String> formatArray = new ArrayList<>();
-
-        for (Billet b : Panier.Billet_PanierList)
-        {
-            idArray.add(b.getId());
-            nomArray.add(b.getSeance().getFilm().getTitre());
-            prixArray.add(String.valueOf(b.getMontant()));
-            typeArray.add("Billet");
-            formatArray.add(b.getTarif().getCategorie());
-        }
-
-        for (GrignotineQuantite g : Panier.Snack_PanierList)
-        {
-            idArray.add(g.getId());
-            nomArray.add(g.getQuantite() + "x " + g.getGrignotine().getMarque());
-            prixArray.add(String.valueOf(g.getGrignotine().getPrix_vente()));
-            typeArray.add(g.getGrignotine().getCategorie());
-            formatArray.add(g.getGrignotine().getFormat());
-        }
+        updatePanier();
 
         this.context = context;
-        this.id = idArray.toArray(new Integer[idArray.size()]);
-        this.nom = nomArray.toArray(new String[nomArray.size()]);
-        this.prix = prixArray.toArray(new String[prixArray.size()]);
-        this.type = typeArray.toArray(new String[typeArray.size()]);
-        this.format = formatArray.toArray(new String[formatArray.size()]);
     }
 
     private void updatePanier()
@@ -92,7 +65,7 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
         {
             idArray.add(g.getId());
             nomArray.add(g.getQuantite() + "x " + g.getGrignotine().getMarque());
-            prixArray.add(String.valueOf(g.getGrignotine().getPrix_vente()));
+            prixArray.add(String.valueOf(g.getPrixQte()));
             typeArray.add(g.getGrignotine().getCategorie());
             formatArray.add(g.getGrignotine().getFormat());
         }
