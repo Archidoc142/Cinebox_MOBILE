@@ -76,5 +76,17 @@ public class Panier {
         return Billet_PanierList.isEmpty() && Snack_PanierList.isEmpty();
     }
 
+    public static void removeGrignotine(int id)
+    {
+        for (GrignotineQuantite gq: Snack_PanierList)
+        {
+            if(gq.getId() == id)
+            {
+                Snack_PanierList.remove(gq);
+                break;
+            }
+        }
+    }
+
 
 }
