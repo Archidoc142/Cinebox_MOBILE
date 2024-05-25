@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class PanierActivity extends AppCompatActivity implements View.OnClickListener, PanierAdapter.suppClickListener {
+public class PanierActivity extends AppCompatActivity implements View.OnClickListener {
     TextView videtxt, temptxt;
     TextView total, tps, tvq, vraitotal;
     LinearLayout bottomPanier;
@@ -58,27 +58,46 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
         payer = findViewById(R.id.btn_payerPanier);
         vider = findViewById(R.id.btn_viderPanier);
 
-        if(Panier.isEmpty()) {
+        if(Panier.isEmpty())
+        {
             temptxt.setVisibility(View.INVISIBLE);
             bottomPanier.setVisibility(View.GONE);
 
             videtxt.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else
+        {
             temptxt.setVisibility(View.VISIBLE);
             bottomPanier.setVisibility(View.VISIBLE);
 
             videtxt.setVisibility(View.GONE);
 
-            Grignotine gggg = new Grignotine(1, "marsque", "cat", "petit", 10, "100", "url");
-            GrignotineQuantite g = new GrignotineQuantite(gggg, 2);
-            Panier.Snack_PanierList.add(g);
+            putTotal();
 
             RecyclerView recyclerView = findViewById(R.id.recycler_panier);
-            PanierAdapter adapter = new PanierAdapter(PanierActivity.this, PanierActivity.this);
+
+            PanierAdapter adapter = new PanierAdapter(PanierActivity.this);
+            adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
+            {
+                @Override
+                public void onItemRangeRemoved(int positionStart, int itemCount)
+                {
+                    if(Panier.isEmpty())
+                    {
+                        temptxt.setVisibility(View.INVISIBLE);
+                        bottomPanier.setVisibility(View.GONE);
+
+                        videtxt.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        putTotal();
+                    }
+                }
+            });
+
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(PanierActivity.this));
-
-            putTotal();
 
             payer.setOnClickListener(new View.OnClickListener()
             {
@@ -147,14 +166,15 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onItemClick(int position) {
-        vraitotal.setText(position);/*
+
+    //@Override
+    //public void onItemClick(int position) {
+    /*    vraitotal.setText(position);/*
         if (position < Panier.Billet_PanierList.size()) {
             Panier.Billet_PanierList.remove(position);
         } else {
             position -= Panier.Billet_PanierList.size();
             Panier.Snack_PanierList.remove(position);
         }*/
-    }
+    //}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class GrignotineQuantite
 {
     //public static ArrayList<GrignotineQuantite> grignotineQuantiteList = new ArrayList<>();
+    private int id;
     private Grignotine grignotine;
     private int quantite;
 
@@ -12,6 +13,7 @@ public class GrignotineQuantite
     {
         this.grignotine = grignotine;
         this.quantite = quantite;
+        this.id = Panier.Snack_PanierList.size();
     }
 
     public Grignotine getGrignotine() {
@@ -28,5 +30,10 @@ public class GrignotineQuantite
 
     public void setQuantite(int quantite) {
         this.quantite = quantite;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 }
