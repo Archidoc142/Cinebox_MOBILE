@@ -12,8 +12,8 @@
  * Historique de modifications :
  * Date     Nom     Description
  * =========================================================
- * 22/05/2023   Arthur  Début Ajout getAchat()
- *
+ * 22/05/2024   Arthur  Début Ajout getAchat()
+ * 20/05/2024   Amélie  Création de la requête pour les tarifs
  * ****************************************/
 
 package com.example.cinebox;

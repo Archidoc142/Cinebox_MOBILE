@@ -1,3 +1,16 @@
+/****************************************
+ * Fichier : PanierActivity
+ * Auteur : Amélie Bergeron
+ * Fonctionnalité : Payer le panier, vider le panier
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * 20 mai 2024, Amélie Bergeron, Affichage fonctionnel des éléments du panier
+ * 20 mai 2024, Amélie Bergeron, Vider le panier
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;

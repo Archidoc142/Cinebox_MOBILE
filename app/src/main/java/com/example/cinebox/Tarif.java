@@ -1,13 +1,13 @@
 /****************************************
  * Fichier : Tarif
- * Auteur : Amélie
+ * Auteur : Amélie Bergeron
  * Fonctionnalité : N/A
- * Date : 20 mai 2024
+ * Date : 14 mai 2024
  * Vérification :
  * Date Nom Approuvé
  * =========================================================
  * Historique de modifications :
- * Date Nom Description
+ * 14 mai 2024, Amélie Bergeron, Création de la classe
  * =========================================================****************************************/
 
 package com.example.cinebox;
