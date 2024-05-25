@@ -59,7 +59,7 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
 
         for (GrignotineQuantite g : Panier.Snack_PanierList) {
             idArray.add(g.getGrignotine().getId());
-            nomArray.add(g.getGrignotine().getMarque());
+            nomArray.add(g.getQuantite() + "x " + g.getGrignotine().getMarque());
             prixArray.add(String.valueOf(g.getGrignotine().getPrix_vente()));
             typeArray.add(g.getGrignotine().getCategorie());
             formatArray.add(g.getGrignotine().getFormat());

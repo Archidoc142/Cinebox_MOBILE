@@ -137,8 +137,7 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent(AccueilActivity.this, GrignotinesActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
-            //////////////////////////////////////////////////////////////////////////Intent intent = new Intent(AccueilActivity.this, TarifsActivity.class);
-            Intent intent = new Intent(AccueilActivity.this, PanierActivity.class);
+            Intent intent = new Intent(AccueilActivity.this, TarifsActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(AccueilActivity.this, CompteActivity.class);

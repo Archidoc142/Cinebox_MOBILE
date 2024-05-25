@@ -76,13 +76,25 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
             @Override
             public void onClick(View v) {
                 int oldsize = Panier.Snack_PanierList.size();
-                //int oldqte = 0; || GrignotineQuantite.grignotineQuantiteList.get(position).getQuantite() == (oldqte + 1) //dans if
-                //boolean dansListe = false;
+                int oldqte = 0;
+                int indexGQ = 0;
+                boolean dansListe = false;
 
+                for(GrignotineQuantite gq : Panier.Snack_PanierList) {
+                    if(gq.getGrignotine().equals(Grignotine.GrignotineOnArrayList.get(position))) {
+                        dansListe = true;
+                        indexGQ = Panier.Snack_PanierList.indexOf(gq);
+                    }
+                }
 
-                Panier.Snack_PanierList.add(new GrignotineQuantite(Grignotine.GrignotineOnArrayList.get(position), 1));
+                if(dansListe) {
+                    oldqte = Panier.Snack_PanierList.get(indexGQ).getQuantite();
+                    Panier.Snack_PanierList.get(indexGQ).setQuantite(Panier.Snack_PanierList.get(indexGQ).getQuantite() + 1);
+                } else {
+                    Panier.Snack_PanierList.add(new GrignotineQuantite(Grignotine.GrignotineOnArrayList.get(position), 1));
+                }
 
-                if(Panier.Snack_PanierList.size() == (oldsize + 1)) {
+                if(Panier.Snack_PanierList.size() == (oldsize + 1)  || Panier.Snack_PanierList.get(indexGQ).getQuantite() == (oldqte + 1)) {
                     Toast.makeText(context, "La grignotine a été ajoutée au panier. ->", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "La grignotine n'a pas été ajoutée au panier.", Toast.LENGTH_SHORT).show();
