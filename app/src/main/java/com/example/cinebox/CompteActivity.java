@@ -16,6 +16,8 @@
  * 21/05/2023   Arthur  Ajout fonctionnement de la caméra et modification des champs
  * 22/05/2023   Arthur  Ajout notification après modification information compte
  * 23/05/2024   Arthur  Save modification into DB
+ * 24/05/2024   Arthur  Début sauvgearde vers API
+ * 25/05/2024   Arthur  Fin sauvegarde vers API + Ajout Validation de champs avant sauvegarde
  * ****************************************/
 
 package com.example.cinebox;
@@ -43,6 +45,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,6 +69,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     ImageView editButton;
     ImageView skipEditButton;
     ImageView saveEditButton;
+    ImageView saveIntoAPI;
 
     Utilisateur user;
     private static final String CHANNEL_ID = "0";
@@ -103,6 +107,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
 
+/*================================================GESTION INFORMATION COMPTE============================================================================*/
         user = Utilisateur.getInstance();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerAchats);
@@ -122,6 +127,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         editButton = (ImageView) findViewById(R.id.editButton);
         skipEditButton = (ImageView) findViewById(R.id.skipEdit);
         saveEditButton = (ImageView) findViewById(R.id.saveEdit);
+        saveIntoAPI = (ImageView) findViewById(R.id.saveIntoAPI);
 
         avatar = (ImageView) findViewById(R.id.avatar);
 
@@ -131,19 +137,43 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         else
             avatar.setImageResource(R.drawable.profil_image);
 
+        fillTextView();
         fillEditText();
-
-        HistoriqueAchatAdapter myAdapter = new HistoriqueAchatAdapter(this, id, date, montant, this);
-
-        recyclerView.setAdapter(myAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        nomUtilisateur.setText(user.getNomUtilisateur());
-        prenomUser.setText(user.getPrenom());
-        nomUser.setText(user.getNom());
-        courrielUser.setText(user.getCourriel());
-        phoneUser.setText(user.getTelephone());
-
+/*================================================GESTION HISTORIQUE ACHAT ET ENVOI INFO COMPTE VERS API============================================================================*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        HistoriqueAchatAdapter myAdapter = new HistoriqueAchatAdapter(CompteActivity.this, id, date, montant, CompteActivity.this);
+                        recyclerView.setAdapter(myAdapter);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(CompteActivity.this));
+                        saveIntoAPI.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        boolean response = APIRequests.postUserUpdate();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (response) {
+                                                    Toast.makeText(CompteActivity.this, "Envoi vers l'API à fonctionné!", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(CompteActivity.this, "Échec de l'envoi vers l'API!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
+                        });
+                    }
+                });
+            }
+        }).start();
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,6 +195,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
 
                 showText();
 
+                //Ce bout de code permet de "refresh" la page sans transition pour afficher les modifications
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);
                 //TODO: clean each editText ?
                 makeNotification(context, "Statut des informations du compte", "Les modifications apporté n'ont été annulé");
 
@@ -174,23 +209,27 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         saveEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
+                if (validateEditext()) {
+                    Context context = view.getContext();
 
-                user.setNomUtilisateur(nomUtilisateurEdit.getText().toString());
-                user.setPrenom(prenomUserEdit.getText().toString());
-                user.setNom(nomUserEdit.getText().toString());
-                user.setCourriel(courrielUserEdit.getText().toString());
-                user.setTelephone(phoneUserEdit.getText().toString());
+                    user.setNomUtilisateur(nomUtilisateurEdit.getText().toString());
+                    user.setPrenom(prenomUserEdit.getText().toString());
+                    user.setNom(nomUserEdit.getText().toString());
+                    user.setCourriel(courrielUserEdit.getText().toString());
+                    user.setTelephone(phoneUserEdit.getText().toString());
 
-                saveToDB();
+                    saveToDB();
 
-                //Ce bout de code permet de "refresh" la page sans transition pour afficher les modifications
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
+                    //Ce bout de code permet de "refresh" la page sans transition pour afficher les modifications
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
 
-                makeNotification(context, "Statut des informations du compte", "Vos information de compte on bien été sauvegardé");
+                    makeNotification(context, "Statut des informations du compte", "Vos information de compte on bien été sauvegardé");
+                } else {
+                    Toast.makeText(CompteActivity.this, "Certains champs sont invalides", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -348,5 +387,79 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         nomUserEdit.setText(user.getNom());
         courrielUserEdit.setText(user.getCourriel());
         phoneUserEdit.setText(user.getTelephone());
+    }
+    public void fillTextView() {
+        nomUtilisateur.setText(user.getNomUtilisateur());
+        prenomUser.setText(user.getPrenom());
+        nomUser.setText(user.getNom());
+        courrielUser.setText(user.getCourriel());
+        phoneUser.setText(user.getTelephone());     //TODO: voir pour afficher le format suivant si temps suffisant: "(123) 456 7890"
+    }
+
+    public boolean validateEditext() {
+        boolean formInputValid = true;
+
+        // Validation nomUtilisateur
+        String nomUtilisateurPattern = "^[a-z0-9._-]+";
+        if (nomUtilisateurEdit.getText().toString().trim().isEmpty()) {
+            nomUtilisateurEdit.setError("Veuillez entrer un nom d'utilisateur.");
+            formInputValid = false;
+        } else if (!nomUtilisateurEdit.getText().toString().trim().matches(nomUtilisateurPattern)) {
+            nomUtilisateurEdit.setError("Le format du nom d'utilisateur entré est invalide.");
+            formInputValid = false;
+        } else if (nomUtilisateurEdit.getText().toString().trim().length() > 24) {
+            nomUtilisateurEdit.setError("Le nom d'utilisateur ne peut pas dépasser 24 caractères.");
+            formInputValid = false;
+        }
+
+        // Validation prenomUser
+        String nomPrenomPattern = "^[A-ZÀ-Ü][a-zà-ù-]+$";
+        if (prenomUserEdit.getText().toString().trim().isEmpty()) {
+            prenomUserEdit.setError("Veuillez entrer un prénom.");
+            formInputValid = false;
+        } else if (!prenomUserEdit.getText().toString().trim().matches(nomPrenomPattern)) {
+            prenomUserEdit.setError("Le format du prénom entré est invalide.");
+            formInputValid = false;
+        } else if (prenomUserEdit.getText().toString().trim().length() > 128) {
+            prenomUserEdit.setError("Le prénom ne peut pas dépasser 128 caractères.");
+            formInputValid = false;
+        }
+
+        // Validation nomUser
+        if (nomUserEdit.getText().toString().trim().isEmpty()) {
+            nomUserEdit.setError("Veuillez entrer un nom de famille.");
+            formInputValid = false;
+        } else if (!nomUserEdit.getText().toString().trim().matches(nomPrenomPattern)) {
+            nomUserEdit.setError("Le format du nom de famille entré est invalide.");
+            formInputValid = false;
+        } else if (nomUserEdit.getText().toString().trim().length() > 128) {
+            nomUserEdit.setError("Le nom de famille ne peut pas dépasser 128 caractères.");
+            formInputValid = false;
+        }
+
+        // Validation courrielUser
+        String emailPattern = "^([a-z0-9._-]+)@([a-z0-9._-]+)\\.([a-z]{2,6})$";
+        if (courrielUserEdit.getText().toString().trim().isEmpty()) {
+            courrielUserEdit.setError("Veuillez entrer un courriel.");
+            formInputValid = false;
+        } else if (!courrielUserEdit.getText().toString().trim().matches(emailPattern)) {
+            courrielUserEdit.setError("Le format du courriel entré est invalide.");
+            formInputValid = false;
+        }
+
+        // Validation phoneUser
+        String phonePattern = "^([0-9\\s\\-\\+\\(\\)]*)$";
+        if (phoneUserEdit.getText().toString().trim().isEmpty()) {
+            phoneUserEdit.setError("Veuillez entrer un numéro de téléphone.");
+            formInputValid = false;
+        } else if (!phoneUserEdit.getText().toString().trim().matches(phonePattern)) {
+            phoneUserEdit.setError("Le numéro de téléphone ne respecte pas le format attendu.");
+            formInputValid = false;
+        } else if (phoneUserEdit.getText().toString().trim().length() < 10) {
+            phoneUserEdit.setError("Le numéro de téléphone doit comporter au moins 10 caractères.");
+            formInputValid = false;
+        }
+
+        return formInputValid;
     }
 }

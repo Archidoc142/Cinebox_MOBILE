@@ -13,7 +13,7 @@
  * Date     Nom     Description
  * =========================================================
  * 22/05/2023   Arthur  Début Ajout getAchat()
- *
+ * 25/05/2023   Arthur  Ajout postClientUpdate()
  * ****************************************/
 
 package com.example.cinebox;
@@ -45,6 +45,7 @@ public class APIRequests
     private static final String postLoginURL = apiURL + "token";
     private static final String getUserURL = apiURL + "user";
     private static final String addUserURL = apiURL + "client/ajout";
+    private static final String postClientUpdateURL = apiURL + "client/update";
     private static final String getTarifsURL = apiURL + "tarifs";
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
     private static final String getNextAchatIdURL = apiURL + "vente/nextId";
@@ -429,7 +430,7 @@ public class APIRequests
         return false;
     }
 
-    private static void getAchats(String token, Context context)
+    public static void getAchats(String token, Context context)
     {
         try
         {
@@ -472,7 +473,7 @@ public class APIRequests
                 float montantBillet = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");
 
-                ArrayList<Grignotine> grignotinesAchat = new ArrayList<Grignotine>();
+                ArrayList<GrignotineQuantite> grignotinesAchat = new ArrayList<GrignotineQuantite>();
                 /*int idGrignotine = billetJ.getInt("id_billet");
 
                 String marque = billetJ.getString("seance");
@@ -481,9 +482,11 @@ public class APIRequests
                 float prix = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");*/
 
-                //billetsAchat.add(new Billet(idBillet, seance, film, dateBillet, montantBillet, typeBillet));
-                grignotinesAchat.add(new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", ""));      //TODO: replace after refonte API
-                //Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
+                Grignotine grignotineProduct = new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", "");
+
+                //billetsAchat.add(new Billet(idBillet, montantBillet, new Tarif(1, "Jeune", 5.50, "Jeune gens"), new Seance(2, "2024-08-12 12:32:33", new Film(4, "Inception", "123", "film test", "2024-08-12", "2024-08-12", "S.F", "Christopher Nolan", "", "none")), new Achat(bille)));
+                grignotinesAchat.add(new GrignotineQuantite(grignotineProduct, 5));
+                Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
             }
             else
             {
@@ -568,6 +571,45 @@ public class APIRequests
         return false;
     }
 
+    public static boolean postUserUpdate() {
+        if (Utilisateur.getInstance() != null) {
+            Utilisateur user = Utilisateur.getInstance();
+            try {
+                JSONObject body = new JSONObject();
+
+                body.put("id_client", user.getId());
+                body.put("nom_utilisateur", user.getNomUtilisateur());
+                body.put("nom_famille", user.getNom());
+                body.put("prenom", user.getPrenom());
+                body.put("email", user.getCourriel());
+                body.put("telephone", user.getTelephone());
+
+                URL obj = new URL(postClientUpdateURL);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("POST");
+                con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                con.setRequestProperty("Accept", "application/json");
+                con.setDoOutput(true);
+
+                OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
+                writer.write(body.toString());
+                writer.flush();
+                writer.close();
+
+                int responseCode = con.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    return true;
+                } else {
+                    System.out.println("POST request not worked");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
     public static StringBuffer fixJSON(StringBuffer response)
     {
         // Pourquoi.

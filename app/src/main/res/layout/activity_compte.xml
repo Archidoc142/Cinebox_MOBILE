@@ -197,13 +197,18 @@
                             android:layout_height="80dp"
                             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
                             android:visibility="gone"/>
-
                         <ImageView
                             android:id="@+id/editButton"
                             android:layout_width="50dp"
                             android:layout_height="80dp"
                             app:srcCompat="@android:drawable/ic_menu_edit"
                             android:visibility="visible"/>
+                        <ImageView
+                            android:id="@+id/saveIntoAPI"
+                            android:layout_width="50dp"
+                            android:layout_height="80dp"
+                            android:visibility="visible"
+                            app:srcCompat="@android:drawable/ic_menu_send" />
                     </LinearLayout>
 
                     <TextView
@@ -232,7 +237,8 @@
                         android:textColor="#FFFFFF"
                         android:textSize="32sp"
                         android:textStyle="bold"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:inputType="textPersonName"/>
                 </LinearLayout>
 
             </LinearLayout>

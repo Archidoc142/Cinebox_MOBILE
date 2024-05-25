@@ -19,6 +19,8 @@ package com.example.cinebox;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
@@ -213,5 +215,19 @@ public class Utilisateur
         byte[] image_data = stream.toByteArray();
 
         return image_data;
+    }
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id_client", this.id);
+            jsonObject.put("nom_famille", this.nom);
+            jsonObject.put("prenom", this.prenom);
+            jsonObject.put("nom_utilisateur", this.nomUtilisateur);
+            jsonObject.put("email", this.courriel);
+            jsonObject.put("telephone", this.telephone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
