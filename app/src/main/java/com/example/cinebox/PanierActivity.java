@@ -1,3 +1,16 @@
+/****************************************
+ * Fichier : PanierActivity
+ * Auteur : Amélie Bergeron
+ * Fonctionnalité : Payer le panier, vider le panier
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * 20 mai 2024, Amélie Bergeron, Affichage fonctionnel des éléments du panier
+ * 20 mai 2024, Amélie Bergeron, Vider le panier
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,10 +81,6 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
             bottomPanier.setVisibility(View.VISIBLE);
 
             videtxt.setVisibility(View.GONE);
-
-            Grignotine gggg = new Grignotine(1, "marsque", "cat", "petit", 10, "100", "url");
-            GrignotineQuantite g = new GrignotineQuantite(gggg, 2);
-            Panier.Snack_PanierList.add(g);
 
             RecyclerView recyclerView = findViewById(R.id.recycler_panier);
             PanierAdapter adapter = new PanierAdapter(PanierActivity.this, PanierActivity.this);
