@@ -97,7 +97,8 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
             Intent intent = new Intent(GrignotinesActivity.this, GrignotinesActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
-            Intent intent = new Intent(GrignotinesActivity.this, TarifsActivity.class);
+            ////////////Intent intent = new Intent(GrignotinesActivity.this, TarifsActivity.class);
+            Intent intent = new Intent(GrignotinesActivity.this, PanierActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);

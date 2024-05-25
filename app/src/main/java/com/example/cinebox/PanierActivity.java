@@ -69,6 +69,10 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
 
             videtxt.setVisibility(View.GONE);
 
+            Grignotine gggg = new Grignotine(1, "marsque", "cat", "petit", 10, "100", "url");
+            GrignotineQuantite g = new GrignotineQuantite(gggg, 2);
+            Panier.Snack_PanierList.add(g);
+
             RecyclerView recyclerView = findViewById(R.id.recycler_panier);
             PanierAdapter adapter = new PanierAdapter(PanierActivity.this, PanierActivity.this);
             recyclerView.setAdapter(adapter);
