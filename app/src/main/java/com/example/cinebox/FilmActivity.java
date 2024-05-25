@@ -45,10 +45,14 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
+        TextView mainTitle = nav.findViewById(R.id.mainTitle);
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
-            imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            if(Utilisateur.getInstance().getImage() != null)
+                imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            else
+                imageUser.setImageResource(R.drawable.profil_image);
         } else {
             imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
@@ -60,6 +64,9 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         grignotines.setOnClickListener(this);
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
+        imageUser.setOnClickListener(this);
+        cartNav.setOnClickListener(this);
+        mainTitle.setOnClickListener(this);
 
         new Thread(new Runnable() {
             @Override
@@ -110,6 +117,15 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
             Intent intent = new Intent(FilmActivity.this, TarifsActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.cartNav) {
+            Intent intent = new Intent(FilmActivity.this, PanierActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.mainTitle) {
+            Intent intent = new Intent(FilmActivity.this, AccueilActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.imageInstanceFilm) {
+            Intent intent = new Intent(FilmActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);

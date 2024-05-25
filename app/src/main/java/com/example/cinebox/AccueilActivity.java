@@ -86,6 +86,7 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
         imageUser.setOnClickListener(this);
+        cartNav.setOnClickListener(this);
 
         RecyclerView filmsRecycler = findViewById(R.id.filmRecycler),
                 snacksRecycler = findViewById(R.id.snackRecycler);
@@ -142,7 +143,11 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
         } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(AccueilActivity.this, CompteActivity.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.listNav) {
+        } else if (v.getId() == R.id.cartNav) {
+            Intent intent = new Intent(AccueilActivity.this, PanierActivity.class);
+            startActivity(intent);
+        }
+        else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);
             if (nav_elements.getVisibility() == View.GONE) {
                 nav_elements.setVisibility(View.VISIBLE);

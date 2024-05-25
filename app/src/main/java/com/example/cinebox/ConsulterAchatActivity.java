@@ -20,6 +20,7 @@ package com.example.cinebox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,36 @@ public class ConsulterAchatActivity extends AppCompatActivity implements Recycle
         recyclerViewFilm.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewSnack.setLayoutManager(new LinearLayoutManager(this));
 
+        View nav = findViewById(R.id.nav);
+
+        TextView films = nav.findViewById(R.id.filmsNav);
+        TextView grignotines = nav.findViewById(R.id.grignotinesNav);
+        TextView tarifs = nav.findViewById(R.id.tarifsNav);
+        TextView connexion = nav.findViewById(R.id.connexionNav);
+        ImageView imageUser = nav.findViewById(R.id.imageInstanceFilm);
+        ImageView listNav = nav.findViewById(R.id.listNav);
+        ImageView cartNav = nav.findViewById(R.id.cartNav);
+        TextView mainTitle = nav.findViewById(R.id.mainTitle);
+
+        if (Utilisateur.getInstance() != null) {
+            connexion.setText("Se déconnecter");
+            if(Utilisateur.getInstance().getImage() != null)
+                imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            else
+                imageUser.setImageResource(R.drawable.profil_image);
+        } else {
+            listNav.setVisibility(View.INVISIBLE);
+            cartNav.setVisibility(View.INVISIBLE);
+        }
+
+        connexion.setOnClickListener(this);
+        films.setOnClickListener(this);
+        grignotines.setOnClickListener(this);
+        tarifs.setOnClickListener(this);
+        listNav.setOnClickListener(this);
+        mainTitle.setOnClickListener(this);
+        cartNav.setOnClickListener(this);
+        imageUser.setOnClickListener(this);
     }
     @Override
     public void onItemClick(int position) {
@@ -73,6 +104,15 @@ public class ConsulterAchatActivity extends AppCompatActivity implements Recycle
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
             Intent intent = new Intent(ConsulterAchatActivity.this, TarifsActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.cartNav) {
+                Intent intent = new Intent(ConsulterAchatActivity.this, PanierActivity.class);
+                startActivity(intent);
+        } else if (v.getId() == R.id.mainTitle) {
+                Intent intent = new Intent(ConsulterAchatActivity.this, AccueilActivity.class);
+                startActivity(intent);
+        } else if (v.getId() == R.id.imageInstanceFilm) {
+            Intent intent = new Intent(ConsulterAchatActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);

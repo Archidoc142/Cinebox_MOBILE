@@ -429,7 +429,7 @@ public class APIRequests
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
+            if (responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR || responseCode == HttpURLConnection.HTTP_OK) {
                 return true;
             } else {
                 System.out.println("POST request not worked");
