@@ -1,12 +1,13 @@
 /****************************************
  * Fichier : GrignotinesAdapter
- * Auteur : Antoine Auger
- * Fonctionnalité : N/A
+ * Auteur : Antoine Auger et Amélie Bergeron
+ * Fonctionnalité : Ajouter une grignotine au panier en cliquant sur son nom
  * Date : 14 mai 2024
  * Vérification :
  * Date Nom Approuvé
  * =========================================================
  * Historique de modifications :
+ * 24 mai 2024, Amélie Bergeron, Ajout d'une grignotine dans le panier (+ mise à jour de sa quantité dans la liste du panier)
  * Date Nom Description
  * =========================================================****************************************/
 
@@ -95,7 +96,7 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
                 }
 
                 if(Panier.Snack_PanierList.size() == (oldsize + 1)  || Panier.Snack_PanierList.get(indexGQ).getQuantite() == (oldqte + 1)) {
-                    Toast.makeText(context, "La grignotine a été ajoutée au panier. ->", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "La grignotine a été ajoutée au panier.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "La grignotine n'a pas été ajoutée au panier.", Toast.LENGTH_SHORT).show();
                 }

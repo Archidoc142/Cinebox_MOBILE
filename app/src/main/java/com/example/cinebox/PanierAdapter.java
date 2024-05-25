@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : PanierAdapter
+ * Auteur : Amélie Bergeron
+ * Fonctionnalité : Supprimer un élément du panier
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * 20 mai 2024, Amélie Bergeron, RecyclerView fonctionnel
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import android.annotation.SuppressLint;

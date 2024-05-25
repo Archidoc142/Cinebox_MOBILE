@@ -1,13 +1,13 @@
 /****************************************
  * Fichier : TarifsActivity
- * Auteur : Amélie
- * Fonctionnalité : Lister tous les tarifs de l'API
+ * Auteur : Amélie Bergeron
+ * Fonctionnalité : N/A
  * Date : 20 mai 2024
  * Vérification :
  * Date Nom Approuvé
  * =========================================================
  * Historique de modifications :
- * Date Nom Description
+ * 20 mai 2024, Amélie Bergeron, Affichage fonctionnel de tous les tarifs
  * =========================================================****************************************/
 
 package com.example.cinebox;

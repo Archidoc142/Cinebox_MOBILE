@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : TarifsAdapter
+ * Auteur : Amélie Bergeron
+ * Fonctionnalité : MFi4
+ * Date : 20 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * 20 mai 2024, Amélie Bergeron, Recycler view fonctionnel
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import android.annotation.SuppressLint;
