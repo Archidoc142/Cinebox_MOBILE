@@ -54,17 +54,14 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         // Nav
         View nav = findViewById(R.id.nav);
 
-        TextView films = nav.findViewById(R.id.filmsNav);
-        TextView grignotines = nav.findViewById(R.id.grignotinesNav);
-        TextView tarifs = nav.findViewById(R.id.tarifsNav);
         TextView connexion = nav.findViewById(R.id.connexionNav);
-        ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
+        ImageView imageUser = nav.findViewById(R.id.imageProfil);
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
-            imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            //imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
@@ -72,10 +69,6 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         }
 
         connexion.setOnClickListener(this);
-        films.setOnClickListener(this);
-        grignotines.setOnClickListener(this);
-        tarifs.setOnClickListener(this);
-        listNav.setOnClickListener(this);
 
         Button inscriptionBtn = findViewById(R.id.inscriptionBtn);
         Button camera = findViewById(R.id.camera);
@@ -121,10 +114,12 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void run() {
                                 boolean response = APIRequests.addUser(data);
-                                System.out.println("Response: " + response);
 
                                 if (response) {
                                     APIRequests.postLoginUser(courriel.getText().toString(), mot_de_passe.getText().toString(), InscriptionActivity.this);
+                                    Toast.makeText(InscriptionActivity.this, "Inscription effectuée", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
+                                    startActivity(intent);
                                 }
                             }
                         }).start();
@@ -143,22 +138,6 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
 
 
 
-        } else if (v.getId() == R.id.filmsNav) {
-            Intent intent = new Intent(InscriptionActivity.this, FilmsActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.grignotinesNav) {
-            Intent intent = new Intent(InscriptionActivity.this, GrignotinesActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.tarifsNav) {
-            Intent intent = new Intent(InscriptionActivity.this, TarifsActivity.class);
-            startActivity(intent);
-        } else if (v.getId() == R.id.listNav) {
-            LinearLayout nav_elements = findViewById(R.id.nav_elements);
-            if (nav_elements.getVisibility() == View.GONE) {
-                nav_elements.setVisibility(View.VISIBLE);
-            } else {
-                nav_elements.setVisibility(View.GONE);
-            }
         } else if (v.getId() == R.id.connexionNav) {
             if (Utilisateur.getInstance() != null) {
                 Utilisateur.logOutUser(this);

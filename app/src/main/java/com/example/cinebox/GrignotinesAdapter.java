@@ -1,12 +1,13 @@
 /****************************************
  * Fichier : GrignotinesAdapter
- * Auteur : Antoine Auger
- * Fonctionnalité : N/A
+ * Auteur : Antoine Auger et Amélie Bergeron
+ * Fonctionnalité : Ajouter une grignotine au panier en cliquant sur son nom
  * Date : 14 mai 2024
  * Vérification :
  * Date Nom Approuvé
  * =========================================================
  * Historique de modifications :
+ * 24 mai 2024, Amélie Bergeron, Ajout d'une grignotine dans le panier (+ mise à jour de sa quantité dans la liste du panier)
  * Date Nom Description
  * =========================================================****************************************/
 
@@ -76,14 +77,26 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
             @Override
             public void onClick(View v) {
                 int oldsize = Panier.Snack_PanierList.size();
-                //int oldqte = 0; || GrignotineQuantite.grignotineQuantiteList.get(position).getQuantite() == (oldqte + 1) //dans if
-                //boolean dansListe = false;
+                int oldqte = 0;
+                int indexGQ = 0;
+                boolean dansListe = false;
 
+                for(GrignotineQuantite gq : Panier.Snack_PanierList) {
+                    if(gq.getGrignotine().equals(Grignotine.GrignotineOnArrayList.get(position))) {
+                        dansListe = true;
+                        indexGQ = Panier.Snack_PanierList.indexOf(gq);
+                    }
+                }
 
-                Panier.Snack_PanierList.add(new GrignotineQuantite(Grignotine.GrignotineOnArrayList.get(position), 1));
+                if(dansListe) {
+                    oldqte = Panier.Snack_PanierList.get(indexGQ).getQuantite();
+                    Panier.Snack_PanierList.get(indexGQ).setQuantite(Panier.Snack_PanierList.get(indexGQ).getQuantite() + 1);
+                } else {
+                    Panier.Snack_PanierList.add(new GrignotineQuantite(Grignotine.GrignotineOnArrayList.get(position), 1));
+                }
 
-                if(Panier.Snack_PanierList.size() == (oldsize + 1)) {
-                    Toast.makeText(context, "La grignotine a été ajoutée au panier. ->", Toast.LENGTH_SHORT).show();
+                if(Panier.Snack_PanierList.size() == (oldsize + 1)  || Panier.Snack_PanierList.get(indexGQ).getQuantite() == (oldqte + 1)) {
+                    Toast.makeText(context, "La grignotine a été ajoutée au panier.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "La grignotine n'a pas été ajoutée au panier.", Toast.LENGTH_SHORT).show();
                 }

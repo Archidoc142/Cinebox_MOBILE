@@ -80,12 +80,12 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         connexion.setOnClickListener(this);
-        connexion.setOnClickListener(this);
         films.setOnClickListener(this);
         grignotines.setOnClickListener(this);
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
         imageUser.setOnClickListener(this);
+        cartNav.setOnClickListener(this);
 
         RecyclerView filmsRecycler = findViewById(R.id.filmRecycler),
                 snacksRecycler = findViewById(R.id.snackRecycler);
@@ -137,13 +137,16 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent(AccueilActivity.this, GrignotinesActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
-            //////////////////////////////////////////////////////////////////////////Intent intent = new Intent(AccueilActivity.this, TarifsActivity.class);
-            Intent intent = new Intent(AccueilActivity.this, PanierActivity.class);
+            Intent intent = new Intent(AccueilActivity.this, TarifsActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(AccueilActivity.this, CompteActivity.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.listNav) {
+        } else if (v.getId() == R.id.cartNav) {
+            Intent intent = new Intent(AccueilActivity.this, PanierActivity.class);
+            startActivity(intent);
+        }
+        else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);
             if (nav_elements.getVisibility() == View.GONE) {
                 nav_elements.setVisibility(View.VISIBLE);

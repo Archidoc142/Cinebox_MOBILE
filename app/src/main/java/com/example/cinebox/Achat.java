@@ -44,7 +44,8 @@ public class Achat
 
     public Achat(Context context)
     {
-        if(!Panier.isEmpty()) {
+        if(!Panier.isEmpty())
+        {
             billetsAchat = Panier.Billet_PanierList;
             grignotinesAchat = Panier.Snack_PanierList;
 
@@ -141,7 +142,7 @@ public class Achat
         return grignotinesAchat;
     }
 
-    public static int getNextAchatId()
+    public static int getNextId()
     {
         return nextAchatId;
     }
@@ -161,9 +162,22 @@ public class Achat
         SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
         sql.insertAchatFromPanier(this);
 
-        if(APIRequests.postVente())
-        {
-            incrementNextAchatId();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                System.out.println("posting");
+                if(APIRequests.postVente())
+                {
+                    System.out.println("post worked!");
+
+                    incrementNextAchatId();
+                    Panier.Billet_PanierList.clear();
+                    Panier.Snack_PanierList.clear();
+                }
+            }
+        }).start();
+
+
     }
 }

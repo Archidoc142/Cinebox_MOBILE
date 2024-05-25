@@ -76,7 +76,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
         db.execSQL(
                 "CREATE TABLE " + TABLE_ACHATS + " (" +
-                        "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "id INTEGER, " +
                         "date" + " TEXT," +
                         "total_brut" + " REAL," +
                         "tps" + " REAL," +
@@ -302,7 +302,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("montant", billet.getMontant());
         contentValues.put("type_billet", billet.getTarif().getCategorie());
 
-        db.insert(TABLE_USER, null, contentValues);
+        db.insert(TABLE_BILLETS, null, contentValues);
         //contentValues.put("id", utilisateur.getId());
     }
 

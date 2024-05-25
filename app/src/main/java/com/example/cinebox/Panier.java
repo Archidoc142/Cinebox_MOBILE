@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : Panier
+ * Auteur : Amélie Bergeron
+ * Fonctionnalité : N/A
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * Date Nom Description
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import java.math.BigDecimal;
@@ -21,7 +33,7 @@ public class Panier {
         }
 
         for(GrignotineQuantite g: Panier.Snack_PanierList) {
-            total += g.getGrignotine().getPrix_vente();
+            total += g.getPrixQte();
         }
 
         return total;
@@ -44,9 +56,6 @@ public class Panier {
         Achat achat = new Achat(context);
         achat.envoyerAchat(context);
 
-        Billet_PanierList.clear();
-        Snack_PanierList.clear();
-
         //faire un Toast "paiement effectué"
 
        // Achat achatPanier = new Achat();
@@ -62,6 +71,18 @@ public class Panier {
     public static boolean isEmpty()
     {
         return Billet_PanierList.isEmpty() && Snack_PanierList.isEmpty();
+    }
+
+    public static void removeGrignotine(int id)
+    {
+        for (GrignotineQuantite gq: Snack_PanierList)
+        {
+            if(gq.getId() == id)
+            {
+                Snack_PanierList.remove(gq);
+                break;
+            }
+        }
     }
 
 

@@ -49,10 +49,14 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
+        TextView mainTitle = nav.findViewById(R.id.mainTitle);
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
-            imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            if(Utilisateur.getInstance().getImage() != null)
+                imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
+            else
+                imageUser.setImageResource(R.drawable.profil_image);
         } else {
             imageUser.setVisibility(View.INVISIBLE);
             listNav.setVisibility(View.INVISIBLE);
@@ -63,7 +67,9 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         grignotines.setOnClickListener(this);
         tarifs.setOnClickListener(this);
         listNav.setOnClickListener(this);
-
+        imageUser.setOnClickListener(this);
+        cartNav.setOnClickListener(this);
+        mainTitle.setOnClickListener(this);
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
         GridLayoutManager layoutManager = new GridLayoutManager(FilmsActivity.this, 2);
@@ -80,6 +86,15 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
             Intent intent = new Intent(FilmsActivity.this, TarifsActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.cartNav) {
+            Intent intent = new Intent(FilmsActivity.this, PanierActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.mainTitle) {
+            Intent intent = new Intent(FilmsActivity.this, AccueilActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.imageProfil) {
+            Intent intent = new Intent(FilmsActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);

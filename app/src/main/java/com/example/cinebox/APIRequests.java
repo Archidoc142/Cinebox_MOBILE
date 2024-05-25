@@ -12,6 +12,7 @@
  * Historique de modifications :
  * Date     Nom     Description
  * =========================================================
+ * 20/05/2024   Amélie  Création de la requête pour les tarifs
  * 22/05/2023   Arthur  Début Ajout getAchat()
  * 25/05/2023   Arthur  Ajout postClientUpdate()
  * ****************************************/
@@ -50,6 +51,7 @@ public class APIRequests
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
     private static final String getNextAchatIdURL = apiURL + "vente/nextId";
     private static final String postVenteAjoutURL = apiURL + "vente/ajout";
+    private static final String getSeanceById = apiURL + "seance/film/";
 
     public class TokenValidRunnable implements Runnable
     {
@@ -111,6 +113,59 @@ public class APIRequests
                         String etat_film = movie.getString("id_etat_film");
 
                         Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche, etat_film));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void getSeanceById(int id)
+    {
+        boolean filmExistsInSeance = false;
+        for (Seance seance : Seance.seancesArrayList) {
+            if (seance.getFilm().equals(Film.FilmOnArrayList.get(id))) {
+                filmExistsInSeance = true;
+                break;
+            }
+        }
+
+        if (Film.FilmOnArrayList.size() != 0 && !filmExistsInSeance) {
+            try {
+                URL obj = new URL(getSeanceById + String.valueOf(id));
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+
+                System.out.println("fetch request");
+                int responseCode = con.getResponseCode();
+
+                System.out.println(responseCode);
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    response = fixJSON(response);
+                    JSONObject json = new JSONObject(response.toString());
+
+                    JSONArray sessions = json.getJSONArray("data");
+
+                    for (int i = 0; i < sessions.length(); i++) {
+                        JSONObject session = sessions.getJSONObject(i);
+
+                        int idS = session.getInt("id");
+                        String hour = session.getString("date_heure");
+                        String siege = session.getString("salle_siege");
+                        String ecran = session.getString("salle_ecran");
+
+                        Seance.seancesArrayList.add(new Seance(idS, hour, Film.FilmOnArrayList.get(id), siege, ecran));
                     }
                 }
             } catch (Exception e) {
@@ -299,7 +354,7 @@ public class APIRequests
     {
         try
         {
-            URL obj = new URL(getUserURL);
+            URL obj = new URL(getNextAchatIdURL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");
 
@@ -309,8 +364,21 @@ public class APIRequests
             {
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                int id = Integer.getInteger(in.readLine());
-                Achat.incrementNextAchatId();
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null)
+                {
+                    System.out.println(inputLine);
+                    response.append(inputLine);
+                }
+                in.close();
+
+                response = fixJSON(response);
+                JSONObject json = new JSONObject(response.toString());
+
+                int id = json.getInt("id");
+                Achat.setNextAchatId(id);
             }
         }
         catch (Exception e)
@@ -417,7 +485,7 @@ public class APIRequests
 
             int responseCode = con.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) {
+            if (responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR || responseCode == HttpURLConnection.HTTP_OK) {
                 return true;
             } else {
                 System.out.println("POST request not worked");
@@ -520,6 +588,7 @@ public class APIRequests
                         billet.put("id_seance", b.getSeance().getId());
 
                         billets.put(Integer.toString(i), billet);
+                        i++;
                     }
 
                     body.put("billets", billets);
@@ -532,9 +601,10 @@ public class APIRequests
                     {
                         JSONObject grignotineQte = new JSONObject();
                         grignotineQte.put("id_grignotine", g.getGrignotine().getId());
-                        grignotineQte.put("id_quantite", g.getQuantite());
+                        grignotineQte.put("quantite", g.getQuantite());
 
                         grignotines.put(Integer.toString(i), grignotineQte);
+                        i++;
                     }
 
                     body.put("grignotines", grignotines);
@@ -553,6 +623,8 @@ public class APIRequests
                 writer.write(body.toString());
                 writer.flush();
                 writer.close();
+
+                System.out.println("sending achat...");
 
                 int responseCode = con.getResponseCode();
 

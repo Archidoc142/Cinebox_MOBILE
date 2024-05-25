@@ -28,7 +28,7 @@
                 android:src="@drawable/list" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/mainTitle"
                 android:layout_width="235dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"

@@ -12,15 +12,20 @@ public class Seance
 {
     public static ArrayList<Seance> seancesArrayList = new ArrayList<>();
     private int id;
-    private LocalDateTime dateTime;
+    private String dateTime;
     private Film film;
+    private String salle_siege;
+    private String salle_ecran;
 
-    public Seance(int id, String dateTimeStr, Film film)
+    public Seance(int id, String dateTimeStr, Film film, String salle_siege, String salle_ecran)
     {
         this.id = id;
         this.film = film;
 
-        this.dateTime = LocalDateTime.parse(dateTimeStr);
+        this.dateTime = dateTimeStr.substring(11, 16);
+
+        this.salle_siege = salle_siege;
+        this.salle_ecran = salle_ecran;
     }
 
     public int getId()
@@ -28,7 +33,7 @@ public class Seance
         return id;
     }
 
-    public LocalDateTime getDateTime()
+    public String getDateTime()
     {
         return dateTime;
     }
@@ -36,5 +41,21 @@ public class Seance
     public Film getFilm()
     {
         return film;
+    }
+
+    public String getSalle_siege() {
+        return salle_siege;
+    }
+
+    public void setSalle_siege(String salle_siege) {
+        this.salle_siege = salle_siege;
+    }
+
+    public String getSalle_ecran() {
+        return salle_ecran;
+    }
+
+    public void setSalle_ecran(String salle_ecran) {
+        this.salle_ecran = salle_ecran;
     }
 }

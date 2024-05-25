@@ -1,3 +1,15 @@
+/****************************************
+ * Fichier : PanierAdapter
+ * Auteur : Amélie Bergeron
+ * Fonctionnalité : Supprimer un élément du panier
+ * Date : 14 mai 2024
+ * Vérification :
+ * Date Nom Approuvé
+ * =========================================================
+ * Historique de modifications :
+ * 20 mai 2024, Amélie Bergeron, RecyclerView fonctionnel
+ * =========================================================****************************************/
+
 package com.example.cinebox;
 
 import android.annotation.SuppressLint;
@@ -36,17 +48,24 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
     private String type[];
     private String format[];
     private Context context;
-    suppClickListener itemClickListener;
 
 
-    public PanierAdapter(Context context, suppClickListener itemClickListener) {
+    public PanierAdapter(Context context) {
+        updatePanier();
+
+        this.context = context;
+    }
+
+    private void updatePanier()
+    {
         ArrayList<Integer> idArray = new ArrayList<>();
         ArrayList<String> nomArray = new ArrayList<>();
         ArrayList<String> prixArray = new ArrayList<>();
         ArrayList<String> typeArray = new ArrayList<>();
         ArrayList<String> formatArray = new ArrayList<>();
 
-        for (Billet b : Panier.Billet_PanierList) {
+        for (Billet b : Panier.Billet_PanierList)
+        {
             idArray.add(b.getId());
             nomArray.add(b.getSeance().getFilm().getTitre());
             prixArray.add(String.valueOf(b.getMontant()));
@@ -54,19 +73,15 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
             formatArray.add(b.getTarif().getCategorie());
         }
 
-        //Grignotine gr = new Grignotine(2, "mmmarque", "cccategorie", "ffformat", 112.3, "12200", "lll image");
-        //Panier.Snack_PanierList.add(gr);
-
-        for (GrignotineQuantite g : Panier.Snack_PanierList) {
-            idArray.add(g.getGrignotine().getId());
-            nomArray.add(g.getGrignotine().getMarque());
-            prixArray.add(String.valueOf(g.getGrignotine().getPrix_vente()));
+        for (GrignotineQuantite g : Panier.Snack_PanierList)
+        {
+            idArray.add(g.getId());
+            nomArray.add(g.getQuantite() + "x " + g.getGrignotine().getMarque());
+            prixArray.add(String.valueOf(g.getPrixQte()));
             typeArray.add(g.getGrignotine().getCategorie());
             formatArray.add(g.getGrignotine().getFormat());
         }
 
-        this.context = context;
-        this.itemClickListener = itemClickListener;
         this.id = idArray.toArray(new Integer[idArray.size()]);
         this.nom = nomArray.toArray(new String[nomArray.size()]);
         this.prix = prixArray.toArray(new String[prixArray.size()]);
@@ -80,15 +95,36 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
         LayoutInflater infl = LayoutInflater.from(context);
         View v = infl.inflate(R.layout.panier_item, parent, false);
 
-        return new PanierAdapter.MyViewHolder(v, this.itemClickListener);
+        return new PanierAdapter.MyViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PanierAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull PanierAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position)
+    {
         holder.nom.setText(nom[position]);
         holder.prix.setText(prix[position] + "$");
         holder.type.setText(type[position]);
         holder.format.setText(format[position]);
+
+        holder.supp.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                int index = holder.getAdapterPosition();
+
+                if(type[index] == "Billet")
+                {
+                    System.out.println("Billet");
+                }
+                else
+                {
+                    Panier.removeGrignotine(id[index]);
+                    PanierAdapter.this.updatePanier();
+                    PanierAdapter.this.notifyItemRemoved(index);
+                }
+            }
+        });
     }
 
     @Override
@@ -96,13 +132,12 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
         return nom.length;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MyViewHolder extends RecyclerView.ViewHolder
+    {
         ImageView supp;
         TextView nom, prix, type, format;
-        suppClickListener itemClickListener;
 
-
-        public MyViewHolder(@NonNull View itemView, suppClickListener itemClickListener) {
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nom = itemView.findViewById(R.id.panierNom);
@@ -111,25 +146,17 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
             format = itemView.findViewById(R.id.panierFormat);
 
             supp = itemView.findViewById(R.id.btn_poubelle);
-           /* supp.setOnClickListener(new View.OnClickListener() {
+            supp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    System.out.println("delete");
                    // Panier.suppItem(itemView.getId());
 
                     //supprimer cet éélément
                 }
-            });*/
+            });
 
-            supp.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            itemClickListener.onItemClick(getAdapterPosition());
         }
     }
 
-    public interface suppClickListener {
-        void onItemClick(int position);
-    }
 }
