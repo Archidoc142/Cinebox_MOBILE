@@ -302,7 +302,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("montant", billet.getMontant());
         contentValues.put("type_billet", billet.getTarif().getCategorie());
 
-        db.insert(TABLE_USER, null, contentValues);
+        db.insert(TABLE_BILLETS, null, contentValues);
         //contentValues.put("id", utilisateur.getId());
     }
 

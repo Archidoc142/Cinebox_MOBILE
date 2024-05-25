@@ -64,7 +64,7 @@ public class ConsulterAchatActivity extends AppCompatActivity implements Recycle
         TextView grignotines = nav.findViewById(R.id.grignotinesNav);
         TextView tarifs = nav.findViewById(R.id.tarifsNav);
         TextView connexion = nav.findViewById(R.id.connexionNav);
-        ImageView imageUser = nav.findViewById(R.id.imageInstanceFilm);
+        ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
         TextView mainTitle = nav.findViewById(R.id.mainTitle);
@@ -111,7 +111,7 @@ public class ConsulterAchatActivity extends AppCompatActivity implements Recycle
         } else if (v.getId() == R.id.mainTitle) {
                 Intent intent = new Intent(ConsulterAchatActivity.this, AccueilActivity.class);
                 startActivity(intent);
-        } else if (v.getId() == R.id.imageInstanceFilm) {
+        } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(ConsulterAchatActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {

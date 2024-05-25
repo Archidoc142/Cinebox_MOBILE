@@ -99,7 +99,7 @@ public class TarifsActivity extends AppCompatActivity implements View.OnClickLis
         } else if (v.getId() == R.id.mainTitle) {
             Intent intent = new Intent(TarifsActivity.this, AccueilActivity.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.imageInstanceFilm) {
+        } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(TarifsActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {

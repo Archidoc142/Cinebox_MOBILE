@@ -85,7 +85,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         TextView grignotines = nav.findViewById(R.id.grignotinesNav);
         TextView tarifs = nav.findViewById(R.id.tarifsNav);
         TextView connexion = nav.findViewById(R.id.connexionNav);
-        ImageView imageUser = nav.findViewById(R.id.imageInstanceFilm);
+        ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
         TextView mainTitle = nav.findViewById(R.id.mainTitle);

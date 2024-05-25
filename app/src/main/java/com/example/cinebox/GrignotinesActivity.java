@@ -100,7 +100,7 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
             startActivity(intent);
         } else if (v.getId() == R.id.tarifsNav) {
             ////////////Intent intent = new Intent(GrignotinesActivity.this, TarifsActivity.class);
-            Intent intent = new Intent(GrignotinesActivity.this, PanierActivity.class);
+            Intent intent = new Intent(GrignotinesActivity.this, TarifsActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.cartNav) {
             Intent intent = new Intent(GrignotinesActivity.this, PanierActivity.class);
@@ -108,7 +108,7 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
         } else if (v.getId() == R.id.mainTitle) {
             Intent intent = new Intent(GrignotinesActivity.this, AccueilActivity.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.imageInstanceFilm) {
+        } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(GrignotinesActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {

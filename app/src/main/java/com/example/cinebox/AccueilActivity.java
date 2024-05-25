@@ -80,7 +80,6 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         connexion.setOnClickListener(this);
-        connexion.setOnClickListener(this);
         films.setOnClickListener(this);
         grignotines.setOnClickListener(this);
         tarifs.setOnClickListener(this);

@@ -49,6 +49,7 @@ public class APIRequests
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
     private static final String getNextAchatIdURL = apiURL + "vente/nextId";
     private static final String postVenteAjoutURL = apiURL + "vente/ajout";
+    private static final String getSeanceById = apiURL + "seance/film/";
 
     public class TokenValidRunnable implements Runnable
     {
@@ -110,6 +111,59 @@ public class APIRequests
                         String etat_film = movie.getString("id_etat_film");
 
                         Film.FilmOnArrayList.add(new Film(id, titre, duration, description, date_de_sortie, date_fin_diffusion, categorie, realisateur, image_affiche, etat_film));
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void getSeanceById(int id)
+    {
+        boolean filmExistsInSeance = false;
+        for (Seance seance : Seance.seancesArrayList) {
+            if (seance.getFilm().equals(Film.FilmOnArrayList.get(id))) {
+                filmExistsInSeance = true;
+                break;
+            }
+        }
+
+        if (Film.FilmOnArrayList.size() != 0 && !filmExistsInSeance) {
+            try {
+                URL obj = new URL(getSeanceById + String.valueOf(id));
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+
+                System.out.println("fetch request");
+                int responseCode = con.getResponseCode();
+
+                System.out.println(responseCode);
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    response = fixJSON(response);
+                    JSONObject json = new JSONObject(response.toString());
+
+                    JSONArray sessions = json.getJSONArray("data");
+
+                    for (int i = 0; i < sessions.length(); i++) {
+                        JSONObject session = sessions.getJSONObject(i);
+
+                        int idS = session.getInt("id");
+                        String hour = session.getString("date_heure");
+                        String siege = session.getString("salle_siege");
+                        String ecran = session.getString("salle_ecran");
+
+                        Seance.seancesArrayList.add(new Seance(idS, hour, Film.FilmOnArrayList.get(id), siege, ecran));
                     }
                 }
             } catch (Exception e) {

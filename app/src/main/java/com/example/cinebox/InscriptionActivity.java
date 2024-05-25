@@ -57,7 +57,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         TextView connexion = nav.findViewById(R.id.connexionNav);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
-        ImageView imageUser = nav.findViewById(R.id.imageInstanceFilm);
+        ImageView imageUser = nav.findViewById(R.id.imageProfil);
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");

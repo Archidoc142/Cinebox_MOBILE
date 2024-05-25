@@ -93,7 +93,7 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         } else if (v.getId() == R.id.mainTitle) {
             Intent intent = new Intent(FilmsActivity.this, AccueilActivity.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.imageInstanceFilm) {
+        } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(FilmsActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {

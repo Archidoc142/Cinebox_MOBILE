@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,6 +77,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     Intent intent = getIntent();
                     Film movie = Film.FilmOnArrayList.get(intent.getIntExtra("id", 0));
+                    APIRequests.getSeanceById(movie.getId());
 
                     runOnUiThread(new Runnable()
                     {
@@ -82,22 +85,25 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                         public void run() {
                             TextView title = findViewById(R.id.title);
                             TextView etat = findViewById(R.id.etat);
-                            /*TextView salle = findViewById(R.id.salle);
-                            TextView seance = findViewById(R.id.seance);
-                            String seances = "";
+                            ImageView affiche = findViewById(R.id.image);
+                            TextView seanceToStr = findViewById(R.id.seance);
+                            TextView salleToStr = findViewById(R.id.salle);
 
-                            /*for (int i=0; i < movie.getSeance().length(); i++) {
-                                try {
-                                    seances += movie.getSeance().getJSONObject(i).getString("date_heure").substring(11, 16) + "\n";
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
+                            String allSessionsForMovie = "";
+                            for (Seance seance : Seance.seancesArrayList) {
+                                if (seance.getFilm().equals(Film.FilmOnArrayList.get(movie.getId()))) {
+                                    allSessionsForMovie += seance.getDateTime().toString() + "\n";
                                 }
-                            }*/
+                            }
 
                             title.setText(movie.getTitre());
                             etat.setText(movie.getEtat_film());
-                            /*salle.setText("Siège : " + movie.getType_siege() + "\nÉcran : " + movie.getTypeEcran() + "\nDurée" +  movie.getDuration());
-                            seance.setText(seances);*/
+                            seanceToStr.setText(allSessionsForMovie);
+                            salleToStr.setText("Siège: " + Seance.seancesArrayList.get(movie.getId()).getSalle_siege() + "\nÉcran: " + Seance.seancesArrayList.get(movie.getId()).getSalle_ecran() + "\nDurée: " + String.valueOf(movie.getDuration()));
+                            Glide.with(FilmActivity.this)
+                                    .load(movie.getImage_affiche())
+                                    .error(R.drawable.image_not_found)
+                                    .into(affiche);
                         }
                     });
                 } catch (Exception e) {
@@ -124,7 +130,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.mainTitle) {
             Intent intent = new Intent(FilmActivity.this, AccueilActivity.class);
             startActivity(intent);
-        } else if (v.getId() == R.id.imageInstanceFilm) {
+        } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(FilmActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.listNav) {
