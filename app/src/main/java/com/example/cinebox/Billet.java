@@ -1,8 +1,8 @@
 /****************************************
  * Fichier : Billet.java
- * Auteur : Arthur Andrianjafisolo
+ * Auteur : Arthur Andrianjafisolo, Hicham Abekiri
  * Fonctionnalité : Object billet permettant de stocker les info de chaque billet vendu pour détail dans ConsulterAchatActivity
- * Date : 19/05/2023
+ * Date : 19/05/2024
  *
  * Vérification :
  * Date     Nom     Approuvé
@@ -12,6 +12,7 @@
  * Historique de modifications :
  * Date     Nom     Description
  * =========================================================
+ * 25/05/2024  Antoine,Hicham   Modifications pour l'envoi de l'achat
  *
  * ****************************************/
 

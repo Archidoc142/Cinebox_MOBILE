@@ -1,8 +1,8 @@
 /****************************************
  * Fichier : APIRequest.java
- * Auteur : ???
+ * Auteur : Hicham, Arthur, Amélie, Antoine
  * Fonctionnalité : Cette class permet de centraliser les requêtes à l'API
- * Date : ?????
+ * Date : 17 mai 2024
  *
  * Vérification :
  * Date     Nom     Approuvé
@@ -12,9 +12,11 @@
  * Historique de modifications :
  * Date     Nom     Description
  * =========================================================
+ * 17/05/2024   Hicham  Création du fichier APIRequests 
+ *                      Ajout requêtes pour authentificatione
  * 20/05/2024   Amélie  Création de la requête pour les tarifs
- * 22/05/2023   Arthur  Début Ajout getAchat()
- * 25/05/2023   Arthur  Ajout postClientUpdate()
+ * 22/05/2024   Arthur  Début Ajout getAchat()
+ * 25/05/2024   Arthur  Ajout postClientUpdate()
  * ****************************************/
 
 package com.example.cinebox;

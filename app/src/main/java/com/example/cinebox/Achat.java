@@ -1,6 +1,6 @@
 /****************************************
- * Fichier : HistoriqueAchat
- * Auteur : Antoine Auger
+ * Fichier : Achat.java
+ * Auteur : Antoine Auger, Hicham Abekiri, Arthur Andrianjafisolo
  * Fonctionnalité : N/A
  * Date : 14 mai 2024
  * Vérification :

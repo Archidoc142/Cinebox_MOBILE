@@ -1,3 +1,21 @@
+/****************************************
+ * Fichier : AccueilAdapter.java
+ * Auteur : Hicham Abekiri
+ * Fonctionnalité : Page d'accueil (MAcc0)
+ * Date : 17 mai 2024
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ * 17/05/2024   Hicham  Création de l'adapter pour l'activité Accueil
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 import android.content.Context;
