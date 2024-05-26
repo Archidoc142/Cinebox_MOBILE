@@ -7,8 +7,10 @@
  * Date Nom Approuvé
  * =========================================================
  * Historique de modifications :
- * Date Nom Description
- * =========================================================****************************************/
+ * Date     Nom     Description
+ * =========================================================
+ * 26/05/2023   Arthur  Ajout getIdFromTitre()
+ * ****************************************/
 
 package com.example.cinebox;
 
@@ -121,5 +123,18 @@ public class Film {
 
     public void setImage_affiche(String image_affiche) {
         this.image_affiche = image_affiche;
+    }
+
+    /**
+     * @param titre
+     * @return Id du film selon son titre
+     */
+    public static int getIdFromTitre(String titre) {
+        for (Film film : FilmOnArrayList) {
+            if (film.getTitre().equalsIgnoreCase(titre)) {
+                return film.getId();
+            }
+        }
+        throw new IllegalArgumentException("Film not found for title: " + titre);
     }
 }
