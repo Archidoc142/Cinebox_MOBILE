@@ -19,8 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,13 +34,50 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class FilmActivity extends AppCompatActivity implements View.OnClickListener {
+
+    ArrayList<Seance> listSeanceFilm  = new ArrayList<>();
+    Spinner spinnerSeance;
+    Spinner spinnerTarif;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film);
+
+        spinnerSeance = findViewById(R.id.spinner);
+        TextView salleToStr = findViewById(R.id.salle);
+
+        Intent intent = getIntent();
+        Film movie = Film.FilmOnArrayList.get(intent.getIntExtra("id", 0));
+
+        spinnerSeance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                salleToStr.setText("Siège: " + listSeanceFilm.get(position).getSalle_siege() + "\nÉcran: " + listSeanceFilm.get(position).getSalle_ecran() + "\nDurée: " + String.valueOf(movie.getDuration()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerTarif = findViewById(R.id.spinnerTarif);
+        spinnerTarif.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         View nav = findViewById(R.id.nav);
 
@@ -48,6 +89,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
         TextView mainTitle = nav.findViewById(R.id.mainTitle);
+        Button ajouterPanier = findViewById(R.id.ajouterPanier);
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
@@ -69,37 +111,43 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         imageUser.setOnClickListener(this);
         cartNav.setOnClickListener(this);
         mainTitle.setOnClickListener(this);
+        ajouterPanier.setOnClickListener(this);
 
         new Thread(new Runnable() {
             @Override
             public void run()
             {
                 try {
-                    Intent intent = getIntent();
-                    Film movie = Film.FilmOnArrayList.get(intent.getIntExtra("id", 0));
-                    APIRequests.getSeanceById(movie.getId());
-
                     runOnUiThread(new Runnable()
                     {
                         @Override
                         public void run() {
                             TextView title = findViewById(R.id.title);
                             TextView etat = findViewById(R.id.etat);
+                            TextView description = findViewById(R.id.description);
                             ImageView affiche = findViewById(R.id.image);
-                            TextView seanceToStr = findViewById(R.id.seance);
-                            TextView salleToStr = findViewById(R.id.salle);
 
-                            String allSessionsForMovie = "";
                             for (Seance seance : Seance.seancesArrayList) {
-                                if (seance.getFilm().equals(Film.FilmOnArrayList.get(movie.getId()))) {
-                                    allSessionsForMovie += seance.getDateTime().toString() + "\n";
+                                if (seance.getFilm().equals(movie)) {
+                                    listSeanceFilm.add(seance);
                                 }
                             }
+                            ArrayAdapter<Seance> arrayAdapter = new ArrayAdapter<>(FilmActivity.this, R.layout.spinner_item, listSeanceFilm);
+                            spinnerSeance.setAdapter(arrayAdapter);
+
+                            ArrayAdapter<Tarif> arrayAdapterTarif = new ArrayAdapter<>(FilmActivity.this, R.layout.spinner_item, Tarif.TarifOnArrayList);
+                            spinnerTarif.setAdapter(arrayAdapterTarif);
 
                             title.setText(movie.getTitre());
                             etat.setText(movie.getEtat_film());
-                            seanceToStr.setText(allSessionsForMovie);
-                            salleToStr.setText("Siège: " + Seance.seancesArrayList.get(movie.getId()).getSalle_siege() + "\nÉcran: " + Seance.seancesArrayList.get(movie.getId()).getSalle_ecran() + "\nDurée: " + String.valueOf(movie.getDuration()));
+                            description.setText(movie.getDescription());
+                            if (!listSeanceFilm.isEmpty()) {
+                                salleToStr.setText("Siège: " + Seance.seancesArrayList.get(movie.getId() - 1).getSalle_siege() + "\nÉcran: " + Seance.seancesArrayList.get(movie.getId() - 1).getSalle_ecran() + "\nDurée: " + String.valueOf(movie.getDuration()));
+                            } else {
+                                salleToStr.setText("Durée: " + String.valueOf(movie.getDuration()));
+                                LinearLayout block = findViewById(R.id.toHide);
+                                block.setVisibility(View.GONE);
+                            }
                             Glide.with(FilmActivity.this)
                                     .load(movie.getImage_affiche())
                                     .error(R.drawable.image_not_found)
@@ -133,6 +181,22 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(FilmActivity.this, CompteActivity.class);
             startActivity(intent);
+        } else if (v.getId() == R.id.ajouterPanier) {
+            new Thread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    APIRequests.getNextBilletId();
+                    Billet billet = new Billet(Billet.getNextBilletId(), ((Tarif) spinnerTarif.getSelectedItem()).getPrix(), ((Tarif) spinnerTarif.getSelectedItem()).getId(), ((Seance) spinnerSeance.getSelectedItem()).getId());
+                    Panier.Billet_PanierList.add(billet);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(FilmActivity.this, "Film ajouté au panier", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }).start();
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);
             if (nav_elements.getVisibility() == View.GONE) {

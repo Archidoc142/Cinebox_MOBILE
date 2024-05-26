@@ -104,6 +104,8 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
             {
                 APIRequests.getFilms();
                 APIRequests.getSnacks(AccueilActivity.this);
+                APIRequests.getTarifs();
+                APIRequests.getSeances();
 
                 runOnUiThread(new Runnable()
                 {

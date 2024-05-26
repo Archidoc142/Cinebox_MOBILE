@@ -63,26 +63,10 @@ public class TarifsActivity extends AppCompatActivity implements View.OnClickLis
         cartNav.setOnClickListener(this);
         mainTitle.setOnClickListener(this);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run()
-            {
-                APIRequests.getTarifs();
-
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        RecyclerView recyclerView = findViewById(R.id.recycler_tarifs);
-                        TarifsAdapter adapter = new TarifsAdapter(TarifsActivity.this);
-                        recyclerView.setAdapter(adapter);
-
-                        recyclerView.setLayoutManager(new LinearLayoutManager(TarifsActivity.this));
-                    }
-                });
-            }
-        }).start();
+        RecyclerView recyclerView = findViewById(R.id.recycler_tarifs);
+        TarifsAdapter adapter = new TarifsAdapter(TarifsActivity.this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(TarifsActivity.this));
     }
 
     @Override
