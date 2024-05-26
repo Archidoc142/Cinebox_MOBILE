@@ -17,10 +17,10 @@ public class Seance
     private String salle_siege;
     private String salle_ecran;
 
-    public Seance(int id, String dateTimeStr, Film film, String salle_siege, String salle_ecran)
+    public Seance(int id, String dateTimeStr, int filmId, String salle_siege, String salle_ecran)
     {
         this.id = id;
-        this.film = film;
+        this.film = Film.FilmOnArrayList.get(filmId - 1);
 
         this.dateTime = dateTimeStr.substring(11, 16);
 
@@ -57,5 +57,10 @@ public class Seance
 
     public void setSalle_ecran(String salle_ecran) {
         this.salle_ecran = salle_ecran;
+    }
+
+    @Override
+    public String toString() {
+        return dateTime;
     }
 }

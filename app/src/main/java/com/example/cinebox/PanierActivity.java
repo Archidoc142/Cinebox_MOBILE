@@ -60,6 +60,7 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
             cartNav.setVisibility(View.INVISIBLE);
         }
 
+        films.setOnClickListener(this);
         connexion.setOnClickListener(this);
         grignotines.setOnClickListener(this);
         tarifs.setOnClickListener(this);

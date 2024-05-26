@@ -60,4 +60,9 @@ public class Tarif {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return categorie + " - " + String.valueOf(prix) + "$";
+    }
 }

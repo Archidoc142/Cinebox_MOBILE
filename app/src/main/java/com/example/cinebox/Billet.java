@@ -19,19 +19,31 @@ package com.example.cinebox;
 
 public class Billet
 {
+    private static int nextBilletId = 0;
+
     private int id;
-    private float montant;
+    private double montant;
     private Tarif tarif;
     private Seance seance;
-    private Achat achat;
 
-    public Billet(int id, float montant, Tarif tarif, Seance seance, Achat achat)
+    public Billet(int id, double montant, int tarifId, int seanceId)
     {
         this.id = id;
         this.montant = montant;
-        this.tarif = tarif;
-        this.seance = seance;
-        this.achat = achat;
+        this.tarif = Tarif.TarifOnArrayList.get(tarifId - 1);
+        this.seance = Seance.seancesArrayList.get(seanceId - 1);
+    }
+
+    public static int getNextBilletId() {
+        return nextBilletId;
+    }
+
+    public static void setNextBilletId(int nextBilletId) {
+        Billet.nextBilletId = nextBilletId;
+    }
+
+    public static void incrementNextBilletId(int value) {
+        nextBilletId += value;
     }
 
     public Tarif getTarif() {
@@ -46,11 +58,7 @@ public class Billet
         return id;
     }
 
-    public float getMontant() {
+    public double getMontant() {
         return montant;
-    }
-
-    public Achat getAchat() {
-        return achat;
     }
 }

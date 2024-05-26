@@ -172,6 +172,7 @@ public class Achat
                     System.out.println("post worked!");
 
                     incrementNextAchatId();
+                    Billet.incrementNextBilletId(Panier.Billet_PanierList.size());
                     Panier.Billet_PanierList.clear();
                     Panier.Snack_PanierList.clear();
                 }
