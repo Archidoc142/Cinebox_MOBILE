@@ -103,14 +103,15 @@ public class Achat
         montantBrut = 0;
     }*/
 
-    /*
-    public Achat(String date, float montantBrut) {
+
+    public Achat(int id, String date, double montantFinal) {
+        this.id = id;
         this.date = date;
-        this.montantBrut = montantBrut;
-        this.tps = montantBrut * TPS;
-        this.tvq = montantBrut * TVQ;
-        this.montantFinal = this.tps + this.tvq;
-    }*/
+        this.montantBrut = 0;   //pas besoin du montant brut
+        this.tps = 0;       //Pas besoin des taxes
+        this.tvq = 0;       //Pas besoin des taxes
+        this.montantFinal = montantFinal;
+    }
 
     public int getId() {
         return id;
@@ -195,6 +196,11 @@ public class Achat
 
 
     }
+
+    /**
+     * @param jsonObject
+     * @return Achat object from a JSON object
+     */
     public static Achat loadFromJSON(JSONObject jsonObject) {
         Achat achat = new Achat();
         achat.id = jsonObject.optInt("no_vente");
@@ -202,7 +208,11 @@ public class Achat
         achat.montantBrut = jsonObject.optDouble("total_brut");
         achat.tps = jsonObject.optDouble("tps");
         achat.tvq = jsonObject.optDouble("tvq");
-        achat.montantFinal = Double.parseDouble(jsonObject.optString("total_final"));
+        achat.montantFinal = Double.parseDouble(jsonObject.optString("total_final").replace(",", "."));
+
+        // Initialisation des ArrayList
+        achat.billetsAchat = new ArrayList<>();
+        achat.grignotinesAchat = new ArrayList<>();
 
         JSONArray billetsArray = jsonObject.optJSONArray("billets");
         if (billetsArray != null) {

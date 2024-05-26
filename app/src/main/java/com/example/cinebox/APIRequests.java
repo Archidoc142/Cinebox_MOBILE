@@ -418,49 +418,6 @@ public class APIRequests
             throw new RuntimeException(e);
         }
     }
-
-    public static void getHistoriqueAchat()
-    {
-        if (Achat.HistoriqueAchats.size() == 0){
-            try {
-                URL obj = new URL(getHistoriqueAchatURL);
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                con.setRequestMethod("GET");
-                int responseCode = con.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-                    response = fixJSON(response);
-                    JSONObject json = new JSONObject(response.toString());
-
-                    JSONArray achats = json.getJSONArray("data");
-
-                    for (int i = 0; i < achats.length(); i++) {
-                        JSONObject achat = achats.getJSONObject(i);
-
-                        int id = achat.getInt("id");
-                        //String date = achat.getString("marque");      //--> date dans la table billet
-                        float montant = BigDecimal.valueOf(achat.getDouble("total_brut")).floatValue();
-
-                        //create billet object
-                        //create grignotine vente object
-                        //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
-                        //Achat.HistoriqueAchats.add(new Achat( "none", montant));
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-  
     public static void getTarifs()
     {
         if (Tarif.TarifOnArrayList.size() == 0){
@@ -530,6 +487,12 @@ public class APIRequests
         return false;
     }
 
+    /**
+     * @param token
+     * @param context
+     *
+     * Fonction add Achat in static HistoriqueAchats arrayList
+     */
     public static void getAchats(String token, Context context)
     {
         try
@@ -559,15 +522,8 @@ public class APIRequests
                 for (int i = 0; i < achats.length(); i++) {
                     JSONObject achat = achats.getJSONObject(i);
 
-                    int id = achats.getInt("id_tarif");
-                    String categorie = tarif.getString("categorie");
-                    double prix = tarif.getDouble("prix");
-                    String description = tarif.getString("description");
-
-                    Tarif.TarifOnArrayList.add(new Tarif(id, categorie, prix, description));
+                    Achat.HistoriqueAchats.add(Achat.loadFromJSON(achat));
                 }
-
-                Log.d("JSON input value", json.toString());     //TODO: Remove after test
             }
             else
             {
