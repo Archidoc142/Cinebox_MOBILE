@@ -1,4 +1,21 @@
+/****************************************
+ * Fichier : GrignotineQuantite.java
+ * Auteur : ????
+ * Fonctionnalité : ????
+ * Date : ???
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ * 25/05/2024   Arthur  Ajout loadFromJSON()
+ * ****************************************/
+
 package com.example.cinebox;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -8,6 +25,12 @@ public class GrignotineQuantite
     private int id;
     private Grignotine grignotine;
     private int quantite;
+
+    public GrignotineQuantite() {
+        this.id = 0;
+        this.grignotine = null;
+        this.quantite = 0;
+    }
 
     public GrignotineQuantite(Grignotine grignotine, int quantite)
     {
@@ -40,5 +63,11 @@ public class GrignotineQuantite
     public double getPrixQte()
     {
         return grignotine.getPrix_vente() * quantite;
+    }
+    public static GrignotineQuantite loadFromJSON(JSONObject jsonObject) {
+        GrignotineQuantite grignotineQuantite = new GrignotineQuantite();
+        grignotineQuantite.grignotine = Grignotine.loadFromJSON(jsonObject.optJSONObject("grignotine"));
+        grignotineQuantite.quantite = jsonObject.optInt("quantite");
+        return grignotineQuantite;
     }
 }

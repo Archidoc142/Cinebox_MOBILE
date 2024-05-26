@@ -8,9 +8,12 @@
  * =========================================================
  * Historique de modifications :
  * Date Nom Description
+ * 25/05/2024   Arthur  Ajout loadFromJSON()
  * =========================================================****************************************/
 
 package com.example.cinebox;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -24,7 +27,15 @@ public class Grignotine {
     private double prix_vente;
     private String qte_disponible;
     private String image;
-
+    public Grignotine() {
+        this.id = 0;
+        this.marque = null;
+        this.categorie = null;
+        this.format = null;
+        this.prix_vente = 0;
+        this.qte_disponible = null;
+        this.image = null;
+    }
     public Grignotine(int id, String marque, String categorie, String format, double prix_vente, String qte_disponible, String image) {
         this.id = id;
         this.marque = marque;
@@ -89,5 +100,16 @@ public class Grignotine {
 
     public void setImage(String image) {
         this.image = image;
+    }
+    public static Grignotine loadFromJSON(JSONObject jsonObject) {
+        Grignotine grignotine = new Grignotine();
+        grignotine.id = jsonObject.optInt("id");
+        grignotine.marque = jsonObject.optString("marque");
+        grignotine.categorie = jsonObject.optString("categorie");
+        grignotine.format = jsonObject.optString("format");
+        grignotine.prix_vente = jsonObject.optDouble("prix_vente");
+        grignotine.qte_disponible = Integer.toString(jsonObject.optInt("qte_disponible"));
+        grignotine.image = jsonObject.optString("image");
+        return grignotine;
     }
 }

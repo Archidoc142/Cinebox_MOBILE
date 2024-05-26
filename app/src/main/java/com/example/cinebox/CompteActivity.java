@@ -17,7 +17,7 @@
  * 22/05/2023   Arthur  Ajout notification après modification information compte
  * 23/05/2024   Arthur  Save modification into DB
  * 24/05/2024   Arthur  Début sauvgearde vers API
- * 25/05/2024   Arthur  Fin sauvegarde vers API + Ajout Validation de champs avant sauvegarde
+ * 25/05/2024   Arthur  Fin sauvegarde vers API + Ajout Validation de champs avant sauvegarde + Début Ajout loadFromJSON
  * ****************************************/
 
 package com.example.cinebox;
@@ -149,6 +149,19 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    // Récupération des achats depuis l'API
+                    APIRequests.getAchats(user.getToken(), CompteActivity.this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(CompteActivity.this, "Erreur lors de la récupération des achats.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
