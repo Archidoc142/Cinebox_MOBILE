@@ -22,6 +22,9 @@ import org.json.JSONObject;
 
 public class Billet
 {
+    /**
+     * L'ID du prochain billet à créer, initialisé depuis l'API
+     */
     private static int nextBilletId = 0;
 
     private int id;
@@ -29,6 +32,14 @@ public class Billet
     private Tarif tarif;
     private Seance seance;
 
+    /**
+     * Constructeur d'un billet
+     *
+     * @param id ID du billet
+     * @param montant Montant du billet (hors taxes)
+     * @param tarifId ID du tarif du billet (enfant, étudiant, adulte...)
+     * @param seanceId ID de la séance
+     */
     public Billet(int id, double montant, int tarifId, int seanceId)
     {
         this.id = id;
@@ -65,6 +76,11 @@ public class Billet
         return montant;
     }
 
+    /**
+     *
+     * @param jsonObject
+     * @return
+     */
     public static Billet loadFromJSON(JSONObject jsonObject) {
         int id = jsonObject.optInt("id_billet");
         double montant = jsonObject.optDouble("montant_achat");

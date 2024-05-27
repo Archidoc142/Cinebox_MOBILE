@@ -198,8 +198,9 @@ public class APIRequests
                         String hour = session.getString("date_heure");
                         String siege = session.getString("salle_siege");
                         String ecran = session.getString("salle_ecran");
+                        int noSalle = session.getInt("no_salle");
 
-                        Seance.seancesArrayList.add(new Seance(idS, hour, filmId, siege, ecran));
+                        Seance.seancesArrayList.add(new Seance(idS, hour, filmId, siege, ecran, noSalle));
                     }
                 }
             } catch (Exception e) {

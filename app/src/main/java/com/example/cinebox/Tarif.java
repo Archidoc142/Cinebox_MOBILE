@@ -19,6 +19,10 @@ package com.example.cinebox;
 import java.util.ArrayList;
 
 public class Tarif {
+
+    /**
+     * Liste statique contenant les tarifs du cinéma
+     */
     public static ArrayList<Tarif> TarifOnArrayList = new ArrayList<Tarif>();
 
     private int id;
@@ -26,6 +30,14 @@ public class Tarif {
     private double prix;
     private String description;
 
+    /**
+     * Constructeur d'un tarif
+     *
+     * @param id ID du tarif
+     * @param categorie Catégorie du tarif
+     * @param prix Prix du tarif (hors taxes)
+     * @param description Description du tarif
+     */
     public Tarif(int id, String categorie, double prix, String description) {
         this.id = id;
         this.categorie = categorie;

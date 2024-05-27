@@ -32,14 +32,28 @@ import java.util.Date;
 
 public class Seance
 {
+    /**
+     * Tableau contenant toutes les séances du cinéma
+     */
     public static ArrayList<Seance> seancesArrayList = new ArrayList<>();
+
     private int id;
+    private int noSalle;
     private String dateTime;
     private Film film;
     private String salle_siege;
     private String salle_ecran;
 
-    public Seance(int id, String dateTimeStr, int filmId, String salle_siege, String salle_ecran)
+    /**
+     * Constructeur d'une séance de film
+     * @param id ID de la séance
+     * @param dateTimeStr Date et heure de la séance
+     * @param filmId ID du film de la séance
+     * @param salle_siege Type de siège
+     * @param salle_ecran Type d'écran
+     * @param noSalle Numéro de salle
+     */
+    public Seance(int id, String dateTimeStr, int filmId, String salle_siege, String salle_ecran, int noSalle)
     {
         this.id = id;
         this.film = Film.FilmOnArrayList.get(filmId - 1);
@@ -48,6 +62,7 @@ public class Seance
 
         this.salle_siege = salle_siege;
         this.salle_ecran = salle_ecran;
+        this.noSalle = noSalle;
     }
 
     public int getId()
@@ -83,12 +98,12 @@ public class Seance
 
     @Override
     public String toString() {
-        return dateTime;
+        return dateTime + " | Salle " + noSalle;
     }
 
     /**
-     * @param dateTime
-     * @param filmTitre
+     * @param dateTime Date et heure de la séance
+     * @param filmTitre Titre du film de la séance
      * @return  Id de la séance en fonction de la date et du titre du film
      */
     public static int getIdFromDateAndTitre(String dateTime, String filmTitre) {
