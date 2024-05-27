@@ -1,8 +1,8 @@
 /****************************************
  * Fichier : AccueilActivity.java
- * Auteur : ?????
- * Fonctionnalité : ??????
- * Date : ?????
+ * Auteur : Hicham Abekiri
+ * Fonctionnalité : Page d'accueil (MAcc0)
+ * Date : 17 mai 2024
  *
  * Vérification :
  * Date     Nom     Approuvé
@@ -12,7 +12,8 @@
  * Historique de modifications :
  * Date     Nom     Description
  * =========================================================
- * 22/05/2023   Arthur  Ajout lien vers page de gestion du compte
+ * 17/05/2024   Hicham  Création de l'activité Accueil
+ * 22/05/2024   Arthur  Ajout lien vers page de gestion du compte
  *
  * ****************************************/
 

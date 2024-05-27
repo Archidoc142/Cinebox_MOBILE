@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 public class FilmActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ArrayList<Seance> listSeanceFilm  = new ArrayList<>();
+    ArrayList<Seance> listSeanceFilm = new ArrayList<>();
     Spinner spinnerSeance;
     Spinner spinnerTarif;
 
@@ -142,7 +142,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                             etat.setText(movie.getEtat_film());
                             description.setText(movie.getDescription());
                             if (!listSeanceFilm.isEmpty()) {
-                                salleToStr.setText("Siège: " + Seance.seancesArrayList.get(movie.getId() - 1).getSalle_siege() + "\nÉcran: " + Seance.seancesArrayList.get(movie.getId() - 1).getSalle_ecran() + "\nDurée: " + String.valueOf(movie.getDuration()));
+                                salleToStr.setText("Siège: " + listSeanceFilm.get(0).getSalle_siege() + "\nÉcran: " + listSeanceFilm.get(0).getSalle_ecran() + "\nDurée: " + movie.getDuration());
                             } else {
                                 salleToStr.setText("Durée: " + String.valueOf(movie.getDuration()));
                                 LinearLayout block = findViewById(R.id.toHide);

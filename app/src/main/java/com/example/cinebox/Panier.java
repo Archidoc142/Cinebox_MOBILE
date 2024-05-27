@@ -15,6 +15,7 @@ package com.example.cinebox;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import android.content.Context;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -51,16 +52,10 @@ public class Panier {
         return  getTotal() + (getTVQ() + getTPS());
     }
 
-    public static void payerPanier(Context context)
+    public static void payerPanier(Context context) throws AchatUnsuccessfulException
     {
-        Achat achat = new Achat(context);
+        Achat achat = new Achat(true);
         achat.envoyerAchat(context);
-
-        //faire un Toast "paiement effectué"
-
-       // Achat achatPanier = new Achat();
-
-
     }
 
     public static void viderPanier() {
@@ -80,10 +75,21 @@ public class Panier {
             if(gq.getId() == id)
             {
                 Snack_PanierList.remove(gq);
+                gq.getGrignotine().addOne();
                 break;
             }
         }
     }
 
-
+    public static void removeBillet(int id)
+    {
+        for (Billet b: Billet_PanierList)
+        {
+            if(b.getId() == id)
+            {
+                Billet_PanierList.remove(b);
+                break;
+            }
+        }
+    }
 }

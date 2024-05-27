@@ -6,9 +6,13 @@
  * Vérification :
  * Date Nom Approuvé
  * =========================================================
+ *
  * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
  * 14 mai 2024, Amélie Bergeron, Création de la classe
- * =========================================================****************************************/
+ * 26/05/2024   Arthur  Ajout getIdFromCategorie()
+ *****************************************/
 
 package com.example.cinebox;
 
@@ -59,6 +63,19 @@ public class Tarif {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * @param categorie
+     * @return Id du tarif correspondant à la catégorie donnée dans la list static
+     */
+    public static int getIdFromCategorie(String categorie) {
+        for (int i = 0; i < TarifOnArrayList.size(); i++) {
+            if (TarifOnArrayList.get(i).getCategorie().equalsIgnoreCase(categorie)) {
+                return TarifOnArrayList.get(i).getId();
+            }
+        }
+        throw new IllegalArgumentException("Tarif not found for type: " + categorie);
     }
 
     @Override

@@ -1,8 +1,8 @@
 /****************************************
  * Fichier : APIRequest.java
- * Auteur : ???
+ * Auteur : Hicham, Arthur, Amélie, Antoine
  * Fonctionnalité : Cette class permet de centraliser les requêtes à l'API
- * Date : ?????
+ * Date : 17 mai 2024
  *
  * Vérification :
  * Date     Nom     Approuvé
@@ -12,14 +12,17 @@
  * Historique de modifications :
  * Date     Nom     Description
  * =========================================================
+ * 17/05/2024   Hicham  Création du fichier APIRequests
+ *                      Ajout requêtes pour authentificatione
  * 20/05/2024   Amélie  Création de la requête pour les tarifs
- * 22/05/2023   Arthur  Début Ajout getAchat()
- * 25/05/2023   Arthur  Ajout postClientUpdate()
+ * 22/05/2024   Arthur  Début Ajout getAchat()
+ * 25/05/2024   Arthur  Ajout postClientUpdate()
  * ****************************************/
 
 package com.example.cinebox;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +72,7 @@ public class APIRequests
      */
     private static final String getNextBilletIdURL = apiURL + "billet/nextId";
 
-    public class TokenValidRunnable implements Runnable
+    public static class TokenValidRunnable implements Runnable
     {
         private volatile boolean valid;
 
@@ -82,6 +85,22 @@ public class APIRequests
         public boolean isValid()
         {
             return valid;
+        }
+    }
+
+    public static class AchatRunnable implements Runnable
+    {
+        private volatile boolean result;
+
+        @Override
+        public void run()
+        {
+            result = postVente();
+        }
+
+        public boolean successful()
+        {
+            return result;
         }
     }
 
@@ -224,7 +243,7 @@ public class APIRequests
                         String categorie = snack.getString("categorie");
                         String format = snack.getString("format");
                         double prix_vente = snack.getDouble("prix_vente");
-                        String qte_disponible = snack.getString("qte_disponible");
+                        int qte_disponible = snack.getInt("qte_disponible");
                         String image = snack.getString("image");
 
                         Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
@@ -445,49 +464,6 @@ public class APIRequests
             throw new RuntimeException(e);
         }
     }
-
-    public static void getHistoriqueAchat()
-    {
-        if (Achat.HistoriqueAchats.size() == 0){
-            try {
-                URL obj = new URL(getHistoriqueAchatURL);
-                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                con.setRequestMethod("GET");
-                int responseCode = con.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-                    response = fixJSON(response);
-                    JSONObject json = new JSONObject(response.toString());
-
-                    JSONArray achats = json.getJSONArray("data");
-
-                    for (int i = 0; i < achats.length(); i++) {
-                        JSONObject achat = achats.getJSONObject(i);
-
-                        int id = achat.getInt("id");
-                        //String date = achat.getString("marque");      //--> date dans la table billet
-                        float montant = BigDecimal.valueOf(achat.getDouble("total_brut")).floatValue();
-
-                        //create billet object
-                        //create grignotine vente object
-                        //Achat.HistoriqueAchats.add(new Achat(id, "none", montant));
-                        //Achat.HistoriqueAchats.add(new Achat( "none", montant));
-                    }
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-  
     public static void getTarifs()
     {
         if (Tarif.TarifOnArrayList.size() == 0){
@@ -562,11 +538,17 @@ public class APIRequests
         return false;
     }
 
+    /**
+     * @param token
+     * @param context
+     *
+     * Fonction add Achat in static HistoriqueAchats arrayList
+     */
     public static void getAchats(String token, Context context)
     {
         try
         {
-            URL obj = new URL(getUserURL);
+            URL obj = new URL(getHistoriqueAchatURL);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", "Bearer " + token);
@@ -583,42 +565,16 @@ public class APIRequests
                     response.append(inputLine);
                 }
                 in.close();
+                response = fixJSON(response);
+                JSONObject json = new JSONObject(response.toString());
 
-                JSONObject achatJ = new JSONObject(response.toString());
-                JSONObject billetJ = new JSONObject(achatJ.getString("billets"));
-                JSONObject grignotineJ = new JSONObject(achatJ.getString("grignotines"));
+                JSONArray achats = json.getJSONArray("data");
 
-                int id = achatJ.getInt("no_vente");
+                for (int i = 0; i < achats.length(); i++) {
+                    JSONObject achat = achats.getJSONObject(i);
 
-                String date = achatJ.getString("date_facturation");
-                double montantBrut = achatJ.getDouble("total_brut");
-                double tps = achatJ.getDouble("tps");
-                double tvq = achatJ.getDouble("tvq");
-                double montantFinal = achatJ.getDouble("total_final");
-
-                ArrayList<Billet> billetsAchat = new ArrayList<Billet>();
-                int idBillet = billetJ.getInt("id_billet");
-
-                String seance = billetJ.getString("seance");
-                String film = billetJ.getString("film");
-                String dateBillet = billetJ.getString("date_heure_achat");
-                float montantBillet = Float.parseFloat(billetJ.getString("montant_achat"));
-                String typeBillet = billetJ.getString("type_billet");
-
-                ArrayList<GrignotineQuantite> grignotinesAchat = new ArrayList<GrignotineQuantite>();
-                /*int idGrignotine = billetJ.getInt("id_billet");
-
-                String marque = billetJ.getString("seance");
-                String categorie = billetJ.getString("film");
-                String format = billetJ.getString("date_heure_achat");
-                float prix = Float.parseFloat(billetJ.getString("montant_achat"));
-                String typeBillet = billetJ.getString("type_billet");*/
-
-                Grignotine grignotineProduct = new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", "");
-
-                //billetsAchat.add(new Billet(idBillet, montantBillet, new Tarif(1, "Jeune", 5.50, "Jeune gens"), new Seance(2, "2024-08-12 12:32:33", new Film(4, "Inception", "123", "film test", "2024-08-12", "2024-08-12", "S.F", "Christopher Nolan", "", "none")), new Achat(bille)));
-                grignotinesAchat.add(new GrignotineQuantite(grignotineProduct, 5));
-                Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
+                    Achat.HistoriqueAchats.add(Achat.loadFromJSON(achat));
+                }
             }
             else
             {
@@ -648,8 +604,8 @@ public class APIRequests
                     for (Billet b : Panier.Billet_PanierList)
                     {
                         JSONObject billet = new JSONObject();
-                        billet.put("id_tarif", b.getTarif().getId());
-                        billet.put("id_seance", b.getSeance().getId());
+                        /*billet.put("id_tarif", b.getTarif().getId());
+                        billet.put("id_seance", b.getSeance().getId());*/       //TODO: modifier cette partie
 
                         billets.put(Integer.toString(i), billet);
                         i++;
@@ -711,14 +667,16 @@ public class APIRequests
         if (Utilisateur.getInstance() != null) {
             Utilisateur user = Utilisateur.getInstance();
             try {
-                JSONObject body = new JSONObject();
+
+                //Remplacé par fonction toJSON() in Utilisateur object
+                /*JSONObject body = new JSONObject();
 
                 body.put("id_client", user.getId());
                 body.put("nom_utilisateur", user.getNomUtilisateur());
                 body.put("nom_famille", user.getNom());
                 body.put("prenom", user.getPrenom());
                 body.put("email", user.getCourriel());
-                body.put("telephone", user.getTelephone());
+                body.put("telephone", user.getTelephone());*/
 
                 URL obj = new URL(postClientUpdateURL);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -728,7 +686,7 @@ public class APIRequests
                 con.setDoOutput(true);
 
                 OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
-                writer.write(body.toString());
+                writer.write(user.toJSON().toString());
                 writer.flush();
                 writer.close();
 
