@@ -16,9 +16,15 @@
 
 package com.example.cinebox;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Tarif {
+
+    /**
+     * Liste statique contenant les tarifs du cinéma
+     */
     public static ArrayList<Tarif> TarifOnArrayList = new ArrayList<Tarif>();
 
     private int id;
@@ -26,6 +32,14 @@ public class Tarif {
     private double prix;
     private String description;
 
+    /**
+     * Constructeur d'un tarif
+     *
+     * @param id ID du tarif
+     * @param categorie Catégorie du tarif
+     * @param prix Prix du tarif (hors taxes)
+     * @param description Description du tarif
+     */
     public Tarif(int id, String categorie, double prix, String description) {
         this.id = id;
         this.categorie = categorie;
@@ -63,19 +77,6 @@ public class Tarif {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * @param categorie
-     * @return Id du tarif correspondant à la catégorie donnée dans la list static
-     */
-    public static int getIdFromCategorie(String categorie) {
-        for (int i = 0; i < TarifOnArrayList.size(); i++) {
-            if (TarifOnArrayList.get(i).getCategorie().equalsIgnoreCase(categorie)) {
-                return TarifOnArrayList.get(i).getId();
-            }
-        }
-        throw new IllegalArgumentException("Tarif not found for type: " + categorie);
     }
 
     @Override

@@ -56,6 +56,7 @@ import org.w3c.dom.Text;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class CompteActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
@@ -81,6 +82,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     Utilisateur user;
     private static final String CHANNEL_ID = "0";
 
+    private Integer[] ids = null;
+    private String[] dates = null;
+    private double[] montants = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +108,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             else
                 imageUser.setImageResource(R.drawable.profil_image);
         } else {
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -153,9 +157,12 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             @Override
             public void run() {
                 try {
-                    // Récupération des achats depuis l'API
-                    APIRequests.getAchats(user.getToken(), CompteActivity.this);
-                    insertAchatsToDB(CompteActivity.this);
+                    SQLiteManager sqLiteManager = new SQLiteManager(CompteActivity.this);
+                    if (!sqLiteManager.achatsInDB()) {        //TODO: uncomment this condition to try debug "Adulte" doesnt exist
+                        // Récupération des achats depuis l'API
+                        APIRequests.getAchats(user.getToken(), CompteActivity.this);
+                        insertAchatsToDB(CompteActivity.this);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
@@ -170,9 +177,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
                     @Override
                     public void run() {
                         int size = Achat.HistoriqueAchats.size();
-                        Integer[] ids = new Integer[size];
-                        String[] dates = new String[size];
-                        double[] montants = new double[size];
+                        ids = new Integer[size];
+                        dates = new String[size];
+                        montants = new double[size];
 
                         for (int i = 0; i < size; i++) {
                             Achat achat = Achat.HistoriqueAchats.get(i);
@@ -324,11 +331,6 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     }
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(CompteActivity.this, ConsulterAchatActivity.class);
-
-        //intent.inputExtra....
-
-        startActivity(intent);
     }
 
     @Override
@@ -355,20 +357,27 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             } else {
                 nav_elements.setVisibility(View.GONE);
             }
-        } else if (v.getId() == R.id.connexionNav) {
-            if (Utilisateur.getInstance() != null) {
+        } else if (v.getId() == R.id.connexionNav)
+        {
+            if (Utilisateur.getInstance() != null)
+            {
                 Utilisateur.logOutUser(this);
 
                 View nav = findViewById(R.id.nav);
                 TextView connexion = nav.findViewById(R.id.connexionNav);
                 connexion.setText("Se connecter");
-            } else {
-                Intent intent = new Intent(CompteActivity.this, LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
+
+            Intent intent = new Intent(CompteActivity.this, LoginActivity.class);
+            startActivity(intent);
+
         }
     }
 
+    /**
+     * Cette fonction fait apparaitre les EditTextview pour mettre à jour les informations utilisateur
+     */
     public void showEdit(){
         editButton.setVisibility(View.GONE);
         skipEditButton.setVisibility(View.VISIBLE);
@@ -386,6 +395,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         phoneUserEdit.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Cette fonction fait disparaitre les EditTextview
+     */
     public void showText(){
         editButton.setVisibility(View.VISIBLE);
         skipEditButton.setVisibility(View.GONE);
@@ -403,6 +415,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         phoneUserEdit.setVisibility(View.GONE);
     }
 
+    /**
+     * @param context current activity context
+     * @param titleNotif Title give to the notification
+     * @param contentNotif Content of the notification
+     */
     public void makeNotification(Context context, String titleNotif, String contentNotif) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.profil_image)
@@ -428,12 +445,18 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
 
     }
 
+    /**
+     * Cette fonction fais l'appel de la focntion qui sauvegarde les information de l'utilisateur
+     */
     public void saveToDB() {
         SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
 
         sqLiteManager.updateUtilisateur(user);
     }
 
+    /**
+     * Cette fonction va remplir les EditTextView avec les informations de l'utilisateur pour les éditer facilement
+     */
     public void fillEditText() {
         nomUtilisateurEdit.setText(user.getNomUtilisateur());
         prenomUserEdit.setText(user.getPrenom());
@@ -441,6 +464,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         courrielUserEdit.setText(user.getCourriel());
         phoneUserEdit.setText(user.getTelephone());
     }
+    /**
+     * Cette fonction va remplir les TextView avec les informations de l'utilisateur après mise à jour
+     */
     public void fillTextView() {
         nomUtilisateur.setText(user.getNomUtilisateur());
         prenomUser.setText(user.getPrenom());
@@ -449,6 +475,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         phoneUser.setText(user.getTelephone());     //TODO: voir pour afficher le format suivant si temps suffisant: "(123) 456 7890"
     }
 
+    /**
+     * @return boolean value
+     *
+     * Cette fonction permet d'empêcher l'envoi d'informations ne répondant pas aux formats autorisés
+     */
     public boolean validateEditext() {
         boolean formInputValid = true;
 
@@ -516,6 +547,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         return formInputValid;
     }
 
+    /**
+     * @param context of the current activity
+     *
+     * Cette fonction va faire les appels nécéssaire pour sauvegarder les données des achats dans la BD
+     */
     private void insertAchatsToDB(Context context) {
         for (Achat achat : Achat.HistoriqueAchats) {
             SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);

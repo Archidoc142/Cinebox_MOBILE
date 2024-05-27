@@ -23,9 +23,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class SQLiteManager extends SQLiteOpenHelper {
 
@@ -210,14 +212,14 @@ public class SQLiteManager extends SQLiteOpenHelper {
         return true;
     }
 
-    /**
-     * Vide la table utilisateur de la base de données
-     */
-    public void clearUserDB()
+    public void clearDB()
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("DELETE FROM " + TABLE_USER);
+        db.execSQL("DELETE FROM " + TABLE_ACHATS);
+        db.execSQL("DELETE FROM " + TABLE_ACHAT_SNACK);
+        db.execSQL("DELETE FROM " + TABLE_BILLETS);
     }
 
     public void updateHistoriqueAchat(Achat achat) {
@@ -254,22 +256,60 @@ public class SQLiteManager extends SQLiteOpenHelper {
     public void populateLists() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
-        Achat.HistoriqueAchats.clear();
-
         try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_ACHATS, null)) {
-            if (result.getCount() != 0) {
-                while (result.moveToNext()) {
+            if (result.moveToFirst()) {
+                do {
                     int id = result.getInt(0);
                     String date = result.getString(1);
                     double montant = result.getDouble(5);
+                    //TODO: Tarif catégorie "Adulte" ne trouve pas d'id. Décomenter ce bout cause l'impossibilité de redémarrer l'app sans wipe le cache
+                    ArrayList<Billet> billetList = new ArrayList<>();
+                    ArrayList<GrignotineQuantite> grignotineQuantiteList = new ArrayList<>();
+
+                    try (Cursor resultBillets = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_BILLETS, null)) {
+                        if (resultBillets.moveToFirst()) {
+                            do {
+                                int idB = resultBillets.getInt(0);
+                                double montantB = resultBillets.getDouble(1);
+                                String typeTarif = resultBillets.getString(2);
+                                int idTarifB = Integer.valueOf(typeTarif);
+                                int idFilm = resultBillets.getInt(3);
+                                billetList.add(new Billet(idB, montantB, idTarifB, idFilm));
+                            } while (resultBillets.moveToNext());
+                        }
+                    }
+
+                    try (Cursor resultGrignotines = sqLiteDatabase.rawQuery(
+                            "SELECT " + TABLE_ACHAT_SNACK + ".*, " + TABLE_SNACKS + ".* " +
+                                    "FROM " + TABLE_ACHAT_SNACK + " " +
+                                    "INNER JOIN " + TABLE_SNACKS + " ON " + TABLE_ACHAT_SNACK + ".id_grignotine = " + TABLE_SNACKS + ".id", null)) {
+                        if (resultGrignotines.moveToFirst()) {
+                            do {
+                                int idGri = resultGrignotines.getInt(1);
+                                int qteGriAc = resultGrignotines.getInt(3);
+                                double prixGri = resultGrignotines.getDouble(5);
+                                int qteDispoGri = resultGrignotines.getInt(6);
+                                String categGris = resultGrignotines.getString(7);
+                                String formatGri = resultGrignotines.getString(8);
+                                String marqueGri = resultGrignotines.getString(9);
+                                String imageGri = resultGrignotines.getString(10);
+                                Grignotine grignotine = new Grignotine(idGri, marqueGri, categGris, formatGri, prixGri, qteDispoGri, imageGri);
+                                grignotineQuantiteList.add(new GrignotineQuantite(grignotine, qteGriAc));
+                            } while (resultGrignotines.moveToNext());
+                        }
+                    }
+
                     Achat achat = new Achat(id, date, montant);
+                    achat.addBilletsAchat(billetList);
+                    achat.addGrignotinesAchat(grignotineQuantiteList);
                     Achat.HistoriqueAchats.add(achat);
-                }
+                } while (result.moveToNext());
             }
         }
 
         getUserFromDB();
     }
+
 
     /**
      *  Insertion des snacks dans la base de données
@@ -338,6 +378,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
     public void insertBillet(Billet billet, Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_BILLETS);
+
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("id", billet.getId());
@@ -370,5 +412,20 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("quantite", qte);
 
         db.insert(TABLE_ACHAT_SNACK, null, contentValues);
+    }
+
+    /**
+     * @return boolean value
+     *
+     * Cette fonction valide si des achats sont présent dans la DB
+     */
+    public boolean achatsInDB() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long rows = DatabaseUtils.queryNumEntries(db, TABLE_ACHATS);
+
+        if(rows == 0)
+            return false;
+
+        return true;
     }
 }

@@ -64,7 +64,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             //imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setVisibility(View.INVISIBLE);
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -77,20 +77,162 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
         camera.setOnClickListener(this);
     }
 
+    private boolean isFormValid()
+    {
+        EditText nom = findViewById(R.id.nom);
+        EditText prenom = findViewById(R.id.prenom);
+        EditText username = findViewById(R.id.username);
+        EditText courriel = findViewById(R.id.courriel);
+        EditText telephone = findViewById(R.id.telephone);
+        EditText mot_de_passe = findViewById(R.id.mot_de_passe);
+        EditText confirmation = findViewById(R.id.confirmation);
+
+        // Validation nomUtilisateur
+        String nomUtilisateurPattern = "^[a-z0-9._-]+";
+        if (username.getText().toString().trim().isEmpty()) {
+            username.setError("Veuillez entrer un nom d'utilisateur.");
+            return false;
+        } else if (!username.getText().toString().trim().matches(nomUtilisateurPattern)) {
+            username.setError("Le format du nom d'utilisateur entré est invalide.");
+            return false;
+        } else if (username.getText().toString().trim().length() > 24) {
+            username.setError("Le nom d'utilisateur ne peut pas dépasser 24 caractères.");
+            return false;
+        }
+        else
+        {
+            // Validation prenomUser
+            String nomPrenomPattern = "^[A-ZÀ-Ü][a-zà-ù-]+$";
+            if (prenom.getText().toString().trim().isEmpty()) {
+                prenom.setError("Veuillez entrer un prénom.");
+                return false;
+            } else if (!prenom.getText().toString().trim().matches(nomPrenomPattern)) {
+                prenom.setError("Le format du prénom entré est invalide.");
+                return false;
+            } else if (prenom.getText().toString().trim().length() > 128) {
+                prenom.setError("Le prénom ne peut pas dépasser 128 caractères.");
+                return false;
+            }
+
+            // Validation nomUser
+            if (nom.getText().toString().trim().isEmpty()) {
+                nom.setError("Veuillez entrer un nom de famille.");
+                return false;
+            } else if (!nom.getText().toString().trim().matches(nomPrenomPattern)) {
+                nom.setError("Le format du nom de famille entré est invalide.");
+                return false;
+            } else if (nom.getText().toString().trim().length() > 128) {
+                nom.setError("Le nom de famille ne peut pas dépasser 128 caractères.");
+                return false;
+            }
+            else
+            {
+                // Validation courrielUser
+                String emailPattern = "^([a-z0-9._-]+)@([a-z0-9._-]+)\\.([a-z]{2,6})$";
+                if (courriel.getText().toString().trim().isEmpty()) {
+                    courriel.setError("Veuillez entrer un courriel.");
+                    return false;
+                } else if (!courriel.getText().toString().trim().matches(emailPattern)) {
+                    courriel.setError("Le format du courriel entré est invalide.");
+                    return false;
+                }
+
+                else
+                {
+                    // Validation phoneUser
+                    String phonePattern = "^([0-9\\s\\-\\+\\(\\)]*)$";
+                    if (telephone.getText().toString().trim().isEmpty()) {
+                        telephone.setError("Veuillez entrer un numéro de téléphone.");
+                        return false;
+                    } else if (!telephone.getText().toString().trim().matches(phonePattern)) {
+                        telephone.setError("Le numéro de téléphone ne respecte pas le format attendu.");
+                        return false;
+                    } else if (telephone.getText().toString().trim().length() < 10) {
+                        telephone.setError("Le numéro de téléphone doit comporter au moins 10 caractères.");
+                        return false;
+                    }
+                    else
+                    {
+                        if (mot_de_passe.getText().toString().trim().isEmpty() || confirmation.getText().toString().trim().isEmpty()  ) {
+                            mot_de_passe.setError("Veuillez entrer un mot de passe.");
+                            return false;
+                        } else if (!mot_de_passe.getText().toString().equals(confirmation.getText().toString())) {
+                            mot_de_passe.setError("Mots de passe différents.");
+                            return false;
+                        } else if (mot_de_passe.getText().toString().trim().length() < 8) {
+                            mot_de_passe.setError("Le mot de passe au moins 10 caractères.");
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.camera) {
             askCameraPermissions();
+
         } else if (v.getId() == R.id.inscriptionBtn) {
 
-            EditText mot_de_passe = findViewById(R.id.mot_de_passe);
-            EditText confirmation = findViewById(R.id.confirmation);
             EditText nom = findViewById(R.id.nom);
             EditText prenom = findViewById(R.id.prenom);
             EditText username = findViewById(R.id.username);
             EditText courriel = findViewById(R.id.courriel);
             EditText telephone = findViewById(R.id.telephone);
+            EditText mot_de_passe = findViewById(R.id.mot_de_passe);
 
+            if(isFormValid())
+            {
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("nom_utilisateur", username.getText().toString());
+                    data.put("nom_famille", nom.getText().toString());
+                    data.put("prenom", prenom.getText().toString());
+                    data.put("courriel", courriel.getText().toString());
+                    data.put("telephone", telephone.getText().toString());
+                    data.put("mdp", mot_de_passe.getText().toString());
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean response = APIRequests.addUser(data);
+
+                            if(response)
+                                APIRequests.postLoginUser(courriel.getText().toString(), mot_de_passe.getText().toString(), InscriptionActivity.this);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run()
+                                {
+                                    if (response) {
+                                        Toast.makeText(InscriptionActivity.this, "Inscription effectuée", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
+                                        finish();
+                                        startActivity(intent);
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(InscriptionActivity.this, "Erreur lors de l'inscription.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    }).start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                getLocalisation();
+            }
+
+
+            /*
             if (!mot_de_passe.getText().toString().isEmpty() &&
                     !confirmation.getText().toString().isEmpty() &&
                     !nom.getText().toString().isEmpty() &&
@@ -98,6 +240,8 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                     !username.getText().toString().isEmpty() &&
                     !courriel.getText().toString().isEmpty() &&
                     !telephone.getText().toString().isEmpty()) {
+
+
 
                 if (mot_de_passe.getText().toString().equals(confirmation.getText().toString())) {
 
@@ -115,12 +259,25 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                             public void run() {
                                 boolean response = APIRequests.addUser(data);
 
-                                if (response) {
+                                if(response)
                                     APIRequests.postLoginUser(courriel.getText().toString(), mot_de_passe.getText().toString(), InscriptionActivity.this);
-                                    Toast.makeText(InscriptionActivity.this, "Inscription effectuée", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                }
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        if (response) {
+                                            Toast.makeText(InscriptionActivity.this, "Inscription effectuée", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
+                                            finish();
+                                            startActivity(intent);
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(InscriptionActivity.this, "Erreur lors de l'inscription.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             }
                         }).start();
                     } catch (Exception e) {
@@ -134,18 +291,21 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
 
             } else {
                 Toast.makeText(InscriptionActivity.this, "Un ou plusieurs champs vide!!!", Toast.LENGTH_SHORT).show();
-            }
+            }*/
 
 
 
         } else if (v.getId() == R.id.connexionNav) {
             if (Utilisateur.getInstance() != null) {
-                Utilisateur.logOutUser(this);
+                if (Utilisateur.getInstance() != null) {
+                    Utilisateur.logOutUser(this);
 
-                View nav = findViewById(R.id.nav);
-                TextView connexion = nav.findViewById(R.id.connexionNav);
-                connexion.setText("Se connecter");
-            } else {
+                    View nav = findViewById(R.id.nav);
+                    TextView connexion = nav.findViewById(R.id.connexionNav);
+                    connexion.setText("Se connecter");
+                    finish();
+                }
+
                 Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
                 startActivity(intent);
             }

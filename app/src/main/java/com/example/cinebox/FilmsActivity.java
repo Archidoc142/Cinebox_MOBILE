@@ -52,7 +52,7 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
                 imageUser.setImageResource(R.drawable.profil_image);
         } else {
             imageUser.setVisibility(View.INVISIBLE);
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -122,10 +122,12 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
                 View nav = findViewById(R.id.nav);
                 TextView connexion = nav.findViewById(R.id.connexionNav);
                 connexion.setText("Se connecter");
-            } else {
-                Intent intent = new Intent(FilmsActivity.this, LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
+
+            Intent intent = new Intent(FilmsActivity.this, LoginActivity.class);
+            startActivity(intent);
+
         }
     }
 }

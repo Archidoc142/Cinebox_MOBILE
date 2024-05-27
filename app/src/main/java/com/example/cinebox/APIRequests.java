@@ -310,8 +310,9 @@ public class APIRequests
                         String hour = session.getString("date_heure");
                         String siege = session.getString("salle_siege");
                         String ecran = session.getString("salle_ecran");
+                        int noSalle = session.getInt("no_salle");
 
-                        Seance.seancesArrayList.add(new Seance(idS, hour, filmId, siege, ecran));
+                        Seance.seancesArrayList.add(new Seance(idS, hour, filmId, siege, ecran, noSalle));
                     }
                 }
             } catch (Exception e) {
@@ -658,6 +659,8 @@ public class APIRequests
      */
     public static void getAchats(String token, Context context)
     {
+        Achat.HistoriqueAchats.clear();
+
         try
         {
             URL obj = new URL(getHistoriqueAchatURL);
@@ -716,8 +719,8 @@ public class APIRequests
                     for (Billet b : Panier.Billet_PanierList)
                     {
                         JSONObject billet = new JSONObject();
-                        /*billet.put("id_tarif", b.getTarif().getId());
-                        billet.put("id_seance", b.getSeance().getId());*/       //TODO: modifier cette partie
+                        billet.put("id_tarif", b.getTarif().getId());
+                        billet.put("id_seance", b.getSeance().getId());
 
                         billets.put(Integer.toString(i), billet);
                         i++;
@@ -775,6 +778,11 @@ public class APIRequests
         return false;
     }
 
+    /**
+     * @return boolean value
+     *
+     * cette fonction permet de mettre à jour les information utlisateur vers l'API depuis l'application
+     */
     public static boolean postUserUpdate() {
         if (Utilisateur.getInstance() != null) {
             Utilisateur user = Utilisateur.getInstance();

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class Film {
     /**
-     * Liste de tous les films
+     * Liste statique de tous les films du cinéma
      */
     public static ArrayList<Film> FilmOnArrayList = new ArrayList<Film>();
 
@@ -35,6 +35,20 @@ public class Film {
     private String image_affiche;
     private String etat_film;
 
+    /**
+     * Constructeur d'un film
+     *
+     * @param id ID du film
+     * @param titre Titre du film
+     * @param duration Durée du film (préformaté en HhM)
+     * @param description Description du film
+     * @param date_de_sortie Date de sortie du film
+     * @param date_fin_diffusion Date de fin de diffusion du film
+     * @param categorie Catégorie du film
+     * @param realisateur Réalisateur du film
+     * @param image_affiche URL de l'affiche du film
+     * @param etat_film État du film (en salle, indisponible, bientôt disponible)
+     */
     public Film(int id, String titre, String duration, String description, String date_de_sortie, String date_fin_diffusion, String categorie, String realisateur, String image_affiche, String etat_film) {
         this.id = id;
         this.titre = titre;
@@ -52,10 +66,6 @@ public class Film {
         return etat_film;
     }
 
-    public void setEtat_film(String etat_film) {
-        this.etat_film = etat_film;
-    }
-
     public int getId() {
         return id;
     }
@@ -68,16 +78,8 @@ public class Film {
         return titre;
     }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
-
     public String getDuration() {
         return duration;
-    }
-
-    public void setDuration(String duration) {
-        this.duration = duration;
     }
 
     public String getDescription() {
@@ -88,48 +90,13 @@ public class Film {
         this.description = description;
     }
 
-    public String getDate_de_sortie() {
-        return date_de_sortie;
-    }
-
-    public void setDate_de_sortie(String date_de_sortie) {
-        this.date_de_sortie = date_de_sortie;
-    }
-
-    public String getDate_fin_diffusion() {
-        return date_fin_diffusion;
-    }
-
-    public void setDate_fin_diffusion(String date_fin_diffusion) {
-        this.date_fin_diffusion = date_fin_diffusion;
-    }
-
-    public String getCategorie() {
-        return categorie;
-    }
-
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
-    }
-
-    public String getRealisateur() {
-        return realisateur;
-    }
-
-    public void setRealisateur(String realisateur) {
-        this.realisateur = realisateur;
-    }
-
     public String getImage_affiche() {
         return image_affiche;
     }
 
-    public void setImage_affiche(String image_affiche) {
-        this.image_affiche = image_affiche;
-    }
-
     /**
-     * @param titre
+     * Récupérer un objet film avec son titre
+     * @param titre Titre du film
      * @return Id du film selon son titre
      */
     public static int getIdFromTitre(String titre) {

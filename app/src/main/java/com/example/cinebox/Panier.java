@@ -20,12 +20,24 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class Panier {
+
+    /**
+     * Tous les billets du panier
+     */
     public static ArrayList<Billet> Billet_PanierList = new ArrayList<Billet>();
+
+    /**
+     * Toutes les grignotines du panier avec leurs quantités
+     */
     public static ArrayList<GrignotineQuantite> Snack_PanierList = new ArrayList<GrignotineQuantite>();
 
-    private static double TPS = 0.05;
-    private static double TVQ = 0.09975;
+    private static final double TPS = 0.05;
+    private static final double TVQ = 0.09975;
 
+    /**
+     * Calcule le total des produits du panier (hors taxes)
+     * @return Le total des produits du panier (hors taxes)
+     */
     public static double getTotal() {
         double total = 0;
 
@@ -52,6 +64,11 @@ public class Panier {
         return  getTotal() + (getTVQ() + getTPS());
     }
 
+    /**
+     * Envoyer l'achat à la BD et à l'API
+     * @param context Contexte de l'application
+     * @throws AchatUnsuccessfulException Si l'achat ne fonctionne pas
+     */
     public static void payerPanier(Context context) throws AchatUnsuccessfulException
     {
         Achat achat = new Achat(true);
@@ -63,11 +80,19 @@ public class Panier {
         Billet_PanierList.clear();
     }
 
+    /**
+     * Si le panier est vide
+     * @return si le panier est vide
+     */
     public static boolean isEmpty()
     {
         return Billet_PanierList.isEmpty() && Snack_PanierList.isEmpty();
     }
 
+    /**
+     * Supprime une grignotine avec sa quantité du panier
+     * @param id ID de la grignotine
+     */
     public static void removeGrignotine(int id)
     {
         for (GrignotineQuantite gq: Snack_PanierList)
@@ -81,6 +106,10 @@ public class Panier {
         }
     }
 
+    /**
+     * Supprime un billet du panier
+     * @param id ID du billet
+     */
     public static void removeBillet(int id)
     {
         for (Billet b: Billet_PanierList)

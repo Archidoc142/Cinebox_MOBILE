@@ -102,40 +102,47 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
             @Override
             public void onClick(View v)
             {
-                int oldsize = Panier.Snack_PanierList.size();
-                int oldqte = 0;
-                int indexGQ = 0;
-                boolean dansListe = false;
-
-                for(GrignotineQuantite gq : Panier.Snack_PanierList)
+                if(Utilisateur.getInstance() == null)
                 {
-                    if(gq.getGrignotine().equals(grignotinesDisponibles.get(position)))
+                    Toast.makeText(context, "Veuillez vous connecter pour ajouter au panier.", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    int oldsize = Panier.Snack_PanierList.size();
+                    int oldqte = 0;
+                    int indexGQ = 0;
+                    boolean dansListe = false;
+
+                    for(GrignotineQuantite gq : Panier.Snack_PanierList)
                     {
-                        dansListe = true;
-                        indexGQ = Panier.Snack_PanierList.indexOf(gq);
+                        if(gq.getGrignotine().equals(grignotinesDisponibles.get(position)))
+                        {
+                            dansListe = true;
+                            indexGQ = Panier.Snack_PanierList.indexOf(gq);
+                        }
                     }
-                }
 
-                if(dansListe)
-                {
-                    oldqte = Panier.Snack_PanierList.get(indexGQ).getQuantite();
-                    Panier.Snack_PanierList.get(indexGQ).setQuantite(Panier.Snack_PanierList.get(indexGQ).getQuantite() + 1);
-                }
-                else
-                {
-                    Panier.Snack_PanierList.add(new GrignotineQuantite(grignotinesDisponibles.get(position), 1));
-                }
+                    if(dansListe)
+                    {
+                        oldqte = Panier.Snack_PanierList.get(indexGQ).getQuantite();
+                        Panier.Snack_PanierList.get(indexGQ).setQuantite(Panier.Snack_PanierList.get(indexGQ).getQuantite() + 1);
+                    }
+                    else
+                    {
+                        Panier.Snack_PanierList.add(new GrignotineQuantite(grignotinesDisponibles.get(position), 1));
+                    }
 
-                if(Panier.Snack_PanierList.size() == (oldsize + 1)  || Panier.Snack_PanierList.get(indexGQ).getQuantite() == (oldqte + 1))
-                {
-                    Toast.makeText(context, "La grignotine a été ajoutée au panier.", Toast.LENGTH_SHORT).show();
-                    grignotinesDisponibles.get(position).removeOne();
-                    updateGrignotines();
-                    notifyDataSetChanged();
-                }
-                else
-                {
-                    Toast.makeText(context, "La grignotine n'a pas été ajoutée au panier.", Toast.LENGTH_SHORT).show();
+                    if(Panier.Snack_PanierList.size() == (oldsize + 1)  || Panier.Snack_PanierList.get(indexGQ).getQuantite() == (oldqte + 1))
+                    {
+                        Toast.makeText(context, "La grignotine a été ajoutée au panier.", Toast.LENGTH_SHORT).show();
+                        grignotinesDisponibles.get(position).removeOne();
+                        updateGrignotines();
+                        notifyDataSetChanged();
+                    }
+                    else
+                    {
+                        Toast.makeText(context, "La grignotine n'a pas été ajoutée au panier.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

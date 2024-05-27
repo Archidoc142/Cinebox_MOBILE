@@ -26,27 +26,26 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         loadFromBDToMemory();
-        Intent intent;
 
         /*
             Juste un test pour voir si l'utilisateur peut se reconnecter automatiquement ou pas.
             La page d'accueil resterait toujours la page initiale peu importe le type d'utilisateur.
          */
 
-        if(Utilisateur.loggedIn(this))
+        /*if(Utilisateur.loggedIn(this))
         {
             intent = new Intent(MainActivity.this, AccueilActivity.class);
-        }
+        }*//*
         else
         {
             //intent = new Intent(MainActivity.this, LoginActivity.class);
 
             intent = new Intent(MainActivity.this, LoginActivity.class);
-        }
+        }*/
 
         finish();
 
-        //Intent intent = new Intent(MainActivity.this, CompteActivity.class);
+        Intent intent = new Intent(MainActivity.this, AccueilActivity.class);
 
         startActivity(intent);
 

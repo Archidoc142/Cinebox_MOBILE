@@ -22,6 +22,9 @@ import org.json.JSONObject;
 
 public class Billet
 {
+    /**
+     * L'ID du prochain billet à créer, initialisé depuis l'API
+     */
     private static int nextBilletId = 0;
 
     private int id;
@@ -29,6 +32,14 @@ public class Billet
     private Tarif tarif;
     private Seance seance;
 
+    /**
+     * Constructeur d'un billet
+     *
+     * @param id ID du billet
+     * @param montant Montant du billet (hors taxes)
+     * @param tarifId ID du tarif du billet (enfant, étudiant, adulte...)
+     * @param seanceId ID de la séance
+     */
     public Billet(int id, double montant, int tarifId, int seanceId)
     {
         this.id = id;
@@ -65,17 +76,22 @@ public class Billet
         return montant;
     }
 
+    /**
+     * @param jsonObject
+     * @return An object Billet
+     *
+     * Cette fonction permet de crée directement un object Billet depuis un object JSON envoyé par l'API
+     */
     public static Billet loadFromJSON(JSONObject jsonObject) {
         int id = jsonObject.optInt("id_billet");
         double montant = jsonObject.optDouble("montant_achat");
-        String type_billet = jsonObject.optString("type_billet");
+        int id_tarif = jsonObject.optInt("id_tarif");
         String seanceStr = jsonObject.optString("seance");
         String film = jsonObject.optString("film");
 //        String dateHeureAchat = jsonObject.optString("date_heure_achat");     Champs inutil, car on utilise seulement la date de facturation
 
-        int tarifId = Tarif.getIdFromCategorie(type_billet);
         int seanceId = Seance.getIdFromDateAndTitre(seanceStr, film);
 
-        return new Billet(id, montant, tarifId, seanceId);
+        return new Billet(id, montant, id_tarif, seanceId);
     }
 }

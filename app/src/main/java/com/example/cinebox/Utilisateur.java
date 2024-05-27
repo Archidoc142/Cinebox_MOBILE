@@ -37,6 +37,9 @@ import java.util.ArrayList;
  */
 public class Utilisateur
 {
+    /**
+     * Instance de l'utilisateur connecté
+     */
     private static Utilisateur instance;
 
     private String token;
@@ -70,8 +73,6 @@ public class Utilisateur
         this.id = id;
         this.image = image;
     }
-
-
     
     /** Initialise une session utilisateur dans l'application et insère l'utilisateur dans la BD 
      * @param context Contexte de l'application
@@ -162,7 +163,7 @@ public class Utilisateur
         instance = null;
 
         SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
-        sql.clearUserDB();
+        sql.clearDB();
     }
 
     /**
@@ -232,89 +233,49 @@ public class Utilisateur
         this.id = id;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getNom() {
         return nom;
     }
 
-    /**
-     *
-     * @param nom
-     */
     public void setNom(String nom) {
         this.nom = nom;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getPrenom() {
         return prenom;
     }
 
-    /**
-     *
-     * @param prenom
-     */
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getCourriel() {
         return courriel;
     }
 
-    /**
-     *
-     * @param courriel
-     */
     public void setCourriel(String courriel) {
         this.courriel = courriel;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getTelephone() {
         return telephone;
     }
 
-    /**
-     *
-     * @param telephone
-     */
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
 
-    /**
-     *
-     * @return
-     */
     public Bitmap getImage() {
         return image;
     }
 
-    /**
-     *
-     * @param image
-     */
     public void setImage(Bitmap image) {
         this.image = image;
     }
 
     /**
-     *
-     * @return
+     * Convertit l'image de l'utilisateur à un byte array
+     * @return byte array de l'image
      */
     public byte[] bitmapToArray() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -327,8 +288,8 @@ public class Utilisateur
     }
 
     /**
-     *
-     * @return
+     * Retourne un utilisateur au format JSON
+     * @return Objet JSON de l'utilisateur
      */
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();

@@ -91,7 +91,8 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
         TextView mainTitle = nav.findViewById(R.id.mainTitle);
         Button ajouterPanier = findViewById(R.id.ajouterPanier);
 
-        if (Utilisateur.getInstance() != null) {
+        if (Utilisateur.getInstance() != null)
+        {
             connexion.setText("Se déconnecter");
             if(Utilisateur.getInstance().getImage() != null)
                 imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
@@ -99,7 +100,7 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                 imageUser.setImageResource(R.drawable.profil_image);
         } else {
             imageUser.setVisibility(View.INVISIBLE);
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -182,21 +183,29 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(FilmActivity.this, CompteActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.ajouterPanier) {
-            new Thread(new Runnable() {
-                @Override
-                public void run()
-                {
-                    APIRequests.getNextBilletId();
-                    Billet billet = new Billet(Billet.getNextBilletId(), ((Tarif) spinnerTarif.getSelectedItem()).getPrix(), ((Tarif) spinnerTarif.getSelectedItem()).getId(), ((Seance) spinnerSeance.getSelectedItem()).getId());
-                    Panier.Billet_PanierList.add(billet);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(FilmActivity.this, "Film ajouté au panier", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }).start();
+            if(Utilisateur.getInstance() != null)
+            {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        APIRequests.getNextBilletId();
+                        Billet billet = new Billet(Billet.getNextBilletId(), ((Tarif) spinnerTarif.getSelectedItem()).getPrix(), ((Tarif) spinnerTarif.getSelectedItem()).getId(), ((Seance) spinnerSeance.getSelectedItem()).getId());
+                        Panier.Billet_PanierList.add(billet);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(FilmActivity.this, "Film ajouté au panier", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).start();
+            }
+            else
+            {
+                Toast.makeText(this, "Veuillez vous connecter pour effectuer cette action.", Toast.LENGTH_SHORT).show();
+            }
+
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);
             if (nav_elements.getVisibility() == View.GONE) {
@@ -205,16 +214,18 @@ public class FilmActivity extends AppCompatActivity implements View.OnClickListe
                 nav_elements.setVisibility(View.GONE);
             }
         } else if (v.getId() == R.id.connexionNav) {
-            if (Utilisateur.getInstance() != null) {
+            if (Utilisateur.getInstance() != null)
+            {
                 Utilisateur.logOutUser(this);
 
                 View nav = findViewById(R.id.nav);
                 TextView connexion = nav.findViewById(R.id.connexionNav);
                 connexion.setText("Se connecter");
-            } else {
-                Intent intent = new Intent(FilmActivity.this, LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
+
+            Intent intent = new Intent(FilmActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
     }
 }
