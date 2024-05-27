@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fond"
-    tools:context=".GrignotinesActivity">
+    tools:context=".Grignotine.GrignotinesActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:gravity="center"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:text="Grignotines"
+            android:text="@string/grignotines"
             android:textColor="#FFFFFF"
             android:textSize="32sp"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="Rechercher"
+                android:text="@string/rechercher"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 

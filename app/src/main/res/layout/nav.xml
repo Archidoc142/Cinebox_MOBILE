@@ -36,7 +36,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="49dp"
-                android:text="Cinébox"
+                android:text="@string/app_name"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -79,7 +79,7 @@
                 android:paddingLeft="18dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:text="Se connecter"
+                android:text="@string/se_connecter"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp" />
 
@@ -91,7 +91,7 @@
                 android:paddingLeft="18dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:text="Films"
+                android:text="@string/se_deconnecter"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp" />
 
@@ -103,7 +103,7 @@
                 android:paddingLeft="18dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:text="Grignotines"
+                android:text="@string/grignotines"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp" />
 
@@ -115,7 +115,7 @@
                 android:paddingLeft="18dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:text="Tarifs"
+                android:text="@string/tarifs"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp" />
         </LinearLayout>

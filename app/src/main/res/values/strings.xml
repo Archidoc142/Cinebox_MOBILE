@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cinebox</string>
+    <string name="app_name">Cinébox</string>
     <string name="panier_vide">Le panier est vide.</string>
     <string name="bienvenue">Bienvenue!</string>
     <string name="films_vedette">Films en vedette</string>
@@ -11,4 +11,43 @@
     <string name="forgot_pwd"><u>Mot de passe oublié?</u></string>
     <string name="new_user"><u>Nouvel utilisateur? Inscrivez-vous.</u></string>
     <string name="panierTemporaire">Ce panier est temporaire et sera vidé lors de la fermeture de l\'application.</string>
+
+    <string name="prenom">Prénom :</string>
+    <string name="nom">Nom :</string>
+    <string name="historique">Historique d\'achats :</string>
+
+    <string name="se_connecter">Se connecter</string>
+    <string name="se_deconnecter">Se déconnecter</string>
+    <string name="films">Films</string>
+    <string name="grignotines">Grignotines</string>
+    <string name="tarifs">Tarifs</string>
+
+    <string name="panier">Panier</string>
+    <string name="ajout_panier">Ajouter au panier</string>
+
+    <string name="total_brut">Total brut : </string>
+    <string name="tps">TPS : </string>
+    <string name="tvq">TVQ : </string>
+    <string name="total">Total : </string>
+
+    <string name="payer">Payer</string>
+    <string name="vider">Vider</string>
+
+    <string name="inscription">Inscription</string>
+    <string name="courriel">Courriel</string>
+    <string name="telephone">No. téléphone</string>
+    <string name="confirmer_mdp">Confirmer le mot de passe</string>
+    <string name="photo">Prendre photo :</string>
+    <string name="activer_cam">Activer cam.</string>
+    <string name="sinscrire">S\'inscrire</string>
+
+    <string name="rechercher">Rechercher</string>
+
+    <string name="horaire">Horaire</string>
+    <string name="tarif">Tarif</string>
+
+    <string name="details_facture">Détails de la facture du </string>
+    <string name="billets">** Billets **</string>
+    <string name="grignotines_facture">** Grignotines **</string>
+
 </resources>

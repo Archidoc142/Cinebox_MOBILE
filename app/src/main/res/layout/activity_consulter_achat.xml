@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fond"
-    tools:context=".ConsulterAchatActivity">
+    tools:context=".Achat.ConsulterAchatActivity">
 
     <LinearLayout
         android:layout_width="409dp"
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    android:text="Détail de la facture du "
+                    android:text="@string/details_facture"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
 
@@ -68,7 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="12dp"
-                    android:text="** Billets **"
+                    android:text="@string/billets"
                     android:textColor="@color/titleMovieBlue"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -94,7 +94,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="12dp"
-                    android:text="** Grignotines **"
+                    android:text="@string/grignotines_facture"
                     android:textColor="@color/titleMovieBlue"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -128,7 +128,7 @@
             android:layout_marginBottom="12dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="Total : "
+            android:text="@string/total"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

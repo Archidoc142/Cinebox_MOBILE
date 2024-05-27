@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/fond"
-    tools:context=".InscriptionActivity">
+    tools:context=".Compte.InscriptionActivity">
 
     <include
         android:id="@+id/nav"
@@ -23,7 +23,7 @@
         android:gravity="center"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
-        android:text="Inscription"
+        android:text="@string/inscription"
         android:textColor="#FFFFFF"
         android:textSize="32sp"
         android:textStyle="bold" />
@@ -44,7 +44,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nom :"
+                android:text="@string/nom"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -66,7 +66,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Prénom :"
+                android:text="@string/prenom"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -88,7 +88,7 @@
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nom d'utilisateur :"
+                android:text="@string/username_label"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -110,7 +110,7 @@
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Courriel :"
+                android:text="@string/courriel"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -132,7 +132,7 @@
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No. téléphone :"
+                android:text="@string/telephone"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -154,7 +154,7 @@
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mot de passe :"
+                android:text="@string/password_label"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -176,7 +176,7 @@
                 android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Confirmer le mot de passe :"
+                android:text="@string/confirmer_mdp"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
 
@@ -205,7 +205,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Prendre photo :"
+                    android:text="@string/photo"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
 
@@ -215,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40dp"
                     android:layout_weight="1"
-                    android:text="Activer Cam." />
+                    android:text="@string/activer_cam" />
 
             </LinearLayout>
 
@@ -225,7 +225,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="200dp"
                 android:background="@drawable/buttoninscription"
-                android:text="S'inscrire"
+                android:text="@string/sinscrire"
                 android:textColor="#FFFFFF"
                 app:cornerRadius="10dp" />
 

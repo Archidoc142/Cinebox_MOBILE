@@ -24,8 +24,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.example.cinebox.Achat.Achat;
+import com.example.cinebox.Billet.Billet;
+import com.example.cinebox.Compte.Utilisateur;
+import com.example.cinebox.Grignotine.Grignotine;
+import com.example.cinebox.Grignotine.GrignotineQuantite;
+
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 public class SQLiteManager extends SQLiteOpenHelper {
 

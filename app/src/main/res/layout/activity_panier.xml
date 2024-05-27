@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PanierActivity"
+    tools:context=".Panier.PanierActivity"
     android:background="@color/fond"
     android:orientation="vertical">
 
@@ -29,7 +29,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            android:text="Panier"
+            android:text="@string/panier"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold" />
@@ -99,24 +99,24 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:paddingTop="3dp"
-            android:text="avant"
-            android:textColor="@color/white"/>
+            android:text="@string/total_brut"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tpsPanier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="TPS : "
-            android:textColor="@color/white"/>
+            android:text="@string/tps"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tvqPanier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="TPS : "
-            android:textColor="@color/white"/>
+            android:text="@string/tvq"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/panierTotal"
@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:paddingTop="3dp"
-            android:text="Total : "
+            android:text="@string/total"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -136,28 +136,28 @@
             android:gravity="center"
             android:padding="30dp">
 
-        <Button
-            android:id="@+id/btn_payerPanier"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_blue"
-            android:text="Payer"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_marginEnd="20dp"/>
+            <Button
+                android:id="@+id/btn_payerPanier"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_blue"
+                android:gravity="center"
+                android:text="@string/payer"
+                android:textColor="#FFFFFF" />
 
 
-        <Button
-            android:id="@+id/btn_viderPanier"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_gray"
-            android:text="Vider"
-            android:textColor="@color/fond"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_marginStart="20dp"/>
+            <Button
+                android:id="@+id/btn_viderPanier"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/border_gray"
+                android:gravity="center"
+                android:text="@string/vider"
+                android:textColor="@color/fond" />
     </LinearLayout>
     </LinearLayout>
 

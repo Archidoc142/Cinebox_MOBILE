@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/fond"
-    tools:context=".FilmsActivity">
+    tools:context=".Film.FilmsActivity">
 
         <include
             android:id="@+id/nav"

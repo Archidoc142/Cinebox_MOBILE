@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fond"
-    tools:context=".FilmActivity">
+    tools:context=".Film.FilmActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,6 @@
                     android:gravity="center"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
-                    android:text="I'M A NAME"
                     android:textColor="#FFFFFF"
                     android:textSize="32sp"
                     android:textStyle="bold" />
@@ -58,7 +57,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:gravity="center"
-                    android:text="I'M A CONDITION"
                     android:textColor="@color/titleMovieBlue"
                     android:textSize="30sp" />
 
@@ -70,7 +68,6 @@
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="20dp"
                     android:gravity="center"
-                    android:text="TextView"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />
 
@@ -80,7 +77,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:paddingLeft="45dp"
-                    android:text="I'M A ROOM"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
 
@@ -96,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:paddingLeft="20dp"
-                        android:text="Horaire :"
+                        android:text="@string/horaire"
                         android:textColor="@color/titleMovieBlue"
                         android:textSize="22sp" />
 
@@ -108,6 +104,16 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="15dp"
                         android:layout_marginBottom="10dp" />
+
+                    <TextView
+                        android:id="@+id/tarif"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:paddingLeft="20dp"
+                        android:text="@string/tarif"
+                        android:textColor="@color/titleMovieBlue"
+                        android:textSize="22sp" />
 
                     <Spinner
                         android:id="@+id/spinnerTarif"
@@ -127,7 +133,7 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginBottom="20dp"
                         android:background="#4CAF50"
-                        android:text="Ajouter au panier"
+                        android:text="@string/ajout_panier"
                         android:textColor="#FFFFFF"
                         android:textSize="16sp" />
                 </LinearLayout>

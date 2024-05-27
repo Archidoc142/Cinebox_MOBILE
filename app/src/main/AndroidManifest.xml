@@ -25,47 +25,40 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".AchatActivityFilm"
+            android:name=".Compte.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".TestActivity"
+            android:name=".Accueil.AccueilActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Panier.PanierActivity"
             android:exported="false" />
         <activity
-            android:name=".AccueilActivity"
+            android:name=".Tarif.TarifsActivity"
             android:exported="false" />
         <activity
-            android:name=".PanierActivity"
+            android:name=".Compte.InscriptionActivity"
             android:exported="false" />
         <activity
-            android:name=".TarifsActivity"
+            android:name=".Film.FilmActivity"
             android:exported="false" />
         <activity
-            android:name=".InscriptionActivity"
+            android:name=".Grignotine.GrignotinesActivity"
             android:exported="false" />
         <activity
-            android:name=".FilmActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GrignotinesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".FilmsActivity"
+            android:name=".Film.FilmsActivity"
             android:exported="true" />
         <activity
-            android:name=".CompteActivity"
+            android:name=".Compte.CompteActivity"
             android:exported="true" />
         <activity
-            android:name=".ConsulterAchatActivity"
+            android:name=".Achat.ConsulterAchatActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

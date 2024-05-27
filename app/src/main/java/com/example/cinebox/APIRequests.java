@@ -22,23 +22,27 @@
 package com.example.cinebox;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.example.cinebox.Achat.Achat;
+import com.example.cinebox.Billet.Billet;
+import com.example.cinebox.Billet.Seance;
+import com.example.cinebox.Compte.Utilisateur;
+import com.example.cinebox.Film.Film;
+import com.example.cinebox.Grignotine.Grignotine;
+import com.example.cinebox.Grignotine.GrignotineQuantite;
+import com.example.cinebox.Panier.Panier;
+import com.example.cinebox.Tarif.Tarif;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class APIRequests
