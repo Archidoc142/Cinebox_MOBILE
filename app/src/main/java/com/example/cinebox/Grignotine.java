@@ -117,6 +117,10 @@ public class Grignotine {
         this.image = image;
     }
 
+    /**
+     * @param jsonObject object JSON contenant les informations de d'une grignotine
+     * @return Grignotine object from a JSON object
+     */
     public static Grignotine loadFromJSON(JSONObject jsonObject) {
         Grignotine grignotine = new Grignotine();
         grignotine.id = jsonObject.optInt("id");

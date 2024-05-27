@@ -77,9 +77,10 @@ public class Billet
     }
 
     /**
-     *
      * @param jsonObject
-     * @return
+     * @return An object Billet
+     *
+     * Cette fonction permet de crée directement un object Billet depuis un object JSON envoyé par l'API
      */
     public static Billet loadFromJSON(JSONObject jsonObject) {
         int id = jsonObject.optInt("id_billet");

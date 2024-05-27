@@ -666,6 +666,11 @@ public class APIRequests
         return false;
     }
 
+    /**
+     * @return boolean value
+     *
+     * cette fonction permet de mettre à jour les information utlisateur vers l'API depuis l'application
+     */
     public static boolean postUserUpdate() {
         if (Utilisateur.getInstance() != null) {
             Utilisateur user = Utilisateur.getInstance();
