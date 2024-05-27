@@ -84,6 +84,10 @@ public class GrignotineQuantite
         return grignotine.getPrix_vente() * quantite;
     }
 
+    /**
+     * @param jsonObject object JSON contenant les informations de d'une grignotine et de la quantité
+     * @return GrignotineQuantite object from a JSON object
+     */
     public static GrignotineQuantite loadFromJSON(JSONObject jsonObject) {
         GrignotineQuantite grignotineQuantite = new GrignotineQuantite();
         grignotineQuantite.grignotine = Grignotine.loadFromJSON(jsonObject.optJSONObject("grignotine"));

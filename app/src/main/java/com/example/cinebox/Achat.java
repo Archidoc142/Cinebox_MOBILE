@@ -265,7 +265,7 @@ public class Achat
     }
 
     /**
-     * @param jsonObject
+     * @param jsonObject object JSON contenant les informations de l'achat (billets, grignotines, ect)
      * @return Achat object from a JSON object
      */
     public static Achat loadFromJSON(JSONObject jsonObject) {

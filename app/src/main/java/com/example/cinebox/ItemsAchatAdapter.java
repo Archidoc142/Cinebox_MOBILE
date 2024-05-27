@@ -35,7 +35,16 @@ public class ItemsAchatAdapter extends RecyclerView.Adapter<ItemsAchatAdapter.It
     private Context context;
     private RecyclerViewInterface recyclerViewInterface;
 
-    // Constructor
+    /**
+     * @param context
+     * @param nom
+     * @param categorie
+     * @param qte
+     * @param prixUnitaire
+     * @param recyclerViewInterface
+     *
+     * Constructeur pour les billets acheté comme pour les grignotines acheté
+     */
     public ItemsAchatAdapter(Context context, String[] nom, String[] categorie, Integer[] qte, double[] prixUnitaire, RecyclerViewInterface recyclerViewInterface) {
         this.context = context;
         this.nom = nom;

@@ -414,6 +414,11 @@ public class SQLiteManager extends SQLiteOpenHelper {
         db.insert(TABLE_ACHAT_SNACK, null, contentValues);
     }
 
+    /**
+     * @return boolean value
+     *
+     * Cette fonction valide si des achats sont présent dans la DB
+     */
     public boolean achatsInDB() {
         SQLiteDatabase db = this.getReadableDatabase();
         long rows = DatabaseUtils.queryNumEntries(db, TABLE_ACHATS);
