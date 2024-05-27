@@ -19,6 +19,7 @@ package com.example.cinebox;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,18 @@ public class HistoriqueAchatAdapter extends RecyclerView.Adapter<HistoriqueAchat
     public void onBindViewHolder(@NonNull HistoriqueAchatAdapter.HistoriqueAchatViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.dateAchat.setText("- " + date[position]);
         holder.montantAchat.setText(String.valueOf(montant[position])+'$');
+
+
+        holder.montantAchat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ConsulterAchatActivity.class);
+
+                intent.putExtra("idAchat", position);
+
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

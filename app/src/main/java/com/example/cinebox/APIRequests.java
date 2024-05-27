@@ -547,6 +547,8 @@ public class APIRequests
      */
     public static void getAchats(String token, Context context)
     {
+        Achat.HistoriqueAchats.clear();
+
         try
         {
             URL obj = new URL(getHistoriqueAchatURL);

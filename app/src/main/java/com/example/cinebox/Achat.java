@@ -206,11 +206,16 @@ public class Achat
     public ArrayList<Billet> getBilletsAchat() {
         return billetsAchat;
     }
+    public void addBilletsAchat(ArrayList<Billet> billet) {
+        this.billetsAchat = billet;
+    }
 
     public ArrayList<GrignotineQuantite> getGrignotinesAchat() {
         return grignotinesAchat;
     }
-
+    public void addGrignotinesAchat(ArrayList<GrignotineQuantite> grignotineQuantite) {
+        this.grignotinesAchat = grignotineQuantite;
+    }
     public static int getNextId()
     {
         return nextAchatId;
