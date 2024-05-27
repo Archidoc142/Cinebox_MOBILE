@@ -54,7 +54,7 @@ public class Panier {
 
     public static void payerPanier(Context context) throws AchatUnsuccessfulException
     {
-        Achat achat = new Achat();
+        Achat achat = new Achat(true);
         achat.envoyerAchat(context);
     }
 

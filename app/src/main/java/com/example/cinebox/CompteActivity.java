@@ -17,7 +17,8 @@
  * 22/05/2023   Arthur  Ajout notification après modification information compte
  * 23/05/2024   Arthur  Save modification into DB
  * 24/05/2024   Arthur  Début sauvgearde vers API
- * 25/05/2024   Arthur  Fin sauvegarde vers API + Ajout Validation de champs avant sauvegarde
+ * 25/05/2024   Arthur  Fin sauvegarde vers API + Ajout Validation de champs avant sauvegarde + Début Ajout loadFromJSON
+ * 26/05/2024   Arthur  AJout Achat + infos insertIntoBD + Affichage historique d'achat from DB
  * ****************************************/
 
 package com.example.cinebox;
@@ -29,6 +30,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -50,6 +52,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CompteActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
     public static final int CAMERA_PERM_CODE = 101;
@@ -73,10 +80,6 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
 
     Utilisateur user;
     private static final String CHANNEL_ID = "0";
-
-    private Integer[] id = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-    private String[] date = {"2023/01/01", "2023/02/01", "2023/03/01", "2023/04/01", "2023/05/01", "2023/06/01", "2023/01/01", "2023/02/01", "2023/03/01", "2023/04/01", "2023/05/01", "2023/06/01"};
-    private double[] montant = {10.5, 20.0, 15.75, 30.0, 25.5, 50.0, 10.5, 20.0, 15.75, 30.0, 25.5, 50.0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,10 +152,48 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    // Récupération des achats depuis l'API
+                    APIRequests.getAchats(user.getToken(), CompteActivity.this);
+                    insertAchatsToDB(CompteActivity.this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(CompteActivity.this, "Erreur lors de la récupération des achats.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    return;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        HistoriqueAchatAdapter myAdapter = new HistoriqueAchatAdapter(CompteActivity.this, id, date, montant, CompteActivity.this);
+                        int size = Achat.HistoriqueAchats.size();
+                        Integer[] ids = new Integer[size];
+                        String[] dates = new String[size];
+                        double[] montants = new double[size];
+
+                        for (int i = 0; i < size; i++) {
+                            Achat achat = Achat.HistoriqueAchats.get(i);
+                            ids[i] = achat.getId();
+
+                            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inputFormat.parse(achat.getDate());
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                            String formattedDate = null;
+                            // Extraire data
+                            formattedDate = outputFormat.format(date);
+                            dates[i] = formattedDate;
+                            montants[i] = achat.getMontantFinal();
+                        }
+
+                        HistoriqueAchatAdapter myAdapter = new HistoriqueAchatAdapter(CompteActivity.this, ids, dates, montants, CompteActivity.this);
                         recyclerView.setAdapter(myAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(CompteActivity.this));
                         saveIntoAPI.setOnClickListener(new View.OnClickListener() {
@@ -473,5 +514,24 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         }
 
         return formInputValid;
+    }
+
+    private void insertAchatsToDB(Context context) {
+        for (Achat achat : Achat.HistoriqueAchats) {
+            SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+            sqLiteManager.insertAchat(achat);
+
+            if (achat.getBilletsAchat() != null) {
+                for (Billet billet : achat.getBilletsAchat()) {
+                    sqLiteManager.insertBillet(billet, achat);
+                }
+            }
+
+            if (achat.getGrignotinesAchat() != null) {
+                for (GrignotineQuantite grignotine : achat.getGrignotinesAchat()) {
+                    sqLiteManager.insertGrignotineQte(grignotine, achat);
+                }
+            }
+        }
     }
 }

@@ -13,10 +13,12 @@
  * Date     Nom     Description
  * =========================================================
  * 23/05/2024  Hicham  Création de la classe
- *
+ * 25/05/2024   Arthur  Ajout loadFromJSON()
  * ****************************************/
 
 package com.example.cinebox;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -50,6 +52,12 @@ public class GrignotineQuantite
         this.id = Panier.Snack_PanierList.size();
     }
 
+    public GrignotineQuantite() {
+        this.id = 0;
+        this.grignotine = null;
+        this.quantite = 0;
+    }
+
     public Grignotine getGrignotine() {
         return grignotine;
     }
@@ -74,5 +82,12 @@ public class GrignotineQuantite
     public double getPrixQte()
     {
         return grignotine.getPrix_vente() * quantite;
+    }
+
+    public static GrignotineQuantite loadFromJSON(JSONObject jsonObject) {
+        GrignotineQuantite grignotineQuantite = new GrignotineQuantite();
+        grignotineQuantite.grignotine = Grignotine.loadFromJSON(jsonObject.optJSONObject("grignotine"));
+        grignotineQuantite.quantite = jsonObject.optInt("quantite");
+        return grignotineQuantite;
     }
 }

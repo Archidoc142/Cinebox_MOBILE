@@ -13,10 +13,12 @@
  * Date     Nom     Description
  * =========================================================
  * 25/05/2024  Antoine,Hicham   Modifications pour l'envoi de l'achat
- *
+ * 26/05/2024   Arthur  Ajout loadFromJSON
  * ****************************************/
 
 package com.example.cinebox;
+
+import org.json.JSONObject;
 
 public class Billet
 {
@@ -61,5 +63,19 @@ public class Billet
 
     public double getMontant() {
         return montant;
+    }
+
+    public static Billet loadFromJSON(JSONObject jsonObject) {
+        int id = jsonObject.optInt("id_billet");
+        double montant = jsonObject.optDouble("montant_achat");
+        String type_billet = jsonObject.optString("type_billet");
+        String seanceStr = jsonObject.optString("seance");
+        String film = jsonObject.optString("film");
+//        String dateHeureAchat = jsonObject.optString("date_heure_achat");     Champs inutil, car on utilise seulement la date de facturation
+
+        int tarifId = Tarif.getIdFromCategorie(type_billet);
+        int seanceId = Seance.getIdFromDateAndTitre(seanceStr, film);
+
+        return new Billet(id, montant, tarifId, seanceId);
     }
 }

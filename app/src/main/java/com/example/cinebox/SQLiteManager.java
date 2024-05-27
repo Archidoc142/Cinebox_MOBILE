@@ -10,6 +10,7 @@
  * Date         Nom     Description
  * =========================================================
  * 23/05/2024   Arthur  Save user into DB
+ * 26/05/2024   Arthur  Modification populateList() pour populate Historique d'achat en même temps
  * ****************************************/
 
 package com.example.cinebox;
@@ -258,10 +259,11 @@ public class SQLiteManager extends SQLiteOpenHelper {
         try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_ACHATS, null)) {
             if (result.getCount() != 0) {
                 while (result.moveToNext()) {
+                    int id = result.getInt(0);
                     String date = result.getString(1);
-                    float montant = result.getFloat(2);
-          //          Achat achat = new Achat(date, montant);
-           //         Achat.HistoriqueAchats.add(achat);
+                    double montant = result.getDouble(5);
+                    Achat achat = new Achat(id, date, montant);
+                    Achat.HistoriqueAchats.add(achat);
                 }
             }
         }
@@ -338,14 +340,15 @@ public class SQLiteManager extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put("id", billet.getId());
+
         contentValues.put("id_achat", achat.getId());
-        contentValues.put("seance", billet.getSeance().getId());
+        //contentValues.put("seance", billet.getSeance().getId());
         contentValues.put("film", billet.getSeance().getFilm().getId());
-        contentValues.put("montant", billet.getMontant());
-        contentValues.put("type_billet", billet.getTarif().getCategorie());
+        contentValues.put("montant_achat", billet.getMontant());
+        contentValues.put("type_tarif", billet.getTarif().getCategorie());
 
         db.insert(TABLE_BILLETS, null, contentValues);
-        //contentValues.put("id", utilisateur.getId());
     }
 
     /**
@@ -368,5 +371,4 @@ public class SQLiteManager extends SQLiteOpenHelper {
 
         db.insert(TABLE_ACHAT_SNACK, null, contentValues);
     }
-
 }

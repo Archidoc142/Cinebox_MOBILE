@@ -11,12 +11,15 @@
  * Date     Nom     Description
  * =========================================================
  * 22/05/2024   Arthur  Ajout des lists billetsAchat et grignotinesAchat au constructeur pour importation depuis BD
- *
+ * 25/05/2024   Arthur  Ajout loadFromJSON()
  * ****************************************/
 
 package com.example.cinebox;
 
 import android.content.Context;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,9 +78,39 @@ public class Achat
     private double montantFinal;
 
     /**
-     * Création d'un achat à partir du contenu du panier
+     * Création d'un achat à partir du contenu du panier ou un achat importé
      */
-    public Achat()
+    public Achat(boolean fromPanier)
+    {
+        if(fromPanier)
+        {
+            if(!Panier.isEmpty())
+            {
+                billetsAchat = Panier.Billet_PanierList;
+                grignotinesAchat = Panier.Snack_PanierList;
+
+                this.id = nextAchatId;
+                this.date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                this.montantBrut = Panier.getTotal();
+                this.tps = Panier.getTPS();
+                this.tvq = Panier.getTVQ();
+                this.montantFinal = Panier.getTotalFinal();
+            }
+        }
+        else
+        {
+            this.billetsAchat = null;
+            this.grignotinesAchat = null;
+            this.id = 0;
+            this.date = null;
+            this.montantBrut = 0;
+            this.tps = 0;
+            this.tvq = 0;
+            this.montantFinal = 0;
+        }
+    }
+
+    public Achat(Context context)
     {
         if(!Panier.isEmpty())
         {
@@ -90,6 +123,11 @@ public class Achat
             this.tps = Panier.getTPS();
             this.tvq = Panier.getTVQ();
             this.montantFinal = Panier.getTotalFinal();
+
+            SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+            sqLiteManager.insertAchat(this);
+
+            nextAchatId++;
         }
     }
 
@@ -114,6 +152,23 @@ public class Achat
         this.montantFinal = montantFinal;
         this.billetsAchat = billetsAchat;
         this.grignotinesAchat = grignotinesAchat;
+    }
+
+    /*
+    public Achat() {
+        id = 0;
+        date = null;
+        montantBrut = 0;
+    }*/
+
+
+    public Achat(int id, String date, double montantFinal) {
+        this.id = id;
+        this.date = date;
+        this.montantBrut = 0;   //pas besoin du montant brut
+        this.tps = 0;       //Pas besoin des taxes
+        this.tvq = 0;       //Pas besoin des taxes
+        this.montantFinal = montantFinal;
     }
 
     public int getId() {
@@ -178,8 +233,7 @@ public class Achat
      * Insère l'achat dans la BD et l'envoie ensuite au serveur via l'API
      * @param context Contexte de l'application
      */
-    public void envoyerAchat(Context context) throws AchatUnsuccessfulException
-    {
+    public void envoyerAchat(Context context) throws AchatUnsuccessfulException {
         SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
         sql.insertAchatFromPanier(this);
 
@@ -188,51 +242,62 @@ public class Achat
         Thread thread = new Thread(achatRunnable);
         thread.start();
 
-        try
-        {
+        try {
             thread.join();
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        if(achatRunnable.successful())
-        {
+        if (achatRunnable.successful()) {
             incrementNextAchatId();
             Billet.incrementNextBilletId(Panier.Billet_PanierList.size());
             Panier.Billet_PanierList.clear();
             Panier.Snack_PanierList.clear();
-        }
-        else
-        {
+        } else {
             sql.deleteAchat(this);
             throw new AchatUnsuccessfulException();
         }
+    }
 
+    /**
+     * @param jsonObject
+     * @return Achat object from a JSON object
+     */
+    public static Achat loadFromJSON(JSONObject jsonObject) {
+        Achat achat = new Achat(false);
+        achat.id = jsonObject.optInt("no_vente");
+        achat.date = jsonObject.optString("date_facturation");
+        achat.montantBrut = jsonObject.optDouble("total_brut");
+        achat.tps = jsonObject.optDouble("tps");
+        achat.tvq = jsonObject.optDouble("tvq");
+        achat.montantFinal = Double.parseDouble(jsonObject.optString("total_final").replace(",", "."));
 
-        /**
+        // Initialisation des ArrayList
+        achat.billetsAchat = new ArrayList<>();
+        achat.grignotinesAchat = new ArrayList<>();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    if(APIRequests.postVente())
-                    {
-                        incrementNextAchatId();
-                        Billet.incrementNextBilletId(Panier.Billet_PanierList.size());
-                        Panier.Billet_PanierList.clear();
-                        Panier.Snack_PanierList.clear();
-                    }
+        JSONArray billetsArray = jsonObject.optJSONArray("billets");
+        if (billetsArray != null) {
+            for (int i = 0; i < billetsArray.length(); i++) {
+                JSONObject billetObject = billetsArray.optJSONObject(i);
+                if (billetObject != null) {
+                    Billet billet = Billet.loadFromJSON(billetObject);
+                    achat.billetsAchat.add(billet);
                 }
-                catch(AchatUnsuccessfulException e)
-                {
-
-                }
-
             }
-        }).start();*/
+        }
+
+        JSONArray grignotinesArray = jsonObject.optJSONArray("grignotines");
+        if (grignotinesArray != null) {
+            for (int i = 0; i < grignotinesArray.length(); i++) {
+                JSONObject grignotineObject = grignotinesArray.optJSONObject(i);
+                if (grignotineObject != null) {
+                    GrignotineQuantite grignotineQuantite = GrignotineQuantite.loadFromJSON(grignotineObject);
+                    achat.grignotinesAchat.add(grignotineQuantite);
+                }
+            }
+        }
+
+        return achat;
     }
 }
