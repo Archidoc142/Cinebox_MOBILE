@@ -87,37 +87,19 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
         filmsRecycler.setNestedScrollingEnabled(false);
         snacksRecycler.setNestedScrollingEnabled(false);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run()
-            {
-                APIRequests.getFilms();
-                APIRequests.getSnacks(AccueilActivity.this);
-                APIRequests.getTarifs();
-                APIRequests.getSeances();
+        AccueilAdapter accueilAdapter = new AccueilAdapter();
 
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        AccueilAdapter accueilAdapter = new AccueilAdapter();
+        AccueilAdapter.FilmsAdapterAccueil filmAdapter = accueilAdapter.new FilmsAdapterAccueil(AccueilActivity.this);
+        AccueilAdapter.GrignotinesAdapterAccueil snackAdapter = accueilAdapter.new GrignotinesAdapterAccueil(AccueilActivity.this);
 
-                        AccueilAdapter.FilmsAdapterAccueil filmAdapter = accueilAdapter.new FilmsAdapterAccueil(AccueilActivity.this);
-                        AccueilAdapter.GrignotinesAdapterAccueil snackAdapter = accueilAdapter.new GrignotinesAdapterAccueil(AccueilActivity.this);
+        GridLayoutManager filmLayoutManager = new GridLayoutManager(AccueilActivity.this, 2),
+                snackLayoutManager = new GridLayoutManager(AccueilActivity.this, 2);
 
-                        GridLayoutManager filmLayoutManager = new GridLayoutManager(AccueilActivity.this, 2),
-                                snackLayoutManager = new GridLayoutManager(AccueilActivity.this, 2);
+        filmsRecycler.setAdapter(filmAdapter);
+        filmsRecycler.setLayoutManager(filmLayoutManager);
 
-                        filmsRecycler.setAdapter(filmAdapter);
-                        filmsRecycler.setLayoutManager(filmLayoutManager);
-
-                        snacksRecycler.setAdapter(snackAdapter);
-                        snacksRecycler.setLayoutManager(snackLayoutManager);
-                    }
-                });
-            }
-        }).start();
+        snacksRecycler.setAdapter(snackAdapter);
+        snacksRecycler.setLayoutManager(snackLayoutManager);
     }
 
     @Override

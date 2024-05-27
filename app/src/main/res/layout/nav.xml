@@ -91,7 +91,7 @@
                 android:paddingLeft="18dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:text="@string/se_deconnecter"
+                android:text="@string/films"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp" />
 

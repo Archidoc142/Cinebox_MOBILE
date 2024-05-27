@@ -18,10 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cinebox.Accueil.AccueilActivity;
 import com.example.cinebox.Compte.CompteActivity;
@@ -31,6 +34,8 @@ import com.example.cinebox.Grignotine.GrignotinesActivity;
 import com.example.cinebox.Panier.PanierActivity;
 import com.example.cinebox.R;
 import com.example.cinebox.Tarif.TarifsActivity;
+import com.example.cinebox.APIRequests;
+import java.util.ArrayList;
 
 public class FilmsActivity extends AppCompatActivity implements View.OnClickListener {
     @Override
@@ -44,6 +49,7 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         TextView tarifs = nav.findViewById(R.id.tarifsNav);
         TextView connexion = nav.findViewById(R.id.connexionNav);
         ImageView imageUser = nav.findViewById(R.id.imageProfil);
+        ImageView searchBtn = findViewById(R.id.searchBtn);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
         TextView mainTitle = nav.findViewById(R.id.mainTitle);
@@ -67,6 +73,7 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         imageUser.setOnClickListener(this);
         cartNav.setOnClickListener(this);
         mainTitle.setOnClickListener(this);
+        searchBtn.setOnClickListener(this);
 
         RecyclerView recyclerView = findViewById(R.id.recycler);
         GridLayoutManager layoutManager = new GridLayoutManager(FilmsActivity.this, 2);
@@ -74,6 +81,12 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
+
+        Intent intent = getIntent();
+        ArrayList<String> list = intent.getStringArrayListExtra("list");
+        if (list != null && !list.isEmpty()) {
+            adapter.filter(list);
+        }
     }
 
     @Override
@@ -93,6 +106,18 @@ public class FilmsActivity extends AppCompatActivity implements View.OnClickList
         } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(FilmsActivity.this, CompteActivity.class);
             startActivity(intent);
+        } else if (v.getId() == R.id.searchBtn) {
+            new Thread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    EditText film_search = findViewById(R.id.grignotine_name);
+                    ArrayList<String> arrayList = APIRequests.getFilmByName(String.valueOf(film_search.getText()));
+                    Intent intent = new Intent(FilmsActivity.this, FilmsActivity.class);
+                    intent.putExtra("list", arrayList);
+                    startActivity(intent);
+                }
+            }).start();
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);
             if (nav_elements.getVisibility() == View.GONE) {

@@ -106,16 +106,12 @@ public class Seance
     public static int getIdFromDateAndTitre(String dateTime, String filmTitre) {
         String formattedTime = null;
         try {
-            // Formatter la date
             DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = originalFormat.parse(dateTime);
 
-            // Extraire l'heure et les minutes
             DateFormat targetFormat = new SimpleDateFormat("HH:mm");
             formattedTime = targetFormat.format(date);
 
-            // Afficher le résultat
-            System.out.println("Heure et minutes uniquement: " + formattedTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }

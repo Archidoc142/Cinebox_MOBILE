@@ -155,6 +155,29 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
         return id.length;
     }
 
+    /**
+     * Les snacks qui ne sont pas dans la liste se voit retiré
+     * @param list
+     */
+    public void filter(ArrayList<String> list) {
+        ArrayList<Integer> idArray = new ArrayList<>();
+        ArrayList<String> nomArray = new ArrayList<>();
+        ArrayList<String> imagesArray = new ArrayList<>();
+
+        for (Grignotine g : Grignotine.GrignotineOnArrayList)
+        {
+            if (list.contains(g.getCategorie())) {
+                idArray.add(g.getId());
+                nomArray.add(g.getCategorie() + " (" + g.getFormat() + ")");
+                imagesArray.add(g.getImage());
+            }
+        }
+
+        this.id = idArray.toArray(new Integer[idArray.size()]);
+        this.nom = nomArray.toArray(new String[nomArray.size()]);
+        this.images = imagesArray.toArray(new String[imagesArray.size()]);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         LinearLayout layout;
         TextView id;

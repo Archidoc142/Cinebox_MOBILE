@@ -18,6 +18,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.cinebox.Accueil.AccueilActivity;
+import com.example.cinebox.Billet.Seance;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -25,44 +28,36 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
-        loadFromBDToMemory();
+        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
 
-        /*
-            Juste un test pour voir si l'utilisateur peut se reconnecter automatiquement ou pas.
-            La page d'accueil resterait toujours la page initiale peu importe le type d'utilisateur.
-         */
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                APIRequests.getFilms();
+                APIRequests.getTarifs();
+                APIRequests.getSeances();
+                APIRequests.getNextAchatId();
+                APIRequests.getSnacks(MainActivity.this);
+            }}
+        );
 
-        /*if(Utilisateur.loggedIn(this))
-        {
-            intent = new Intent(MainActivity.this, AccueilActivity.class);
-        }*//*
-        else
-        {
-            //intent = new Intent(MainActivity.this, LoginActivity.class);
+        thread.start();
 
-            intent = new Intent(MainActivity.this, LoginActivity.class);
-        }*/
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        sqLiteManager.populateLists();
 
         finish();
-
         Intent intent = new Intent(MainActivity.this, AccueilActivity.class);
 
         startActivity(intent);
 
-    }
-
-    private void loadFromBDToMemory()
-    {
-        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
-        sqLiteManager.populateLists();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                APIRequests.getNextAchatId();
-            }
-        }).start();
     }
 }

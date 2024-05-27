@@ -23,6 +23,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.example.cinebox.Achat.Achat;
 import com.example.cinebox.Billet.Billet;
@@ -31,6 +32,8 @@ import com.example.cinebox.Grignotine.Grignotine;
 import com.example.cinebox.Grignotine.GrignotineQuantite;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class SQLiteManager extends SQLiteOpenHelper {
 
@@ -105,7 +108,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
                 "CREATE TABLE " + TABLE_BILLETS + " (" +
                         "id INTEGER, " +
                         "montant_achat REAL, " +
-                        "type_tarif TEXT, " +
+                        //"type_tarif TEXT, " +
+                        "id_tarif INT, " +
                         "film TEXT, " +
                         "id_achat INTEGER, " +
                         "FOREIGN KEY(id_achat) REFERENCES " + TABLE_USER + "(id) ON DELETE CASCADE)"
@@ -259,22 +263,64 @@ public class SQLiteManager extends SQLiteOpenHelper {
     public void populateLists() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
-        Achat.HistoriqueAchats.clear();
-
-        try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_ACHATS, null)) {
-            if (result.getCount() != 0) {
-                while (result.moveToNext()) {
+        try (Cursor result = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_ACHATS, null))
+        {
+            if (result.moveToFirst())
+            {
+                do
+                {
                     int id = result.getInt(0);
                     String date = result.getString(1);
                     double montant = result.getDouble(5);
+                    ArrayList<Billet> billetList = new ArrayList<>();
+                    ArrayList<GrignotineQuantite> grignotineQuantiteList = new ArrayList<>();
+
+                    try (Cursor resultBillets = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_BILLETS + " WHERE id_achat=?", new String[]{Integer.toString(id)}))
+                    {
+                        if (resultBillets.moveToFirst())
+                        {
+                            do
+                            {
+                                int idB = resultBillets.getInt(0);
+                                double montantB = resultBillets.getDouble(1);
+                                int idTarif = resultBillets.getInt(3);
+                                int idFilm = resultBillets.getInt(3);
+                                billetList.add(new Billet(idB, montantB, idTarif, idFilm));
+                            } while (resultBillets.moveToNext());
+                        }
+                    }
+
+                    try (Cursor resultGrignotines = sqLiteDatabase.rawQuery(
+                            "SELECT " + TABLE_ACHAT_SNACK + ".*, " + TABLE_SNACKS + ".* " +
+                                    "FROM " + TABLE_ACHAT_SNACK + " " +
+                                    "INNER JOIN " + TABLE_SNACKS + " ON " + TABLE_ACHAT_SNACK + ".id_grignotine = " + TABLE_SNACKS + ".id" + " WHERE id_achat=?", new String[]{Integer.toString(id)}, null)) {
+                        if (resultGrignotines.moveToFirst()) {
+                            do {
+                                int idGri = resultGrignotines.getInt(1);
+                                int qteGriAc = resultGrignotines.getInt(3);
+                                double prixGri = resultGrignotines.getDouble(5);
+                                int qteDispoGri = resultGrignotines.getInt(6);
+                                String categGris = resultGrignotines.getString(7);
+                                String formatGri = resultGrignotines.getString(8);
+                                String marqueGri = resultGrignotines.getString(9);
+                                String imageGri = resultGrignotines.getString(10);
+                                Grignotine grignotine = new Grignotine(idGri, marqueGri, categGris, formatGri, prixGri, qteDispoGri, imageGri);
+                                grignotineQuantiteList.add(new GrignotineQuantite(grignotine, qteGriAc));
+                            } while (resultGrignotines.moveToNext());
+                        }
+                    }
+
                     Achat achat = new Achat(id, date, montant);
+                    achat.addBilletsAchat(billetList);
+                    achat.addGrignotinesAchat(grignotineQuantiteList);
                     Achat.HistoriqueAchats.add(achat);
-                }
+                } while (result.moveToNext());
             }
         }
 
         getUserFromDB();
     }
+
 
     /**
      *  Insertion des snacks dans la base de données
@@ -335,6 +381,12 @@ public class SQLiteManager extends SQLiteOpenHelper {
         db.delete(TABLE_BILLETS, "id_achat=" + achat.getId(), null);
     }
 
+    public void clearBillets()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_BILLETS);
+    }
+
     /**
      * Insertion d'un billet à la base de données
      * @param billet Le billet à insérer
@@ -343,6 +395,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
     public void insertBillet(Billet billet, Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("id", billet.getId());
@@ -351,7 +404,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
         //contentValues.put("seance", billet.getSeance().getId());
         contentValues.put("film", billet.getSeance().getFilm().getId());
         contentValues.put("montant_achat", billet.getMontant());
-        contentValues.put("type_tarif", billet.getTarif().getCategorie());
+        //contentValues.put("type_tarif", billet.getTarif().getCategorie());
+        contentValues.put("id_tarif", billet.getTarif().getId());
 
         db.insert(TABLE_BILLETS, null, contentValues);
     }
@@ -375,5 +429,20 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("quantite", qte);
 
         db.insert(TABLE_ACHAT_SNACK, null, contentValues);
+    }
+
+    /**
+     * @return boolean value
+     *
+     * Cette fonction valide si des achats sont présent dans la DB
+     */
+    public boolean achatsInDB() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long rows = DatabaseUtils.queryNumEntries(db, TABLE_ACHATS);
+
+        if(rows == 0)
+            return false;
+
+        return true;
     }
 }

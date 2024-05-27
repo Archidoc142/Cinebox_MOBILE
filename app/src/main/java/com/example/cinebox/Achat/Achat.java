@@ -96,7 +96,7 @@ public class Achat
                 grignotinesAchat = Panier.Snack_PanierList;
 
                 this.id = nextAchatId;
-                this.date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                this.date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
                 this.montantBrut = Panier.getTotal();
                 this.tps = Panier.getTPS();
                 this.tvq = Panier.getTVQ();
@@ -124,7 +124,7 @@ public class Achat
             grignotinesAchat = Panier.Snack_PanierList;
 
             this.id = nextAchatId;
-            this.date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            this.date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
             this.montantBrut = Panier.getTotal();
             this.tps = Panier.getTPS();
             this.tvq = Panier.getTVQ();
@@ -194,29 +194,34 @@ public class Achat
     }
 
     public double getmontantBrut() {
-        return montantBrut;
+        return Double.parseDouble(String.format("%.2f", montantBrut));
     }
 
     public double getTps() {
-        return tps;
+        return Double.parseDouble(String.format("%.2f", tps));
     }
 
     public double getTvq() {
-        return tvq;
+        return Double.parseDouble(String.format("%.2f", tvq));
     }
 
     public double getMontantFinal() {
-        return montantFinal;
+        return Double.parseDouble(String.format("%.2f", montantFinal));
     }
 
     public ArrayList<Billet> getBilletsAchat() {
         return billetsAchat;
     }
+    public void addBilletsAchat(ArrayList<Billet> billet) {
+        this.billetsAchat = billet;
+    }
 
     public ArrayList<GrignotineQuantite> getGrignotinesAchat() {
         return grignotinesAchat;
     }
-
+    public void addGrignotinesAchat(ArrayList<GrignotineQuantite> grignotineQuantite) {
+        this.grignotinesAchat = grignotineQuantite;
+    }
     public static int getNextId()
     {
         return nextAchatId;
@@ -256,6 +261,7 @@ public class Achat
 
         if (achatRunnable.successful()) {
             incrementNextAchatId();
+            Achat.HistoriqueAchats.add(this);
             Billet.incrementNextBilletId(Panier.Billet_PanierList.size());
             Panier.Billet_PanierList.clear();
             Panier.Snack_PanierList.clear();
@@ -266,10 +272,11 @@ public class Achat
     }
 
     /**
-     * @param jsonObject
+     * @param jsonObject object JSON contenant les informations de l'achat (billets, grignotines, ect)
      * @return Achat object from a JSON object
      */
-    public static Achat loadFromJSON(JSONObject jsonObject) {
+    public static Achat loadFromJSON(JSONObject jsonObject)
+    {
         Achat achat = new Achat(false);
         achat.id = jsonObject.optInt("no_vente");
         achat.date = jsonObject.optString("date_facturation");

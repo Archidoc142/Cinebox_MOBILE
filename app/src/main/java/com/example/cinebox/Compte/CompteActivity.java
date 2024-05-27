@@ -64,6 +64,7 @@ import com.example.cinebox.Tarif.TarifsActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class CompteActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
@@ -89,6 +90,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     Utilisateur user;
     private static final String CHANNEL_ID = "0";
 
+    private Integer[] ids = null;
+    private String[] dates = null;
+    private double[] montants = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,9 +165,12 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             @Override
             public void run() {
                 try {
-                    // Récupération des achats depuis l'API
-                    APIRequests.getAchats(user.getToken(), CompteActivity.this);
-                    insertAchatsToDB(CompteActivity.this);
+                    SQLiteManager sqLiteManager = new SQLiteManager(CompteActivity.this);
+                    if (!sqLiteManager.achatsInDB()) {        //TODO: uncomment this condition to try debug "Adulte" doesnt exist
+                        // Récupération des achats depuis l'API
+                        APIRequests.getAchats(user.getToken(), CompteActivity.this);
+                        insertAchatsToDB(CompteActivity.this);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
@@ -177,10 +184,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        /*
                         int size = Achat.HistoriqueAchats.size();
-                        Integer[] ids = new Integer[size];
-                        String[] dates = new String[size];
-                        double[] montants = new double[size];
+                        ids = new Integer[size];
+                        dates = new String[size];
+                        montants = new double[size];
 
                         for (int i = 0; i < size; i++) {
                             Achat achat = Achat.HistoriqueAchats.get(i);
@@ -202,6 +210,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
                         }
 
                         HistoriqueAchatAdapter myAdapter = new HistoriqueAchatAdapter(CompteActivity.this, ids, dates, montants, CompteActivity.this);
+                        */
+
+                        HistoriqueAchatAdapter myAdapter = new HistoriqueAchatAdapter(CompteActivity.this, CompteActivity.this);
                         recyclerView.setAdapter(myAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(CompteActivity.this));
                         saveIntoAPI.setOnClickListener(new View.OnClickListener() {
@@ -289,6 +300,16 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         });
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerAchats);
+        HistoriqueAchatAdapter adapter = new HistoriqueAchatAdapter(this, this);
+        recyclerView.setAdapter(adapter);
+    }
+
     public void askCameraPermissions() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERM_CODE);
@@ -332,11 +353,6 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     }
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(CompteActivity.this, ConsulterAchatActivity.class);
-
-        //intent.inputExtra....
-
-        startActivity(intent);
     }
 
     @Override
@@ -381,6 +397,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         }
     }
 
+    /**
+     * Cette fonction fait apparaitre les EditTextview pour mettre à jour les informations utilisateur
+     */
     public void showEdit(){
         editButton.setVisibility(View.GONE);
         skipEditButton.setVisibility(View.VISIBLE);
@@ -398,6 +417,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         phoneUserEdit.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Cette fonction fait disparaitre les EditTextview
+     */
     public void showText(){
         editButton.setVisibility(View.VISIBLE);
         skipEditButton.setVisibility(View.GONE);
@@ -415,6 +437,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         phoneUserEdit.setVisibility(View.GONE);
     }
 
+    /**
+     * @param context current activity context
+     * @param titleNotif Title give to the notification
+     * @param contentNotif Content of the notification
+     */
     public void makeNotification(Context context, String titleNotif, String contentNotif) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.profil_image)
@@ -440,12 +467,18 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
 
     }
 
+    /**
+     * Cette fonction fais l'appel de la focntion qui sauvegarde les information de l'utilisateur
+     */
     public void saveToDB() {
         SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
 
         sqLiteManager.updateUtilisateur(user);
     }
 
+    /**
+     * Cette fonction va remplir les EditTextView avec les informations de l'utilisateur pour les éditer facilement
+     */
     public void fillEditText() {
         nomUtilisateurEdit.setText(user.getNomUtilisateur());
         prenomUserEdit.setText(user.getPrenom());
@@ -453,6 +486,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         courrielUserEdit.setText(user.getCourriel());
         phoneUserEdit.setText(user.getTelephone());
     }
+    /**
+     * Cette fonction va remplir les TextView avec les informations de l'utilisateur après mise à jour
+     */
     public void fillTextView() {
         nomUtilisateur.setText(user.getNomUtilisateur());
         prenomUser.setText(user.getPrenom());
@@ -461,6 +497,11 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         phoneUser.setText(user.getTelephone());     //TODO: voir pour afficher le format suivant si temps suffisant: "(123) 456 7890"
     }
 
+    /**
+     * @return boolean value
+     *
+     * Cette fonction permet d'empêcher l'envoi d'informations ne répondant pas aux formats autorisés
+     */
     public boolean validateEditext() {
         boolean formInputValid = true;
 
@@ -528,18 +569,27 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
         return formInputValid;
     }
 
-    private void insertAchatsToDB(Context context) {
-        for (Achat achat : Achat.HistoriqueAchats) {
-            SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+    /**
+     * @param context of the current activity
+     *
+     * Cette fonction va faire les appels nécéssaire pour sauvegarder les données des achats dans la BD
+     */
+    private void insertAchatsToDB(Context context)
+    {
+        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
+        sqLiteManager.clearBillets();
+
+        for (Achat achat : Achat.HistoriqueAchats)
+        {
             sqLiteManager.insertAchat(achat);
 
-            if (achat.getBilletsAchat() != null) {
+            if (!achat.getBilletsAchat().isEmpty()) {
                 for (Billet billet : achat.getBilletsAchat()) {
                     sqLiteManager.insertBillet(billet, achat);
                 }
             }
 
-            if (achat.getGrignotinesAchat() != null) {
+            if (!achat.getGrignotinesAchat().isEmpty()) {
                 for (GrignotineQuantite grignotine : achat.getGrignotinesAchat()) {
                     sqLiteManager.insertGrignotineQte(grignotine, achat);
                 }

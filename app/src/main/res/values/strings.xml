@@ -46,7 +46,7 @@
     <string name="horaire">Horaire</string>
     <string name="tarif">Tarif</string>
 
-    <string name="details_facture">Détails de la facture du </string>
+    <string name="details_facture">Détails de la facture du : </string>
     <string name="billets">** Billets **</string>
     <string name="grignotines_facture">** Grignotines **</string>
 

@@ -51,19 +51,19 @@ public class Panier {
             total += g.getPrixQte();
         }
 
-        return total;
+        return Double.parseDouble(String.format("%.2f", total));
     }
 
     public static double getTPS() {
-        return (getTotal() * TPS);
+        return Double.parseDouble(String.format("%.2f", (getTotal() * TPS)));
     }
 
     public static double getTVQ() {
-        return (getTotal() * TVQ);
+        return Double.parseDouble(String.format("%.2f", (getTotal() * TVQ)));
     }
 
     public static double getTotalFinal() {
-        return  getTotal() + (getTVQ() + getTPS());
+        return Double.parseDouble(String.format("%.2f", getTotal() + (getTVQ() + getTPS())));
     }
 
     /**
