@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class GrignotinesActivity extends AppCompatActivity implements View.OnClickListener {
     @Override
@@ -49,6 +51,7 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
         TextView mainTitle = nav.findViewById(R.id.mainTitle);
+        ImageView searchBtn = findViewById(R.id.searchBtn);
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
@@ -69,28 +72,20 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
         mainTitle.setOnClickListener(this);
         imageUser.setOnClickListener(this);
         cartNav.setOnClickListener(this);
+        searchBtn.setOnClickListener(this);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run()
-            {
-                APIRequests.getSnacks(GrignotinesActivity.this);
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        GridLayoutManager layoutManager = new GridLayoutManager(GrignotinesActivity.this, 2);
+        GrignotinesAdapter adapter = new GrignotinesAdapter(GrignotinesActivity.this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
 
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        RecyclerView recyclerView = findViewById(R.id.recycler);
-                        GridLayoutManager layoutManager = new GridLayoutManager(GrignotinesActivity.this, 2);
-                        GrignotinesAdapter adapter = new GrignotinesAdapter(GrignotinesActivity.this);
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setAdapter(adapter);
-                        recyclerView.setLayoutManager(layoutManager);
-                    }
-                });
-            }
-        }).start();
+        Intent intent = getIntent();
+        ArrayList<String> list = intent.getStringArrayListExtra("list");
+        if (list != null && !list.isEmpty()) {
+            adapter.filter(list);
+        }
     }
 
     @Override
@@ -111,6 +106,18 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
         } else if (v.getId() == R.id.imageProfil) {
             Intent intent = new Intent(GrignotinesActivity.this, CompteActivity.class);
             startActivity(intent);
+        } else if (v.getId() == R.id.searchBtn) {
+            new Thread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    EditText grignotine_search = findViewById(R.id.grignotine_name);
+                    ArrayList<String> arrayList = APIRequests.getGrignotineByName(String.valueOf(grignotine_search.getText()));
+                    Intent intent = new Intent(GrignotinesActivity.this, GrignotinesActivity.class);
+                    intent.putExtra("list", arrayList);
+                    startActivity(intent);
+                }
+            }).start();
         } else if (v.getId() == R.id.listNav) {
             LinearLayout nav_elements = findViewById(R.id.nav_elements);
             if (nav_elements.getVisibility() == View.GONE) {

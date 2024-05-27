@@ -88,6 +88,29 @@ public class FilmsAdapter extends RecyclerView.Adapter<FilmsAdapter.MyViewHolder
         return id.length;
     }
 
+    /**
+     * Les films qui ne sont pas dans la liste se voit retiré
+     * @param list
+     */
+    public void filter(ArrayList<String> list) {
+        ArrayList<Integer> idArray = new ArrayList<>();
+        ArrayList<String> nomArray = new ArrayList<>();
+        ArrayList<String> imagesArray = new ArrayList<>();
+
+        for (Film f : Film.FilmOnArrayList)
+        {
+            if (list.contains(f.getTitre())) {
+                idArray.add(f.getId());
+                nomArray.add(f.getTitre());
+                imagesArray.add(f.getImage_affiche());
+            }
+        }
+
+        this.id = idArray.toArray(new Integer[idArray.size()]);
+        this.nom = nomArray.toArray(new String[nomArray.size()]);
+        this.images = imagesArray.toArray(new String[imagesArray.size()]);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView id, nom;
         ImageView imageView;

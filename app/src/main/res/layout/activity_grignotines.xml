@@ -48,27 +48,17 @@
                 android:padding="6dp"
                 android:src="@drawable/loupe" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="199dp"
+            <EditText
+                android:id="@+id/grignotine_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_marginRight="60dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:ems="10"
+                android:inputType="text"
                 android:text="Rechercher"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp" />
-
-            <ImageView
-                android:id="@+id/stateBtn"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="6dp"
-                android:src="@drawable/arrow_right"
-                android:visibility="invisible" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 

@@ -71,6 +71,14 @@ public class APIRequests
      * URL de l'API pour obtenir la nouvelle valeur de nextBilletId
      */
     private static final String getNextBilletIdURL = apiURL + "billet/nextId";
+    /**
+     * URL de l'API pour obtenir les films selon un nom demandé
+     */
+    private static final String getFilmByName = apiURL + "films/";
+    /**
+     * URL de l'API pour obtenir les films selon un nom demandé
+     */
+    private static final String getGrignotineByName = apiURL + "snacks/";
 
     public static class TokenValidRunnable implements Runnable
     {
@@ -157,6 +165,110 @@ public class APIRequests
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Retourne la liste des films demandé
+     */
+    public static ArrayList<String> getFilmByName(String name)
+    {
+        ArrayList<String> arrayList = new ArrayList();
+
+        if (Film.FilmOnArrayList.size() != 0) {
+            try {
+                URL obj = new URL(getFilmByName + name);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+
+                System.out.println("fetch request");
+                int responseCode = con.getResponseCode();
+
+                System.out.println(responseCode);
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    System.out.println(response);
+                    response = fixJSON(response);
+                    JSONObject json = new JSONObject(response.toString());
+
+                    JSONArray movies = json.getJSONArray("data");
+
+                    for (Film filmsBD:Film.FilmOnArrayList) {
+                        for (int i = 0; i < movies.length(); i++) {
+                            JSONObject movie = movies.getJSONObject(i);
+
+                            int id = movie.getInt("id");
+                            if (id == filmsBD.getId()) {
+                                arrayList.add(filmsBD.getTitre());
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return arrayList;
+    }
+
+    /**
+     * Retourne la liste des grignotines demandé
+     */
+    public static ArrayList<String> getGrignotineByName(String name)
+    {
+        ArrayList<String> arrayList = new ArrayList();
+
+        if (Grignotine.GrignotineOnArrayList.size() != 0) {
+            try {
+                URL obj = new URL(getGrignotineByName + name);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+
+                System.out.println("fetch request");
+                int responseCode = con.getResponseCode();
+
+                System.out.println(responseCode);
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    System.out.println(response);
+                    response = fixJSON(response);
+                    JSONObject json = new JSONObject(response.toString());
+
+                    JSONArray snacks = json.getJSONArray("data");
+
+                    for (Grignotine snacksBD:Grignotine.GrignotineOnArrayList) {
+                        for (int i = 0; i < snacks.length(); i++) {
+                            JSONObject snack = snacks.getJSONObject(i);
+
+                            int id = snack.getInt("id");
+                            if (id == snacksBD.getId()) {
+                                arrayList.add(snacksBD.getCategorie());
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return arrayList;
     }
 
     /**
