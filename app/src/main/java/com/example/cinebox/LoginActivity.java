@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText pwdInput;
     private TextView inscriptionTxt;
     private Button loginBtn;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
         ImageView cartNav = nav.findViewById(R.id.cartNav);
+        progressBar = findViewById(R.id.progressBar);
 
         if (Utilisateur.getInstance() != null) {
             connexion.setText("Se déconnecter");
@@ -84,26 +87,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(LoginActivity.this, InscriptionActivity.class);
             startActivity(intent);
         }
-        else if(v.getId() == R.id.login_btn)
-        {
+        else if(v.getId() == R.id.login_btn) {
             String username = userInput.getText().toString();
             String pwd = pwdInput.getText().toString();
 
-            if(!username.isEmpty() && !pwd.isEmpty())
+            if(username.trim().isEmpty() || !username.trim().matches("^([a-z0-9._-]+)@([a-z0-9._-]+)\\.([a-z]{2,6})$"))
             {
-                Toast.makeText(this, "nice", Toast.LENGTH_SHORT).show();
+                userInput.setError("Veuillez entrer une adresse courriel.");
+            }
+            else if(pwd.trim().isEmpty())
+            {
+                pwdInput.setError("Veuillez entrer un mot de passe.");
+            }
+            else
+            {
+                loginBtn.setEnabled(false);
+                progressBar.setVisibility(View.VISIBLE);
+                userInput.setEnabled(false);
+                pwdInput.setEnabled(false);
 
                 new Thread(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        if(APIRequests.postLoginUser(username, pwd, LoginActivity.this))
-                        {
-                            runOnUiThread(new Runnable()
-                            {
+                    public void run() {
+                        if (APIRequests.postLoginUser(username, pwd, LoginActivity.this)) {
+                            runOnUiThread(new Runnable() {
                                 @Override
-                                public void run()
-                                {
+                                public void run() {
                                     Toast.makeText(LoginActivity.this, "Bienvenue " + Utilisateur.getInstance().getNom(), Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -112,30 +121,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             //Intent intent = new Intent(LoginActivity.this, PanierActivity.class);
                             finish();
                             startActivity(intent);
-                        }
-                        else
-                        {
-                            runOnUiThread(new Runnable()
-                            {
+                        } else {
+                            runOnUiThread(new Runnable() {
                                 @Override
                                 public void run()
                                 {
-                                    Toast.makeText(LoginActivity.this, "Fail!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Impossible de se connecter.", Toast.LENGTH_SHORT).show();
+                                    loginBtn.setEnabled(true);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    userInput.setEnabled(true);
+                                    pwdInput.setEnabled(true);
                                 }
                             });
                         }
                     }
                 }).start();
-            } else if (v.getId() == R.id.connexionNav) {
-                if (Utilisateur.getInstance() != null) {
-                    Utilisateur.logOutUser(this);
-
-                    View nav = findViewById(R.id.nav);
-                    TextView connexion = nav.findViewById(R.id.connexionNav);
-                    connexion.setText("Se connecter");
-                }
-            } else {
-                Toast.makeText(this, "not nice", Toast.LENGTH_SHORT).show();
             }
         }
         else if (v.getId() == R.id.filmsNav)
