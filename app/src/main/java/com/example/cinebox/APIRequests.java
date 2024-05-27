@@ -41,17 +41,32 @@ import java.util.Arrays;
 public class APIRequests
 {
     private static final String apiURL = "http://20.121.131.16/api/";
+    /**
+     * URL de l'API pour obtenir la liste des films en JSON
+     */
     private static final String getFilmsURL = apiURL + "films";
+    /**
+     *  URL de l'API pour obtenir la liste des grignotines en JSON
+     */
     private static final String getSnacksURL = apiURL + "snacks";
     private static final String postLoginURL = apiURL + "token";
     private static final String getUserURL = apiURL + "user";
+    /**
+     * URL de l'API pout ajouter un compte client dans la BD
+     */
     private static final String addUserURL = apiURL + "client/ajout";
     private static final String postClientUpdateURL = apiURL + "client/update";
     private static final String getTarifsURL = apiURL + "tarifs";
     private static final String getHistoriqueAchatURL = apiURL + "ventes";
     private static final String getNextAchatIdURL = apiURL + "vente/nextId";
     private static final String postVenteAjoutURL = apiURL + "vente/ajout";
+    /**
+     * URL de l'API pour obtenir la liste des séances en JSON
+     */
     private static final String getSeances = apiURL + "seances";
+    /**
+     * URL de l'API pour obtenir la nouvelle valeur de nextBilletId
+     */
     private static final String getNextBilletIdURL = apiURL + "billet/nextId";
 
     public class TokenValidRunnable implements Runnable
@@ -70,6 +85,9 @@ public class APIRequests
         }
     }
 
+    /**
+     * Popule la liste FilmOnArrayList de la class Film
+     */
     public static void getFilms()
     {
         if (Film.FilmOnArrayList.size() == 0) {
@@ -122,6 +140,9 @@ public class APIRequests
         }
     }
 
+    /**
+     * Popule la liste seancesArrayList de la class Seance
+     */
     public static void getSeances()
     {
         if (Film.FilmOnArrayList.size() != 0) {
@@ -168,6 +189,10 @@ public class APIRequests
         }
     }
 
+    /**
+     * Popule la liste GrignotineOnArrayList de la class Grignotine
+     * @param context
+     */
     public static void getSnacks(Context context)
     {
         if (Grignotine.GrignotineOnArrayList.size() == 0){
@@ -381,6 +406,9 @@ public class APIRequests
         }
     }
 
+    /**
+     * Incrémente la variable nextBilletId de la class Billet
+     */
     public static void getNextBilletId()
     {
         try
@@ -500,6 +528,11 @@ public class APIRequests
         }
     }
 
+    /**
+     * Ajoute un utilisateur à la BD avec les informations de body
+     * @param body
+     * @return
+     */
     public static boolean addUser(JSONObject body) {
         try {
             URL obj = new URL(addUserURL);

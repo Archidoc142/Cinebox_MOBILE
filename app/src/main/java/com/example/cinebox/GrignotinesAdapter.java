@@ -73,6 +73,9 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
                 .error(R.drawable.image_not_found)
                 .into(holder.imageView);
 
+        /**
+         * Cliquer sur le nom d'une grignotine permet de l'ajouter au panier
+         */
         holder.nom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

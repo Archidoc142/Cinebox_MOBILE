@@ -70,6 +70,9 @@ public class FilmsAdapter extends RecyclerView.Adapter<FilmsAdapter.MyViewHolder
                 .error(R.drawable.image_not_found)
                 .into(holder.imageView);
 
+        /**
+         * Cliquer sur l'image d'un film permet d'accéder à ses informations
+         */
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

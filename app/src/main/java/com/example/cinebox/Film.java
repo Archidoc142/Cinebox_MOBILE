@@ -17,6 +17,9 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 public class Film {
+    /**
+     * Liste de tous les films
+     */
     public static ArrayList<Film> FilmOnArrayList = new ArrayList<Film>();
 
     private int id;

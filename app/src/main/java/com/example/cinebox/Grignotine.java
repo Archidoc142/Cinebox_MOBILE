@@ -15,6 +15,9 @@ package com.example.cinebox;
 import java.util.ArrayList;
 
 public class Grignotine {
+    /**
+     * Liste de tous les grignotines
+     */
     public static ArrayList<Grignotine> GrignotineOnArrayList = new ArrayList<Grignotine>();
 
     private int id;
