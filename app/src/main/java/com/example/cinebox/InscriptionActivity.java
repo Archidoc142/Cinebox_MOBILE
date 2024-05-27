@@ -64,7 +64,7 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
             //imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setVisibility(View.INVISIBLE);
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -140,12 +140,15 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
 
         } else if (v.getId() == R.id.connexionNav) {
             if (Utilisateur.getInstance() != null) {
-                Utilisateur.logOutUser(this);
+                if (Utilisateur.getInstance() != null) {
+                    Utilisateur.logOutUser(this);
 
-                View nav = findViewById(R.id.nav);
-                TextView connexion = nav.findViewById(R.id.connexionNav);
-                connexion.setText("Se connecter");
-            } else {
+                    View nav = findViewById(R.id.nav);
+                    TextView connexion = nav.findViewById(R.id.connexionNav);
+                    connexion.setText("Se connecter");
+                    finish();
+                }
+
                 Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
                 startActivity(intent);
             }

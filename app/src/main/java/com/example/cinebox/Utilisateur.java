@@ -162,7 +162,7 @@ public class Utilisateur
         instance = null;
 
         SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
-        sql.clearUserDB();
+        sql.clearDB();
     }
 
     /**

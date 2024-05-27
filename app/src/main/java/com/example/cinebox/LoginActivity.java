@@ -45,6 +45,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         View nav = findViewById(R.id.nav);
 
+        TextView filmsNav = nav.findViewById(R.id.filmsNav);
+        TextView grignotinesNav = nav.findViewById(R.id.grignotinesNav);
+        TextView tarifsNav = nav.findViewById(R.id.tarifsNav);
         TextView connexion = nav.findViewById(R.id.connexionNav);
         ImageView imageUser = nav.findViewById(R.id.imageProfil);
         ImageView listNav = nav.findViewById(R.id.listNav);
@@ -55,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //imageUser.setImageBitmap(Utilisateur.getInstance().getImage());
         } else {
             imageUser.setVisibility(View.INVISIBLE);
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -77,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(LoginActivity.this, InscriptionActivity.class);
             startActivity(intent);
         }
-        if(v.getId() == R.id.login_btn)
+        else if(v.getId() == R.id.login_btn)
         {
             String username = userInput.getText().toString();
             String pwd = pwdInput.getText().toString();
@@ -97,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 @Override
                                 public void run()
                                 {
-                                    Toast.makeText(LoginActivity.this, "Working!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Bienvenue " + Utilisateur.getInstance().getNom(), Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -130,6 +133,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else {
                 Toast.makeText(this, "not nice", Toast.LENGTH_SHORT).show();
             }
+        }
+        else if (v.getId() == R.id.filmsNav)
+        {
+            Intent intent = new Intent(LoginActivity.this, FilmsActivity.class);
+            startActivity(intent);
+        }
+        else if (v.getId() == R.id.grignotinesNav)
+        {
+            Intent intent = new Intent(LoginActivity.this, GrignotinesActivity.class);
+            startActivity(intent);
+        }
+        else if (v.getId() == R.id.tarifsNav)
+        {
+            Intent intent = new Intent(LoginActivity.this, TarifsActivity.class);
+            startActivity(intent);
+        }
+        else if (v.getId() == R.id.listNav)
+        {
+            LinearLayout nav_elements = findViewById(R.id.nav_elements);
+
+            if (nav_elements.getVisibility() == View.GONE)
+                nav_elements.setVisibility(View.VISIBLE);
+
+            else
+                nav_elements.setVisibility(View.GONE);
         }
     }
 }

@@ -604,8 +604,8 @@ public class APIRequests
                     for (Billet b : Panier.Billet_PanierList)
                     {
                         JSONObject billet = new JSONObject();
-                        /*billet.put("id_tarif", b.getTarif().getId());
-                        billet.put("id_seance", b.getSeance().getId());*/       //TODO: modifier cette partie
+                        billet.put("id_tarif", b.getTarif().getId());
+                        billet.put("id_seance", b.getSeance().getId());
 
                         billets.put(Integer.toString(i), billet);
                         i++;

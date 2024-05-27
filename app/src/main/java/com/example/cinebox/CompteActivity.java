@@ -104,7 +104,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             else
                 imageUser.setImageResource(R.drawable.profil_image);
         } else {
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -355,17 +355,21 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             } else {
                 nav_elements.setVisibility(View.GONE);
             }
-        } else if (v.getId() == R.id.connexionNav) {
-            if (Utilisateur.getInstance() != null) {
+        } else if (v.getId() == R.id.connexionNav)
+        {
+            if (Utilisateur.getInstance() != null)
+            {
                 Utilisateur.logOutUser(this);
 
                 View nav = findViewById(R.id.nav);
                 TextView connexion = nav.findViewById(R.id.connexionNav);
                 connexion.setText("Se connecter");
-            } else {
-                Intent intent = new Intent(CompteActivity.this, LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
+
+            Intent intent = new Intent(CompteActivity.this, LoginActivity.class);
+            startActivity(intent);
+
         }
     }
 

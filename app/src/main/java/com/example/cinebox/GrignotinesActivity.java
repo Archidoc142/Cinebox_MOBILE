@@ -58,7 +58,7 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
                 imageUser.setImageResource(R.drawable.profil_image);
         } else {
             imageUser.setVisibility(View.INVISIBLE);
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -125,10 +125,11 @@ public class GrignotinesActivity extends AppCompatActivity implements View.OnCli
                 View nav = findViewById(R.id.nav);
                 TextView connexion = nav.findViewById(R.id.connexionNav);
                 connexion.setText("Se connecter");
-            } else {
-                Intent intent = new Intent(GrignotinesActivity.this, LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
+
+            Intent intent = new Intent(GrignotinesActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
     }
 }

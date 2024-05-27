@@ -210,14 +210,14 @@ public class SQLiteManager extends SQLiteOpenHelper {
         return true;
     }
 
-    /**
-     * Vide la table utilisateur de la base de données
-     */
-    public void clearUserDB()
+    public void clearDB()
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("DELETE FROM " + TABLE_USER);
+        db.execSQL("DELETE FROM " + TABLE_ACHATS);
+        db.execSQL("DELETE FROM " + TABLE_ACHAT_SNACK);
+        db.execSQL("DELETE FROM " + TABLE_BILLETS);
     }
 
     public void updateHistoriqueAchat(Achat achat) {

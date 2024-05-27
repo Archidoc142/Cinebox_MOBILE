@@ -76,7 +76,7 @@ public class ConsulterAchatActivity extends AppCompatActivity implements Recycle
             else
                 imageUser.setImageResource(R.drawable.profil_image);
         } else {
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -123,12 +123,15 @@ public class ConsulterAchatActivity extends AppCompatActivity implements Recycle
             }
         } else if (v.getId() == R.id.connexionNav) {
             if (Utilisateur.getInstance() != null) {
-                Utilisateur.logOutUser(this);
+                if (Utilisateur.getInstance() != null) {
+                    Utilisateur.logOutUser(this);
 
-                View nav = findViewById(R.id.nav);
-                TextView connexion = nav.findViewById(R.id.connexionNav);
-                connexion.setText("Se connecter");
-            } else {
+                    View nav = findViewById(R.id.nav);
+                    TextView connexion = nav.findViewById(R.id.connexionNav);
+                    connexion.setText("Se connecter");
+                    finish();
+                }
+
                 Intent intent = new Intent(ConsulterAchatActivity.this, LoginActivity.class);
                 startActivity(intent);
             }

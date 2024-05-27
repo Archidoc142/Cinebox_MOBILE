@@ -76,7 +76,7 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             imageUser.setImageBitmap(null);
             imageUser.setVisibility(View.INVISIBLE);
-            listNav.setVisibility(View.INVISIBLE);
+            //listNav.setVisibility(View.INVISIBLE);
             cartNav.setVisibility(View.INVISIBLE);
         }
 
@@ -93,10 +93,6 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
 
         filmsRecycler.setNestedScrollingEnabled(false);
         snacksRecycler.setNestedScrollingEnabled(false);
-
-        Utilisateur user = Utilisateur.getInstance();
-
-        Toast.makeText(this, "Bienvenue " + Utilisateur.getInstance().getNom(), Toast.LENGTH_SHORT).show();
 
         new Thread(new Runnable() {
             @Override
@@ -157,16 +153,18 @@ public class AccueilActivity extends AppCompatActivity implements View.OnClickLi
                 nav_elements.setVisibility(View.GONE);
             }
         } else if (v.getId() == R.id.connexionNav) {
-            if (Utilisateur.getInstance() != null) {
+            if (Utilisateur.getInstance() != null)
+            {
                 Utilisateur.logOutUser(this);
 
                 View nav = findViewById(R.id.nav);
                 TextView connexion = nav.findViewById(R.id.connexionNav);
                 connexion.setText("Se connecter");
-            } else {
-                Intent intent = new Intent(AccueilActivity.this, LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
+
+            Intent intent = new Intent(AccueilActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
     }
 }
