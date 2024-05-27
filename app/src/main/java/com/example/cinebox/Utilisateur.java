@@ -1,6 +1,13 @@
+/**
+ * @author Antoine, Hicham, Arthur
+ * @version 1.0
+ * 
+ * Cette classe représente l'utilisateur connecté dans l'application.
+ */
+
 /****************************************
  * Fichier : Utilisateur
- * Auteur : Antoine Auger, Hicham Abekiri
+ * Auteur : Antoine Auger, Hicham Abekiri, Arthur
  * Fonctionnalité : N/A
  * Date : 14 mai 2024
  *
@@ -8,9 +15,10 @@
  * Date Nom Approuvé
  * =========================================================
  *
- * Historique de modifications :
+ * Historique de modifications :  
  * Date         Nom     Description
  * =========================================================
+ * 14/05/2024   Hicham  Création de la classe + système d'authentification
  * 23/05/2024   Arthur  Ajout fonction bitmapToArray() pour sauvegarder l'image dans la BD as Blob
  * ****************************************/
 
@@ -24,6 +32,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class Utilisateur
 {
     private static Utilisateur instance;
@@ -37,6 +48,17 @@ public class Utilisateur
     private String telephone;
     private Bitmap image;
 
+    /**
+     *  Constructeur de l'utilisateur, utilisé seulement dans la méthode setInstance
+     * @param token Token de l'utilisateur
+     * @param id ID de l'utilsiateur
+     * @param nom Nom de famille de l'utilisateur
+     * @param prenom Prénom de l'utilisateur
+     * @param nomUtilisateur Nom du compté utilisateur 
+     * @param courriel Courriel de l'utilisateur
+     * @param telephone Numéro de téléphone de l'utilisateur
+     * @param image Photo de l'utilisateur
+     */
     public Utilisateur (String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone, Bitmap image)
     {
         this.nom = nom;
@@ -50,6 +72,18 @@ public class Utilisateur
     }
 
 
+    
+    /** Initialise une session utilisateur dans l'application et insère l'utilisateur dans la BD 
+     * @param context Contexte de l'application
+     * @param token Token de l'utilisateur
+     * @param id ID de l'utilsiateur
+     * @param nom Nom de famille de l'utilisateur
+     * @param prenom Prénom de l'utilisateur
+     * @param nomUtilisateur Nom du compté utilisateur 
+     * @param courriel Courriel de l'utilisateur
+     * @param telephone Numéro de téléphone de l'utilisateur
+     * @param image Photo de l'utilisateur
+     */
     public static void initUser(Context context, String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone, Bitmap image)
     {
         setInstance(token, id, nom, prenom, nomUtilisateur, courriel, telephone, image);
@@ -59,21 +93,18 @@ public class Utilisateur
         if(!sql.userExistsInDB())
             addUserToDB(context);
     }
-  
-    /*
-      public Utilisateur() {
-          this.nom = "defaultNom";
-          this.prenom = "defaultPrénom";
-          this.nomUtilisateur = "defaultUsername";
-          this.courriel = "default@gmail.com";
-          this.telephone = "(123) 456 7890";
-          //this.motDePasse = motDePasse;
-          //this.image = image;
-      }
 
-      public static void setInstance(String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone)
-    */
-
+    /**
+     * Définit la nouvelle instance de l'utilisateur connecté
+     * @param token Token de l'utilisateur
+     * @param id ID de l'utilsiateur
+     * @param nom Nom de famille de l'utilisateur
+     * @param prenom Prénom de l'utilisateur
+     * @param nomUtilisateur Nom du compté utilisateur 
+     * @param courriel Courriel de l'utilisateur
+     * @param telephone Numéro de téléphone de l'utilisateur
+     * @param image Photo de l'utilisateur
+     */
     private static void setInstance(String token, int id, String nom, String prenom, String nomUtilisateur, String courriel, String telephone, Bitmap image)
     {
         if(instance == null)
@@ -82,14 +113,20 @@ public class Utilisateur
         }
     }
 
+    /**
+     * Détermine si l'utilisateur s'est déjà connecté à l'application avant 
+     * en récupérant son token de la BD locale et en vérifiant sa validité avec l'API.
+     *
+     * @param context Contexte de l'application
+     * @return true si le token dans la BD est encore valide, false si ce n'est pas le cas
+     */
     public static boolean loggedIn(Context context)
     {
         SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
 
         if(sql.userExistsInDB())
         {
-            APIRequests api = new APIRequests();
-            APIRequests.TokenValidRunnable tokenValidRunnable = api.new TokenValidRunnable();
+            APIRequests.TokenValidRunnable tokenValidRunnable = new APIRequests.TokenValidRunnable();
 
             Thread thread = new Thread(tokenValidRunnable);
             thread.start();
@@ -116,6 +153,10 @@ public class Utilisateur
 
     }
 
+    /**
+     * Met fin à la session et déconnecte l'utilisateur connecté de l'application
+     * @param context Contexte de l'application
+     */
     public static void logOutUser(Context context)
     {
         instance = null;
@@ -124,89 +165,157 @@ public class Utilisateur
         sql.clearUserDB();
     }
 
+    /**
+     * Insère l'utilisateur connecté à la BD locale
+     * @param context Contexte de l'application
+     */
     public static void addUserToDB(Context context)
     {
         SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
         sql.insertUserToDB();
     }
 
+    /**
+     * Récupérer l'utilisateur connecté
+     * @return objet Utilisateur représentant l'utilisateur connecté
+     */
     public static Utilisateur getInstance()
     {
         return instance;
     }
 
+    /**
+     * Récupérer le token d'un utilisateur
+     * @return le token de l'utilisateur
+     */
     public String getToken() {
         return token;
     }
 
+    /**
+     * Définir le token d'un utilisateur
+     * @param token Le token à définir
+     */
     public void setToken(String token) {
         this.token = token;
     }
 
+    /**
+     * Récupérer le nom d'utilisateur
+     * @return le nom d'utilisateur
+     */
     public String getNomUtilisateur() {
         return nomUtilisateur;
     }
 
+    /**
+     * Définir le nom d'utilisateur
+     * @param nomUtilisateur Le nom d'utilisateur à définir
+     */
     public void setNomUtilisateur(String nomUtilisateur) {
         this.nomUtilisateur = nomUtilisateur;
     }
 
+    /**
+     * Récupérer l'ID d'un utilisateur
+     * @return l'ID de l'utilisateur
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Définir l'ID de l'utilisateur
+     * @param id l'ID de l'utilisateur
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNom() {
         return nom;
     }
 
+    /**
+     *
+     * @param nom
+     */
     public void setNom(String nom) {
         this.nom = nom;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPrenom() {
         return prenom;
     }
 
+    /**
+     *
+     * @param prenom
+     */
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCourriel() {
         return courriel;
     }
 
+    /**
+     *
+     * @param courriel
+     */
     public void setCourriel(String courriel) {
         this.courriel = courriel;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTelephone() {
         return telephone;
     }
 
+    /**
+     *
+     * @param telephone
+     */
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-/*
-    public String getMotDePasse() {
-        return motDePasse;
-    }
 
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
-    }
-*/
+    /**
+     *
+     * @return
+     */
     public Bitmap getImage() {
         return image;
     }
 
+    /**
+     *
+     * @param image
+     */
     public void setImage(Bitmap image) {
         this.image = image;
     }
 
+    /**
+     *
+     * @return
+     */
     public byte[] bitmapToArray() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -216,6 +325,11 @@ public class Utilisateur
 
         return image_data;
     }
+
+    /**
+     *
+     * @return
+     */
     public JSONObject toJSON() {
         JSONObject jsonObject = new JSONObject();
         try {

@@ -1,3 +1,21 @@
+/****************************************
+ * Fichier : LoginActivity.java
+ * Auteur : Hicham Abekiri
+ * Fonctionnalité : Connexion au compte - MCc6
+ * Date : 18/05/2024
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ * 18/05/2024   Hicham   Création de l'activité
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 import androidx.appcompat.app.AppCompatActivity;

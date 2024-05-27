@@ -56,7 +56,7 @@ public class APIRequests
     private static final String getSeances = apiURL + "seances";
     private static final String getNextBilletIdURL = apiURL + "billet/nextId";
 
-    public class TokenValidRunnable implements Runnable
+    public static class TokenValidRunnable implements Runnable
     {
         private volatile boolean valid;
 
@@ -69,6 +69,22 @@ public class APIRequests
         public boolean isValid()
         {
             return valid;
+        }
+    }
+
+    public static class AchatRunnable implements Runnable
+    {
+        private volatile boolean result;
+
+        @Override
+        public void run()
+        {
+            result = postVente();
+        }
+
+        public boolean successful()
+        {
+            return result;
         }
     }
 
@@ -172,7 +188,8 @@ public class APIRequests
 
     public static void getSnacks(Context context)
     {
-        if (Grignotine.GrignotineOnArrayList.size() == 0){
+        if (Grignotine.GrignotineOnArrayList.size() == 0)
+        {
             try {
                 URL obj = new URL(getSnacksURL);
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -201,7 +218,7 @@ public class APIRequests
                         String categorie = snack.getString("categorie");
                         String format = snack.getString("format");
                         double prix_vente = snack.getDouble("prix_vente");
-                        String qte_disponible = snack.getString("qte_disponible");
+                        int qte_disponible = snack.getInt("qte_disponible");
                         String image = snack.getString("image");
 
                         Grignotine.GrignotineOnArrayList.add(new Grignotine(id, marque, categorie, format, prix_vente, qte_disponible, image));
@@ -583,10 +600,10 @@ public class APIRequests
                 float prix = Float.parseFloat(billetJ.getString("montant_achat"));
                 String typeBillet = billetJ.getString("type_billet");*/
 
-                Grignotine grignotineProduct = new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", "");
+                //Grignotine grignotineProduct = new Grignotine(0, "no name", "Popcorn", "petit", 5.00, "5", "");
 
                 //billetsAchat.add(new Billet(idBillet, montantBillet, new Tarif(1, "Jeune", 5.50, "Jeune gens"), new Seance(2, "2024-08-12 12:32:33", new Film(4, "Inception", "123", "film test", "2024-08-12", "2024-08-12", "S.F", "Christopher Nolan", "", "none")), new Achat(bille)));
-                grignotinesAchat.add(new GrignotineQuantite(grignotineProduct, 5));
+                //grignotinesAchat.add(new GrignotineQuantite(grignotineProduct, 5));
                 Achat.HistoriqueAchats.add(new Achat(id, date, montantBrut, tps, tvq, montantFinal, billetsAchat, grignotinesAchat));
             }
             else
@@ -656,8 +673,6 @@ public class APIRequests
                 writer.write(body.toString());
                 writer.flush();
                 writer.close();
-
-                System.out.println("sending achat...");
 
                 int responseCode = con.getResponseCode();
 

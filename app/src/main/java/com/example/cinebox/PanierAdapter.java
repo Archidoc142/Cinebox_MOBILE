@@ -8,6 +8,7 @@
  * =========================================================
  * Historique de modifications :
  * 20 mai 2024, Amélie Bergeron, RecyclerView fonctionnel
+ * 24 mai 2024, Hicham Abekiri, Suppression d'un élément du panier fonctionnel
  * =========================================================****************************************/
 
 package com.example.cinebox;
@@ -115,14 +116,15 @@ public class PanierAdapter extends RecyclerView.Adapter<PanierAdapter.MyViewHold
 
                 if(type[index] == "Billet")
                 {
-                    System.out.println("Billet");
+                    Panier.removeBillet(id[index]);
                 }
                 else
                 {
                     Panier.removeGrignotine(id[index]);
-                    PanierAdapter.this.updatePanier();
-                    PanierAdapter.this.notifyItemRemoved(index);
                 }
+
+                PanierAdapter.this.updatePanier();
+                PanierAdapter.this.notifyItemRemoved(index);
             }
         });
     }

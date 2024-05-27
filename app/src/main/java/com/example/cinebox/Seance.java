@@ -1,3 +1,22 @@
+/****************************************
+ * Fichier : Seance.java
+ * Auteur : Hicham Abekiri
+ * Fonctionnalité : Classe qui représente une séance pour un film
+ * Date : 23/05/2024
+ *
+ * Vérification :
+ * Date     Nom     Approuvé
+ * =========================================================
+ *
+ *
+ * Historique de modifications :
+ * Date     Nom     Description
+ * =========================================================
+ * 23/05/2024  Hicham  Création de la classe Séance
+ * 25/05/2024  Antoine, Hicham    Modifications pour utiliser dans FilmActivity et Panier
+ *
+ * ****************************************/
+
 package com.example.cinebox;
 
 import java.text.ParseException;

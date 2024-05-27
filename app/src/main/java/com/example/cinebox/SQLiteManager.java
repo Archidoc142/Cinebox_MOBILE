@@ -1,6 +1,6 @@
 /****************************************
  * Fichier : SQLiteManager
- * Auteur : Antoine Auger
+ * Auteur : Antoine, Arthur, Hicham
  * Fonctionnalité : N/A
  * Date : 14 mai 2024
  * Vérification :
@@ -102,7 +102,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
                         "type_tarif TEXT, " +
                         "film TEXT, " +
                         "id_achat INTEGER, " +
-                        "FOREIGN KEY(id_achat) REFERENCES " + TABLE_USER + "(id) )"
+                        "FOREIGN KEY(id_achat) REFERENCES " + TABLE_USER + "(id) ON DELETE CASCADE)"
         );
 
         db.execSQL(
@@ -111,13 +111,17 @@ public class SQLiteManager extends SQLiteOpenHelper {
                         "id_grignotine INTEGER, " +
                         "prix_unitaire REAL, " +
                         "quantite INTEGER, " +
-                        "FOREIGN KEY(id_achat) REFERENCES " + TABLE_USER + "(id), " +
+                        "FOREIGN KEY(id_achat) REFERENCES " + TABLE_USER + "(id) ON DELETE CASCADE, " +
                         "FOREIGN KEY(id_grignotine) REFERENCES " + TABLE_SNACKS + "(id) )"
         );
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {/* the cake is lie*/}
 
+    /**
+     * Insertion d'un achat à la base de données locale
+     * @param achat L'achat à insérer
+     */
     public void insertAchat(Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -133,6 +137,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
         db.insert(TABLE_ACHATS, null, contentValues);
     }
 
+    /**
+     * Insertion de l'utilisateur connecté à la base de données locale
+     */
     public void insertUserToDB()
     {
         Utilisateur user = Utilisateur.getInstance();
@@ -154,6 +161,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Récupérer l'utilisateur de la base de données
+     */
     public void getUserFromDB()
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -184,6 +194,10 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Vérifie si un utililsateur existe dans la base de données
+     * @return si un utililsateur existe dans la base de données
+     */
     public boolean userExistsInDB()
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -195,6 +209,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Vide la table utilisateur de la base de données
+     */
     public void clearUserDB()
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -252,6 +269,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
         getUserFromDB();
     }
 
+    /**
+     *  Insertion des snacks dans la base de données
+     */
     public void insertSnacks() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_SNACKS);
@@ -270,6 +290,10 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Insertion d'un achat à la base de donneés
+     * @param achat L'achat à insérer
+     */
     public void insertAchatFromPanier(Achat achat)
     {
         insertAchat(achat);
@@ -291,6 +315,24 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Annule l'insertion de l'achat dans la BD dans le cas où l'envoi vers l'API n'a pas fonctionné
+     * @param achat
+     */
+    public void deleteAchat(Achat achat)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_ACHATS, "id=" + achat.getId(), null);
+        db.delete(TABLE_ACHAT_SNACK, "id_achat=" + achat.getId(), null);
+        db.delete(TABLE_BILLETS, "id_achat=" + achat.getId(), null);
+    }
+
+    /**
+     * Insertion d'un billet à la base de données
+     * @param billet Le billet à insérer
+     * @param achat  L'achat lié au billet
+     */
     public void insertBillet(Billet billet, Achat achat)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -306,6 +348,11 @@ public class SQLiteManager extends SQLiteOpenHelper {
         //contentValues.put("id", utilisateur.getId());
     }
 
+    /**
+     * Insertion d'un achat de grignotine à la base de données
+     * @param gq La grignotine et sa quantité
+     * @param achat L'achat lié
+     */
     public void insertGrignotineQte(GrignotineQuantite gq, Achat achat)
     {
         Grignotine g = gq.getGrignotine();

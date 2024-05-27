@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.MyViewHolder> {
@@ -38,18 +40,36 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
     private String images[];
     private Context context;
 
-    public GrignotinesAdapter(Context context) {
+    private ArrayList<Grignotine> grignotinesDisponibles;
+
+    public GrignotinesAdapter(Context context)
+    {
+        this.context = context;
+        updateGrignotines();
+    }
+
+    private void updateGrignotines()
+    {
         ArrayList<Integer> idArray = new ArrayList<>();
         ArrayList<String> nameArray = new ArrayList<>();
         ArrayList<String> imagesArray = new ArrayList<>();
+        grignotinesDisponibles = new ArrayList<>();
 
-        for(Grignotine g: Grignotine.GrignotineOnArrayList) {
+        for(Grignotine g: Grignotine.GrignotineOnArrayList)
+        {
+            if(g.getQte_disponible() > 0)
+            {
+                grignotinesDisponibles.add(g);
+            }
+        }
+
+        for(Grignotine g: grignotinesDisponibles)
+        {
             idArray.add(g.getId());
             nameArray.add(g.getCategorie() + " (" + g.getFormat() + ")");
             imagesArray.add(g.getImage());
         }
 
-        this.context = context;
         this.id = idArray.toArray(new Integer[idArray.size()]);
         this.nom = nameArray.toArray(new String[nameArray.size()]);
         this.images = imagesArray.toArray(new String[imagesArray.size()]);
@@ -57,14 +77,16 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
 
     @NonNull
     @Override
-    public GrignotinesAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GrignotinesAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.grignotine_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GrignotinesAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull GrignotinesAdapter.MyViewHolder holder, @SuppressLint("RecyclerView") int position)
+    {
         holder.id.setText(String.valueOf(id[position]));
         holder.nom.setText(nom[position]);
 
@@ -73,35 +95,49 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
                 .error(R.drawable.image_not_found)
                 .into(holder.imageView);
 
-        holder.nom.setOnClickListener(new View.OnClickListener() {
+        holder.nom.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 int oldsize = Panier.Snack_PanierList.size();
                 int oldqte = 0;
                 int indexGQ = 0;
                 boolean dansListe = false;
 
-                for(GrignotineQuantite gq : Panier.Snack_PanierList) {
-                    if(gq.getGrignotine().equals(Grignotine.GrignotineOnArrayList.get(position))) {
+                for(GrignotineQuantite gq : Panier.Snack_PanierList)
+                {
+                    if(gq.getGrignotine().equals(grignotinesDisponibles.get(position)))
+                    {
                         dansListe = true;
                         indexGQ = Panier.Snack_PanierList.indexOf(gq);
                     }
                 }
 
-                if(dansListe) {
+                if(dansListe)
+                {
                     oldqte = Panier.Snack_PanierList.get(indexGQ).getQuantite();
                     Panier.Snack_PanierList.get(indexGQ).setQuantite(Panier.Snack_PanierList.get(indexGQ).getQuantite() + 1);
-                } else {
-                    Panier.Snack_PanierList.add(new GrignotineQuantite(Grignotine.GrignotineOnArrayList.get(position), 1));
+                }
+                else
+                {
+                    Panier.Snack_PanierList.add(new GrignotineQuantite(grignotinesDisponibles.get(position), 1));
                 }
 
-                if(Panier.Snack_PanierList.size() == (oldsize + 1)  || Panier.Snack_PanierList.get(indexGQ).getQuantite() == (oldqte + 1)) {
+                if(Panier.Snack_PanierList.size() == (oldsize + 1)  || Panier.Snack_PanierList.get(indexGQ).getQuantite() == (oldqte + 1))
+                {
                     Toast.makeText(context, "La grignotine a été ajoutée au panier.", Toast.LENGTH_SHORT).show();
-                } else {
+                    grignotinesDisponibles.get(position).removeOne();
+                    updateGrignotines();
+                    notifyDataSetChanged();
+                }
+                else
+                {
                     Toast.makeText(context, "La grignotine n'a pas été ajoutée au panier.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
     }
 
     @Override
@@ -110,6 +146,7 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout layout;
         TextView id;
         Button nom;
         ImageView imageView;
@@ -119,6 +156,7 @@ public class GrignotinesAdapter extends RecyclerView.Adapter<GrignotinesAdapter.
             id = itemView.findViewById(R.id.text_id);
             nom = itemView.findViewById(R.id.nom);
             imageView = itemView.findViewById(R.id.imageInstanceGrignotine);
+            layout = itemView.findViewById(R.id.layout);
         }
     }
 }

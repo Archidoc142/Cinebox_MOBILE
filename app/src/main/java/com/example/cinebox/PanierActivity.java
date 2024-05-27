@@ -9,6 +9,7 @@
  * Historique de modifications :
  * 20 mai 2024, Amélie Bergeron, Affichage fonctionnel des éléments du panier
  * 20 mai 2024, Amélie Bergeron, Vider le panier
+ * 23 mai 2024, Hicham Abekiri, Suppression d'un élément du panier + envoi grignotines
  * =========================================================****************************************/
 
 package com.example.cinebox;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PanierActivity extends AppCompatActivity implements View.OnClickListener {
     TextView videtxt, temptxt;
@@ -123,7 +125,19 @@ public class PanierActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onClick(View v)
                 {
-                    Panier.payerPanier(PanierActivity.this);
+                    try
+                    {
+                        Panier.payerPanier(PanierActivity.this);
+                        Toast.makeText(PanierActivity.this, "L'achat a été envoyé!", Toast.LENGTH_SHORT).show();
+
+                        PanierActivity.this.finish();
+                    }
+                    catch(AchatUnsuccessfulException e)
+                    {
+                        Toast.makeText(PanierActivity.this, "L'achat n'a pas pu être envoyé.", Toast.LENGTH_SHORT).show();
+                    }
+
+
                 }
             });
 

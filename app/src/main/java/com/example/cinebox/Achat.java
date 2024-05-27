@@ -24,25 +24,60 @@ import java.util.Date;
 
 public class Achat
 {
+    /**
+     * Tableau dynamique contenant tous les achats de l'utilisateur connecté
+     */
     public static ArrayList<Achat> HistoriqueAchats = new ArrayList<Achat>();
+
+    /**
+     * L'ID à utiliser lors de l'ajout d'un nouvel achat (initialisé depuis l'API)
+     */
     private static int nextAchatId = 0;
 
+    /**
+     * Les billets de l'achat
+     */
     private ArrayList<Billet> billetsAchat;
+
+    /**
+     * Les grignotines de l'achat
+     */
     private ArrayList<GrignotineQuantite> grignotinesAchat;
 
+    /**
+     * ID de l'achat
+     */
     private int id;
+
+    /**
+     * Date de l'achat
+     */
     private String date;
+
+    /**
+     * Montant brut de l'achat
+     */
     private double montantBrut;
+
+    /**
+     * Taux TPS de l'achat
+     */
     private double tps;
+
+    /**
+     * Taux TVQ de l'achat
+     */
     private double tvq;
+
+    /**
+     * Montant final de l'achat
+     */
     private double montantFinal;
 
-    public static void ajouterAchatPanier()
-    {
-        Achat achatPanier = new Achat(Panier.Billet_PanierList, Panier.Snack_PanierList);
-    }
-
-    public Achat(Context context)
+    /**
+     * Création d'un achat à partir du contenu du panier
+     */
+    public Achat()
     {
         if(!Panier.isEmpty())
         {
@@ -55,21 +90,20 @@ public class Achat
             this.tps = Panier.getTPS();
             this.tvq = Panier.getTVQ();
             this.montantFinal = Panier.getTotalFinal();
-
-            SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(context);
-            sqLiteManager.insertAchat(this);
-
-            nextAchatId++;
         }
     }
 
-    public Achat(ArrayList<Billet> billets, ArrayList<GrignotineQuantite> grignotinesqte)
-    {
-        billetsAchat = billets;
-        grignotinesAchat = grignotinesqte;
-    }
-
-    // constructeur importation depuis BD
+    /**
+     * Création d'un achat importé depuis la BD
+     * @param id ID de l'achat
+     * @param date Date de l'achat
+     * @param montantBrut Montant de l'achat
+     * @param tps Taux TPS de l'achat
+     * @param tvq Taux TVQ de l'achat
+     * @param montantFinal Montant final de l'achat
+     * @param billetsAchat Billets de l'achat
+     * @param grignotinesAchat Grignotines de l'achat avec leurs quantités
+     */
     public Achat(int id, String date, double montantBrut, double tps, double tvq, double montantFinal, ArrayList<Billet> billetsAchat, ArrayList<GrignotineQuantite> grignotinesAchat)
     {
         this.id = id;
@@ -81,22 +115,6 @@ public class Achat
         this.billetsAchat = billetsAchat;
         this.grignotinesAchat = grignotinesAchat;
     }
-
-    /*
-    public Achat() {
-        id = 0;
-        date = null;
-        montantBrut = 0;
-    }*/
-
-    /*
-    public Achat(String date, float montantBrut) {
-        this.date = date;
-        this.montantBrut = montantBrut;
-        this.tps = montantBrut * TPS;
-        this.tvq = montantBrut * TVQ;
-        this.montantFinal = this.tps + this.tvq;
-    }*/
 
     public int getId() {
         return id;
@@ -116,10 +134,6 @@ public class Achat
 
     public double getmontantBrut() {
         return montantBrut;
-    }
-
-    public void setmontantBrut(float montantBrut) {
-        this.montantBrut = montantBrut;
     }
 
     public double getTps() {
@@ -152,33 +166,73 @@ public class Achat
         nextAchatId = id;
     }
 
+    /**
+     * Met à jour l'ID du prochain achat
+     */
     public static void incrementNextAchatId()
     {
         nextAchatId++;
     }
 
-    public void envoyerAchat(Context context)
+    /**
+     * Insère l'achat dans la BD et l'envoie ensuite au serveur via l'API
+     * @param context Contexte de l'application
+     */
+    public void envoyerAchat(Context context) throws AchatUnsuccessfulException
     {
         SQLiteManager sql = SQLiteManager.instanceOfDatabase(context);
         sql.insertAchatFromPanier(this);
+
+        APIRequests.AchatRunnable achatRunnable = new APIRequests.AchatRunnable();
+
+        Thread thread = new Thread(achatRunnable);
+        thread.start();
+
+        try
+        {
+            thread.join();
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+        if(achatRunnable.successful())
+        {
+            incrementNextAchatId();
+            Billet.incrementNextBilletId(Panier.Billet_PanierList.size());
+            Panier.Billet_PanierList.clear();
+            Panier.Snack_PanierList.clear();
+        }
+        else
+        {
+            sql.deleteAchat(this);
+            throw new AchatUnsuccessfulException();
+        }
+
+
+        /**
 
         new Thread(new Runnable() {
             @Override
             public void run()
             {
-                System.out.println("posting");
-                if(APIRequests.postVente())
+                try
                 {
-                    System.out.println("post worked!");
-
-                    incrementNextAchatId();
-                    Billet.incrementNextBilletId(Panier.Billet_PanierList.size());
-                    Panier.Billet_PanierList.clear();
-                    Panier.Snack_PanierList.clear();
+                    if(APIRequests.postVente())
+                    {
+                        incrementNextAchatId();
+                        Billet.incrementNextBilletId(Panier.Billet_PanierList.size());
+                        Panier.Billet_PanierList.clear();
+                        Panier.Snack_PanierList.clear();
+                    }
                 }
+                catch(AchatUnsuccessfulException e)
+                {
+
+                }
+
             }
-        }).start();
-
-
+        }).start();*/
     }
 }

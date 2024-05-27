@@ -22,10 +22,10 @@ public class Grignotine {
     private String categorie;
     private String format;
     private double prix_vente;
-    private String qte_disponible;
+    private int qte_disponible;
     private String image;
 
-    public Grignotine(int id, String marque, String categorie, String format, double prix_vente, String qte_disponible, String image) {
+    public Grignotine(int id, String marque, String categorie, String format, double prix_vente, int qte_disponible, String image) {
         this.id = id;
         this.marque = marque;
         this.categorie = categorie;
@@ -75,12 +75,22 @@ public class Grignotine {
         this.prix_vente = prix_vente;
     }
 
-    public String getQte_disponible() {
+    public int getQte_disponible() {
         return qte_disponible;
     }
 
-    public void setQte_disponible(String qte_disponible) {
+    public void setQte_disponible(int qte_disponible) {
         this.qte_disponible = qte_disponible;
+    }
+
+    public void removeOne()
+    {
+        this.qte_disponible--;
+    }
+
+    public void addOne()
+    {
+        this.qte_disponible++;
     }
 
     public String getImage() {
