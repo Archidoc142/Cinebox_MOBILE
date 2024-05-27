@@ -62,7 +62,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             cartNav.setVisibility(View.INVISIBLE);
         }
 
+        filmsNav.setOnClickListener(this);
         connexion.setOnClickListener(this);
+        grignotinesNav.setOnClickListener(this);
+        tarifsNav.setOnClickListener(this);
+        listNav.setOnClickListener(this);
 
         userInput = findViewById(R.id.username_input);
         pwdInput = findViewById(R.id.password_input);

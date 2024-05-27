@@ -115,12 +115,25 @@ public class InscriptionActivity extends AppCompatActivity implements View.OnCli
                             public void run() {
                                 boolean response = APIRequests.addUser(data);
 
-                                if (response) {
+                                if(response)
                                     APIRequests.postLoginUser(courriel.getText().toString(), mot_de_passe.getText().toString(), InscriptionActivity.this);
-                                    Toast.makeText(InscriptionActivity.this, "Inscription effectuée", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                }
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run()
+                                    {
+                                        if (response) {
+                                            Toast.makeText(InscriptionActivity.this, "Inscription effectuée", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(InscriptionActivity.this, LoginActivity.class);
+                                            finish();
+                                            startActivity(intent);
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(InscriptionActivity.this, "Erreur lors de l'inscription.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             }
                         }).start();
                     } catch (Exception e) {
