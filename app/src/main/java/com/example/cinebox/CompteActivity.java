@@ -56,6 +56,7 @@ import org.w3c.dom.Text;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class CompteActivity extends AppCompatActivity implements RecyclerViewInterface, View.OnClickListener {
@@ -81,6 +82,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     Utilisateur user;
     private static final String CHANNEL_ID = "0";
 
+    private Integer[] ids = null;
+    private String[] dates = null;
+    private double[] montants = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,9 +157,12 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
             @Override
             public void run() {
                 try {
-                    // Récupération des achats depuis l'API
-                    APIRequests.getAchats(user.getToken(), CompteActivity.this);
-                    insertAchatsToDB(CompteActivity.this);
+                    SQLiteManager sqLiteManager = new SQLiteManager(CompteActivity.this);
+                    if (!sqLiteManager.achatsInDB()) {        //TODO: uncomment this condition to try debug "Adulte" doesnt exist
+                        // Récupération des achats depuis l'API
+                        APIRequests.getAchats(user.getToken(), CompteActivity.this);
+                        insertAchatsToDB(CompteActivity.this);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
@@ -170,9 +177,9 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
                     @Override
                     public void run() {
                         int size = Achat.HistoriqueAchats.size();
-                        Integer[] ids = new Integer[size];
-                        String[] dates = new String[size];
-                        double[] montants = new double[size];
+                        ids = new Integer[size];
+                        dates = new String[size];
+                        montants = new double[size];
 
                         for (int i = 0; i < size; i++) {
                             Achat achat = Achat.HistoriqueAchats.get(i);
@@ -324,11 +331,6 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
     }
     @Override
     public void onItemClick(int position) {
-        Intent intent = new Intent(CompteActivity.this, ConsulterAchatActivity.class);
-
-        //intent.inputExtra....
-
-        startActivity(intent);
     }
 
     @Override

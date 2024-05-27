@@ -68,14 +68,13 @@ public class Billet
     public static Billet loadFromJSON(JSONObject jsonObject) {
         int id = jsonObject.optInt("id_billet");
         double montant = jsonObject.optDouble("montant_achat");
-        String type_billet = jsonObject.optString("type_billet");
+        int id_tarif = jsonObject.optInt("id_tarif");
         String seanceStr = jsonObject.optString("seance");
         String film = jsonObject.optString("film");
 //        String dateHeureAchat = jsonObject.optString("date_heure_achat");     Champs inutil, car on utilise seulement la date de facturation
 
-        int tarifId = Tarif.getIdFromCategorie(type_billet);
         int seanceId = Seance.getIdFromDateAndTitre(seanceStr, film);
 
-        return new Billet(id, montant, tarifId, seanceId);
+        return new Billet(id, montant, id_tarif, seanceId);
     }
 }
