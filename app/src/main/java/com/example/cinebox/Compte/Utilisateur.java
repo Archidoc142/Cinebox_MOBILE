@@ -20,6 +20,7 @@
  * =========================================================
  * 14/05/2024   Hicham  Création de la classe + système d'authentification
  * 23/05/2024   Arthur  Ajout fonction bitmapToArray() pour sauvegarder l'image dans la BD as Blob
+ * 28/05/2024   Arthur  Ajout d'une fonction pour mettre à jour l'instance de l'utilisateur
  * ****************************************/
 
 package com.example.cinebox.Compte;
@@ -306,5 +307,12 @@ public class Utilisateur
             e.printStackTrace();
         }
         return jsonObject;
+    }
+    public void updateCurrentUser(String nom, String prenom, String nomUtilisateur, String courriel, String telephone) {
+        instance.nomUtilisateur = nomUtilisateur;
+        instance.prenom = prenom;
+        instance.nom = nom;
+        instance.courriel = courriel;
+        instance.telephone = telephone;
     }
 }

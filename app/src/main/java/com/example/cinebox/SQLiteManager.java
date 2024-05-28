@@ -11,6 +11,7 @@
  * =========================================================
  * 23/05/2024   Arthur  Save user into DB
  * 26/05/2024   Arthur  Modification populateList() pour populate Historique d'achat en même temps
+ * 28/05/2024   Arthur  Ajout d'une condition pour mettre à jour l'image selement si elle est != de null
  * ****************************************/
 
 package com.example.cinebox;
@@ -255,7 +256,8 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put("courriel", utilisateur.getCourriel());
         contentValues.put("telephone", utilisateur.getTelephone());
         //contentValues.put("mot_de_passe", utilisateur.getMotDePasse());
-        contentValues.put("image", utilisateur.bitmapToArray());
+        if (utilisateur.getImage() != null)
+            contentValues.put("image", utilisateur.bitmapToArray());
 
         sqLiteDatabase.update(TABLE_USER, contentValues, "id" + " =?", new String[]{String.valueOf(utilisateur.getId())});
     }

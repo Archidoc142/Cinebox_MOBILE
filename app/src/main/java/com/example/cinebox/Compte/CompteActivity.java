@@ -19,6 +19,7 @@
  * 24/05/2024   Arthur  Début sauvgearde vers API
  * 25/05/2024   Arthur  Fin sauvegarde vers API + Ajout Validation de champs avant sauvegarde + Début Ajout loadFromJSON
  * 26/05/2024   Arthur  AJout Achat + infos insertIntoBD + Affichage historique d'achat from DB
+ * 28/05/2024   Arthur  utilisation d'une nouvelle méthode pour mettre à jour l'instance utilisateur
  * ****************************************/
 
 package com.example.cinebox.Compte;
@@ -278,11 +279,7 @@ public class CompteActivity extends AppCompatActivity implements RecyclerViewInt
                 if (validateEditext()) {
                     Context context = view.getContext();
 
-                    user.setNomUtilisateur(nomUtilisateurEdit.getText().toString());
-                    user.setPrenom(prenomUserEdit.getText().toString());
-                    user.setNom(nomUserEdit.getText().toString());
-                    user.setCourriel(courrielUserEdit.getText().toString());
-                    user.setTelephone(phoneUserEdit.getText().toString());
+                    user.updateCurrentUser(nomUserEdit.getText().toString(), prenomUserEdit.getText().toString(), nomUtilisateurEdit.getText().toString(), courrielUserEdit.getText().toString(), phoneUserEdit.getText().toString());
 
                     saveToDB();
 
